@@ -2,17 +2,68 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Mancala</title>    
-    <link href="style.css" rel="stylesheet">
+    <title>Mancala</title>  
+    <link href="styles/general.css" rel="stylesheet" >  
+    <link href="styles/header.css" rel="stylesheet">
+    <link href="styles/players-configurations.css" rel="stylesheet">
   </head>
   <body>
     <header>
       <img class=logo alt="Logo" src="Mancala.png">
-      <div>
-        <label>Username <br><input type="text" id="user" name="username"> </label>
-        <label class=pass>Password <br><input type="password" id="pass" name="password"> </label>
-      </div>
-      <button type="button">Login</button>
+      <form class=authentication>
+        <div>
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password">
+        </div>
+        <button id="login">Login</button>
+      </form>
     </header>
+
+    <div class=players-configurations>
+      <div class=player-card id="player1">
+        <div>
+          <img src="images/player-1-icon.png" alt="Player 1 Icon">
+        </div>
+        <form class=player-configurations>
+          <div>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name">
+          </div>
+          <div>
+            <label for="computer">Computer</label>
+            <input type="checkbox" id="computer" name="computer">
+          </div>
+          <div>
+            <label for="level">Level 1</label>
+            <input type="radio" id="level1" name="level">
+            <input type="radio" id="level2" name="level">
+            <label for="level">Level 2</label>
+          </div>
+        </form>
+      </div>
+      <div class=player-card id="player2">
+        <div>
+          <img src="images/player-2-icon.png" alt="Play 2 Icon">
+        </div>
+        <form class=player-configurations>
+          <div>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name">
+          </div>
+          <div>
+            <label for="computer">Computer</label>
+            <input type="checkbox" id="computer" name="computer">
+          </div>
+          <div>
+            <label for="level">Level 1</label>
+            <input type="radio" id="level1" name="level">
+            <input type="radio" id="level2" name="level">
+            <label for="level">Level 2</label>
+          </div>
+        </form>
+      </div>
+    </div>
   </body>
 </html>
