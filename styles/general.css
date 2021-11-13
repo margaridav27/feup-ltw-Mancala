@@ -16,6 +16,10 @@ button {
   text-align: center;
 }
 
+button:hover {
+  background: rgba(255, 255, 255, 0.80);
+}
+
 button {
   width: 100px;
   border-radius: 20px;
@@ -41,4 +45,25 @@ input[type="number"] {
 input[type="checkbox"]:checked,
 input[type="radio"]:checked {
   background: rgba(102, 187, 106, 1);
+}
+
+li{
+  margin: 10px 0;
+}
+
+/* Scroll bar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background:#EDE5DF;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: rgb(155, 155, 155); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888; 
 }

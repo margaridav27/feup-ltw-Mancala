@@ -27,8 +27,16 @@
   background-color: rgba(183, 228, 199, 0.55);
 }
 
+.board-configurations #save:hover {
+  background-color: #B7E4C7;
+}
+
 .board-configurations #cancel {
   background-color: rgba(228, 11, 11, 0.4);
+}
+
+.board-configurations #cancel:hover {
+  background-color: rgba(228, 11, 11, 0.6);
 }
 
 .card {
