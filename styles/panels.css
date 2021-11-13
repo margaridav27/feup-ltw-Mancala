@@ -1,46 +1,60 @@
-/* ------------------ DEFAULT PANEL ------------------ */
 .default-panel {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .default-panel img {
-    margin: 20px;
-    width: 1160px;
-    height: 415px;
+  width: 70%;
+  height: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
-/* ------------------ INFO PANEL ------------------ */
 .info-panel {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.info-panel .score, .info-panel .info {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.info-panel .score,
+.info-panel .info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
 }
 
 .info-panel .score {
-    font-size: 30px;
+  width: 10%;
 }
 
 .info-panel .score img {
-    width: 30px;
-    height: 30px;
+  width: 40px;
+  height: 40px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .info-panel .info {
-    width: 60%;
-    height: 30px;
-    margin-right: 30px;
-    margin-left: 30px;
-    border-radius: 15px;
-    background-color: rgba(230, 204, 178, 0.3);
-    font-size: 15px;
+  width: 50%;
+  height: 50px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 15px;
+  background-color: rgba(230, 204, 178, 0.3);
+  text-align: center;
 }
 
+@media (max-width: 1200px) {
+  .default-panel img {
+    width: 95%;
+  }
+  .info-panel .score {
+    width: 10%;
+  }
+  .info-panel .info {
+    width: 70%;
+  }
+}

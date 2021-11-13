@@ -23,10 +23,13 @@ header {
   font-size: 12px;
 }
 
-input:focus {
-  outline: none;
-}
+@media (max-width: 900px) {
+  header {
+    height: 150px;
+  }
 
-#login:hover {
-  background: rgba(25, 130, 196, 0.4);
+  .authentication label,
+  .authentication input {
+    display: block;
+  }
 }

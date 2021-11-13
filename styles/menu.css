@@ -1,39 +1,36 @@
 .menu {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .menu-btn {
-    width: 250px;
-    height: 50px;
-    margin: 20px;
-    border-radius: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #FFFFFF;
+  width: 20%;
+  height: 50px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+@media (max-width: 815px) {
+  .menu-btn {
+    width: 28%;
+  }
 }
 
 #play-btn {
-    background-color: rgba(25, 130, 196, 0.4);
+  background-color: rgba(25, 130, 196, 0.4);
 }
 
 #instructions-btn {
-    background-color: rgba(138, 201, 38, 0.4);
+  background-color: rgba(138, 201, 38, 0.4);
 }
 
 #scores-btn {
-    background-color: rgba(255, 202, 58, 0.4);
-}
-
-#play-btn:hover {
-    background-color: #1982C4;
-}
-
-#instructions-btn:hover {
-    background-color: #91D12A;
-}
-
-#scores-btn:hover {
-    background-color: #FFCA3A;
+  background-color: rgba(255, 202, 58, 0.4);
 }

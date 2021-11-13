@@ -1,47 +1,44 @@
 html body {
-  font-family: 'Montserrat', sans-serif; 
+  font-family: "Montserrat", sans-serif;
   padding: 0;
   margin: 0;
 }
 
-input, button{
-  font-family:inherit;
+input,
+button {
+  font-family: inherit;
+  height: 25px;
+  margin-right: 5px;
+  margin-left: 5px;
+  background: rgba(255, 255, 255, 0.55);
+  border: none;
+  cursor: pointer;
+  text-align: center;
 }
 
-input {
-  height: 25px;
-  background: rgba(255, 255, 255, 0.55);
+button {
+  width: 100px;
+  border-radius: 20px;
 }
 
 input[type="text"],
 input[type="password"] {
   width: 160px;
-  margin: 5px;
-  border: none;
   border-radius: 20px;
-  text-align: center;
 }
 
 input[type="checkbox"],
 input[type="radio"] {
   width: 25px;
-  height: 25px;
   appearance: none;
   border-radius: 50%;
-  cursor: pointer;
+}
+
+input[type="number"] {
+  width: 50px;
 }
 
 input[type="checkbox"]:checked,
 input[type="radio"]:checked {
   background: rgba(102, 187, 106, 1);
-}
-
-button {
-  width: 100px;
-  height: 25px;
-  border: none;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.5);
-  text-align: center;
-  cursor: pointer;
 }
