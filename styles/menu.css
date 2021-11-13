@@ -1,0 +1,39 @@
+.menu {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.menu-btn {
+    width: 300px;
+    height: 60px;
+    margin: 10px;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+#play-btn {
+    background-color: rgba(25, 130, 196, 0.4);
+}
+
+#instructions-btn {
+    background-color: rgba(138, 201, 38, 0.4);
+}
+
+#scores-btn {
+    background-color: rgba(255, 202, 58, 0.4);
+}
+
+#play-btn:hover {
+    background-color: #1982C4;
+}
+
+#instructions-btn:hover {
+    background-color: #91D12A;
+}
+
+#scores-btn:hover {
+    background-color: #FFCA3A;
+}

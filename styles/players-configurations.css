@@ -1,20 +1,26 @@
 .players-configurations {
   display: flex;
   align-items: center;
-  padding: 30px;
+  padding: 20px;
 }
 
 .player-card {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  width: 500px;
-  height: 200px;
+  width: 400px;
+  height: 170px;
+  margin: 20px;
+  padding: 10px;
   border-radius: 30px;
-  margin: 30px;
-  padding: 20px;
   background-color: rgba(230, 204, 178, 0.3);
   font-size: 12px;
+}
+
+.player-card legend {
+  font-size: 20px;
+  font-weight: bold;
+  color: #FFFFFF;
 }
 
 .player-card img {
@@ -23,18 +29,18 @@
 }
 
 .player-configurations {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .player-configurations div {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 

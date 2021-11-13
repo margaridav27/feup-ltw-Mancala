@@ -1,3 +1,13 @@
+html body {
+  font-family: 'Montserrat', sans-serif; 
+  padding: 0;
+  margin: 0;
+}
+
+input, button{
+  font-family:inherit;
+}
+
 input {
   height: 25px;
   background: rgba(255, 255, 255, 0.55);
@@ -5,7 +15,7 @@ input {
 
 input[type="text"],
 input[type="password"] {
-  width: 200px;
+  width: 160px;
   margin: 5px;
   border: none;
   border-radius: 20px;
@@ -14,7 +24,16 @@ input[type="password"] {
 
 input[type="checkbox"],
 input[type="radio"] {
-  width: 30px;
+  width: 25px;
+  height: 25px;
+  appearance: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  background: rgba(102, 187, 106, 1);
 }
 
 button {
@@ -24,4 +43,5 @@ button {
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.5);
   text-align: center;
+  cursor: pointer;
 }
