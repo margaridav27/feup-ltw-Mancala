@@ -67,9 +67,8 @@
 }
 
 .record-btn {
-  width: 10px;
-  color: white;
-  background: rgba(189, 141, 90, 0.4);
+  color: #ffffff;
+  background-color: rgba(189, 141, 90, 0.4);
   position: absolute;
   top: 82%;
   left: 18%;
@@ -116,14 +115,8 @@
 }
 
 @media (max-width: 1200px) {
-  .default-panel img {
-    width: 95%;
-  }
-
-  .instructions-panel img {
-    width: 95%;
-  }
-
+  .default-panel img,
+  .instructions-panel img,
   .record-panel img {
     width: 95%;
   }
@@ -131,6 +124,7 @@
   .info-panel .score {
     width: 10%;
   }
+
   .info-panel .info {
     width: 70%;
   }
