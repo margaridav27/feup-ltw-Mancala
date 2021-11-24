@@ -23,12 +23,17 @@
   justify-content: center;
 }
 
+.card .player-configurations .level-1,
+.card .player-configurations .level-2 {
+  display: none;
+}
+
 .board-configurations #save {
   background-color: rgba(183, 228, 199, 0.55);
 }
 
 .board-configurations #save:hover {
-  background-color: #B7E4C7;
+  background-color: #b7e4c7;
 }
 
 .board-configurations #cancel {

@@ -11,7 +11,7 @@
   <link href="styles/configurations.css" rel="stylesheet">
   <link href="styles/menu.css" rel="stylesheet">
   <link href="styles/panels.css" rel="stylesheet">
-  <script></script>
+  <script src="scripts/App.js"></script>
 </head>
 
 <body>
@@ -29,7 +29,6 @@
   </header>
 
   <div class="configurations">
-
     <div class="players-configurations">
       <div class="card" id="player1">
         <div>
@@ -42,14 +41,14 @@
             <input type="text" id="name" name="name">
           </div>
           <div>
-            <label for="computer#1">Computer</label>
-            <input type="checkbox" id="computer#1" name="computer">
+            <label for="computer-1" onclick="computerClickHandler(1)">Computer</label>
+            <input type="checkbox" id="computer-1" name="computer">
           </div>
-          <div>
-            <label for="level#1">Level 1</label>
-            <input type="radio" id="level#1" name="level">
-            <input type="radio" id="level#2" name="level">
-            <label for="level#2">Level 2</label>
+          <div class="level-1">
+            <label for="level-1-1">Level 1</label>
+            <input type="radio" id="level-1-1" name="level">
+            <input type="radio" id="level-1-2" name="level">
+            <label for="level-1-2">Level 2</label>
           </div>
         </form>
       </div>
@@ -64,20 +63,22 @@
             <input type="text" id="name" name="name">
           </div>
           <div>
-            <label for="computer#2">Computer</label>
-            <input type="checkbox" id="computer#2" name="computer">
+            <label for="computer-2" onclick="computerClickHandler(2)">Computer</label>
+            <input type="checkbox" id="computer-2" name="computer">
           </div>
-          <div>
-            <label for="level#3">Level 1</label>
-            <input type="radio" id="level#3" name="level">
-            <input type="radio" id="level#4" name="level">
-            <label for="level#4">Level 2</label>
+          <div class="level-2">
+            <label for="level-2-1">Level 1</label>
+            <input type="radio" id="level-2-1" name="level">
+            <input type="radio" id="level-2-2" name="level">
+            <label for="level-2-2">Level 2</label>
           </div>
         </form>
       </div>
     </div>
 
     <form class="card board-configurations">
+      <label for="configsButton" onclick="showConfigs">Configurations</label>
+      <input type="checkbox" id="configsButton" name="configurations">
       <legend>Board Configurations</legend>
       <div>
         <label for="holes">Number of holes</label>
@@ -117,9 +118,9 @@
   <!--PARA A PRIMEIRA PAGINA-->
   <div class="default-panel">
     <img src="assets/default-panel-background.png" alt="Default Panel Background">
-    </div> 
+  </div> 
   
-  <!--PARA AS INSTRUÇÕES-->
+  <!--
   <div class="instructions-panel">
     <img src="assets/instructions-panel-background.png" alt="Instructions Panel Background">
     <div class="instructions">
@@ -138,7 +139,6 @@
      </div>
   </div>
 
-  <!--PARA AS PONTUAÇÕES-->
   <div class="record-panel">
     <div class="game-record">
       <img src="assets/records-panel-background.png" alt="Game Record Panel Background">
@@ -246,6 +246,7 @@
       </table>
     </div>
   </div>
+  -->
 </body>
 
 </html>
