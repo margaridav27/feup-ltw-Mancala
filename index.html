@@ -34,15 +34,14 @@
         <div>
           <img src="assets/player-1-icon.png" alt="Player 1 Icon">
         </div>
-        <form class="player-configurations">
-          <legend>Player 1</legend>
+        <div class="player-configurations">
           <div>
             <label for="name">Name</label>
             <input type="text" id="name" name="name">
           </div>
           <div>
-            <label for="computer-1" onclick="computerClickHandler(1)">Computer</label>
-            <input type="checkbox" id="computer-1" name="computer">
+            <label for="computer-1">Computer</label>
+            <input type="checkbox" id="computer-1" name="computer" onclick="computerCheckHandler('1')">
           </div>
           <div class="level-1">
             <label for="level-1-1">Level 1</label>
@@ -50,21 +49,20 @@
             <input type="radio" id="level-1-2" name="level">
             <label for="level-1-2">Level 2</label>
           </div>
-        </form>
+        </div>
       </div>
       <div class="card" id="player2">
         <div>
-          <img src="assets/player-2-icon.png" alt="Player 2 Icon">
+          <img src="assets/player-2-icon.png" alt="Player level2 Icon">
         </div>
-        <form class="player-configurations">
-          <legend>Player 2</legend>
+        <div class="player-configurations">
           <div>
             <label for="name">Name</label>
             <input type="text" id="name" name="name">
           </div>
           <div>
-            <label for="computer-2" onclick="computerClickHandler(2)">Computer</label>
-            <input type="checkbox" id="computer-2" name="computer">
+            <label for="computer-2">Computer</label>
+            <input type="checkbox" id="computer-2" name="computer" onclick="computerCheckHandler('2')">
           </div>
           <div class="level-2">
             <label for="level-2-1">Level 1</label>
@@ -72,7 +70,7 @@
             <input type="radio" id="level-2-2" name="level">
             <label for="level-2-2">Level 2</label>
           </div>
-        </form>
+        </div>
       </div>
     </div>
 

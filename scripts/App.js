@@ -7,22 +7,22 @@
 */
 
 function hideLevels(id) {
-    let selector = ".card .player-configurations .level-{id}";
-    let div = document.querySelector({selector});
+    let selector = ".card .player-configurations .level-" + id;
+    let div = document.querySelector(selector);
     div.style.display = "none"
 }
 
 function showLevels(id) {
-    let selector = ".card .player-configurations .level-{id}";
-    let div = document.querySelector({selector});
-    div.style.display = "block"
+    let selector = ".card .player-configurations .level-" + id;
+    let element = document.querySelector(selector);
+    element.style.display = "flex"
 }
 
-function computerClickHandler(id) {
-    showLevels(id); 
-}
+function computerCheckHandler(id) {
+    let selector = "#computer-" + id;
+    let element = document.querySelector(selector);
 
-function showConfigs() {
-    //if (document.querySelector())
+    if (element.checked) showLevels(id);
+    else hideLevels(id); 
 }
 
