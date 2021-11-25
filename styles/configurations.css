@@ -87,71 +87,8 @@
   background-color: rgba(228, 11, 11, 0.6);
 }
 
-/* .configurations,
-.players-configurations {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  font-size: 10px;
-}
-
-.player-configurations,
-.board-configurations {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.player-configurations div,
-.board-configurations div {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card .player-configurations .level-1,
-.card .player-configurations .level-2 {
-  display: none;
-}
-
-.board-configurations #save {
-  background-color: rgba(183, 228, 199, 0.55);
-}
-.board-configurations #save:hover {
-  background-color: #b7e4c7;
-}
-.board-configurations #cancel {
-  background-color: rgba(228, 11, 11, 0.4);
-}
-.board-configurations #cancel:hover {
-  background-color: rgba(228, 11, 11, 0.6);
-}
-
-.card {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 350px;
-  height: 150px;
-  margin: 20px;
-  border-radius: 30px;
-  background-color: rgba(230, 204, 178, 0.3);
-}
-
-.card legend {
-  font-size: 15px;
-  font-weight: bold;
-  color: rgba(155, 121, 87, 0.7);
-}
-
-.card img {
-  width: 126px;
-  height: 126px;
-}
-
+/* TODO: responsivness */
+/*
 @media (max-width: 1250px) {
   .configurations {
     display: flex;
