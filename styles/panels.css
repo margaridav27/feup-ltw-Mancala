@@ -14,8 +14,8 @@
 .scores-record img {
   width: 70%;
   height: 100%;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .instructions {
@@ -26,56 +26,6 @@
   top: 16%;
   left: 19%;
   overflow: auto;
-}
-
-.record-panel {
-  color: white;
-  font-weight: bold;
-}
-
-.record-titles {
-  font-family: Brush Script, cursive;
-  position: absolute;
-  top: 9%;
-}
-
-.record-panel table {
-  font-family: Brush Script, cursive;
-  position: absolute;
-  font-size: 20px;
-  text-align: center;
-  height: 60%;
-}
-
-#games-made {
-  width: 30%;
-  top: 27%;
-  border-spacing: 0 15px;
-}
-
-#scores {
-  top: 19%;
-}
-
-#scores td {
-  padding: 0 70px;
-}
-
-#scores th {
-  font-size: 25px;
-  padding: 29px;
-}
-
-.record-btn {
-  color: #ffffff;
-  background-color: rgba(189, 141, 90, 0.4);
-  position: absolute;
-  top: 82%;
-  left: 18%;
-}
-
-.record-btn:hover {
-  background: rgba(189, 141, 90, 0.8);
 }
 
 .info-panel {
@@ -129,3 +79,71 @@
     width: 70%;
   }
 }
+
+/* 
+.record-panel {
+  color: white;
+  font-weight: bold;
+}
+
+.record-titles {
+  font-family: Brush Script, cursive;
+  position: absolute;
+  top: 9%;
+}
+
+.record-panel table {
+  font-family: Brush Script, cursive;
+  position: absolute;
+  font-size: 20px;
+  text-align: center;
+  height: 60%;
+}
+
+#games-made {
+  width: 30%;
+  top: 27%;
+  border-spacing: 0 15px;
+}
+
+#scores {
+  top: 19%;
+}
+
+#scores td {
+  padding: 0 70px;
+}
+
+#scores th {
+  font-size: 25px;
+  padding: 29px;
+}
+
+.record-btn {
+  color: #ffffff;
+  background-color: rgba(189, 141, 90, 0.4);
+  position: absolute;
+  top: 82%;
+  left: 18%;
+}
+
+.record-btn:hover {
+  background: rgba(189, 141, 90, 0.8);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ede5df;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(155, 155, 155);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+} 
+*/

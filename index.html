@@ -19,9 +19,15 @@
     <img class="logo" alt="Logo" src="assets/mancala-logo.png">
     <form class="authentication">
       <div>
-        <label for="username">Username</label>
+        <label for="username">
+          <img src="assets/user.png" alt="">
+        </label>
         <input type="text" id="username" name="username">
-        <label for="password">Password</label>
+      </div>
+      <div>
+        <label for="password">
+          <img src="assets/key.png" alt="">
+        </label>
         <input type="password" id="password" name="password">
       </div>
       <button id="login">Login</button>
@@ -75,8 +81,6 @@
     </div>
 
     <form class="card board-configurations">
-      <label for="configsButton" onclick="showConfigs">Configurations</label>
-      <input type="checkbox" id="configsButton" name="configurations">
       <legend>Board Configurations</legend>
       <div>
         <label for="holes">Number of holes</label>

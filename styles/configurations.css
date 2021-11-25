@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .player-configurations,
@@ -31,15 +31,12 @@
 .board-configurations #save {
   background-color: rgba(183, 228, 199, 0.55);
 }
-
 .board-configurations #save:hover {
   background-color: #b7e4c7;
 }
-
 .board-configurations #cancel {
   background-color: rgba(228, 11, 11, 0.4);
 }
-
 .board-configurations #cancel:hover {
   background-color: rgba(228, 11, 11, 0.6);
 }
@@ -48,23 +45,22 @@
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  width: 400px;
-  height: 170px;
+  width: 350px;
+  height: 150px;
   margin: 20px;
-  padding: 10px;
   border-radius: 30px;
   background-color: rgba(230, 204, 178, 0.3);
 }
 
 .card legend {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   color: rgba(155, 121, 87, 0.7);
 }
 
 .card img {
-  width: 170px;
-  height: 166px;
+  width: 126px;
+  height: 126px;
 }
 
 @media (max-width: 1250px) {
