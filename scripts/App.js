@@ -7,15 +7,21 @@
 */
 
 function hideLevels(id) {
-    let selector = ".card .player-configurations .level-" + id;
-    let div = document.querySelector(selector);
-    div.style.display = "none"
+    document.querySelector("#player-card-" + id).className = "card player-card levels-hide"
 }
 
 function showLevels(id) {
-    let selector = ".card .player-configurations .level-" + id;
-    let element = document.querySelector(selector);
-    element.style.display = "flex"
+    document.querySelector("#player-card-" + id).className = "card player-card"
+}
+
+function enablePlaceholder(selector) {
+    document.querySelector(selector).placeholder = "";
+    document.querySelector(selector).disabled = false;
+}
+
+function disablePlaceholder(selector) {
+    document.querySelector(selector).placeholder = "COMPUTER";
+    document.querySelector(selector).disabled = true;
 }
 
 function computerCheckHandler(id) {
@@ -27,19 +33,13 @@ function computerCheckHandler(id) {
         document.querySelector("#computer-" + otherId).checked = false;
         hideLevels(otherId);
 
-        document.querySelector("#name-" + id).placeholder = "COMPUTER";
-        document.querySelector("#name-" + id).disabled = true;
-
-        document.querySelector("#name-" + otherId).placeholder = "";
-        document.querySelector("#name-" + otherId).disabled = false;
+        disablePlaceholder("#name-" + id);
+        enablePlaceholder("#name-" + otherId);
     } else {
-        hideLevels(id); 
-
-        document.querySelector("#name-" + id).placeholder = "";
-        document.querySelector("#name-" + id).disabled = false;
-
-        document.querySelector("#name-" + otherId).placeholder = "";
-        document.querySelector("#name-" + otherId).disabled = false;
+        hideLevels(id);
+        
+        enablePlaceholder("#name-" + id);
+        enablePlaceholder("#name-" + otherId);
     }
 }
 

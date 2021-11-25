@@ -6,6 +6,7 @@ header {
   grid-template-rows: 5vh 5vh;
   grid-template-columns: 2fr 1fr;
   align-items: center;
+  margin-bottom: 10px;
   font-size: 10px;
   background: rgba(155, 121, 87, 0.7);
 }

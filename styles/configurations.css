@@ -1,4 +1,93 @@
-.configurations,
+.configurations {
+  display: grid;
+  grid-template-areas: "player1 player2 board";
+  justify-items: center;
+  font-size: 10px;
+}
+#player-card-1 {
+  grid-area: player1;
+}
+#player-card-2 {
+  grid-area: player2;
+}
+#board-card {
+  grid-area: board;
+}
+
+.card {
+  display: grid;
+  grid-template-areas:
+    "img r1"
+    "img r2"
+    "img r3";
+  justify-items: center;
+  align-items: center;
+  height: 150px;
+  padding: 5px;
+  border-radius: 30px;
+  background-color: rgba(230, 204, 178, 0.3);
+}
+.player-card {
+  width: 310px;
+}
+.board-card {
+  width: 350px;
+}
+
+/* to when the level radio buttons are not hidden */
+.card img {
+  grid-area: img;
+
+  width: 120px;
+  height: 120px;
+}
+.player-card .name,
+.board-card .holes {
+  grid-area: r1;
+}
+.player-card .computer,
+.board-card .seeds {
+  grid-area: r2;
+}
+.player-card .levels,
+.board-card .buttons {
+  grid-area: r3;
+}
+
+/* to when the level radio buttons are hidden */
+.player-card.levels-hide {
+  display: grid;
+  grid-template-areas:
+    "img r1"
+    "img r2";
+}
+.player-card.levels-hide .name {
+  grid-area: r1;
+  align-self: end;
+}
+.player-card.levels-hide .computer {
+  grid-area: r2;
+  align-self: start;
+  margin-top: 10px;
+}
+.player-card.levels-hide .levels {
+  display: none;
+}
+
+.board-card #save {
+  background-color: rgba(183, 228, 199, 0.55);
+}
+.board-card #save:hover {
+  background-color: #b7e4c7;
+}
+.board-card #cancel {
+  background-color: rgba(228, 11, 11, 0.4);
+}
+.board-card #cancel:hover {
+  background-color: rgba(228, 11, 11, 0.6);
+}
+
+/* .configurations,
 .players-configurations {
   display: flex;
   align-items: center;
@@ -75,4 +164,4 @@
     display: flex;
     flex-wrap: wrap;
   }
-}
+} */
