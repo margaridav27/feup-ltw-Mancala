@@ -19,14 +19,27 @@ function showLevels(id) {
 }
 
 function computerCheckHandler(id) {
+    let otherId = (id === '1') ? '2' : '1';
+
     if (document.querySelector("#computer-" + id).checked) {
         showLevels(id);
 
-        let otherId = (id === '1') ? '2' : '1';
         document.querySelector("#computer-" + otherId).checked = false;
-        console.log(document.querySelector("#computer-" + otherId));
         hideLevels(otherId);
-        
-    } else hideLevels(id); 
+
+        document.querySelector("#name-" + id).placeholder = "COMPUTER";
+        document.querySelector("#name-" + id).disabled = true;
+
+        document.querySelector("#name-" + otherId).placeholder = "";
+        document.querySelector("#name-" + otherId).disabled = false;
+    } else {
+        hideLevels(id); 
+
+        document.querySelector("#name-" + id).placeholder = "";
+        document.querySelector("#name-" + id).disabled = false;
+
+        document.querySelector("#name-" + otherId).placeholder = "";
+        document.querySelector("#name-" + otherId).disabled = false;
+    }
 }
 
