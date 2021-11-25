@@ -19,10 +19,14 @@ function showLevels(id) {
 }
 
 function computerCheckHandler(id) {
-    let selector = "#computer-" + id;
-    let element = document.querySelector(selector);
+    if (document.querySelector("#computer-" + id).checked) {
+        showLevels(id);
 
-    if (element.checked) showLevels(id);
-    else hideLevels(id); 
+        let otherId = (id === '1') ? '2' : '1';
+        document.querySelector("#computer-" + otherId).checked = false;
+        console.log(document.querySelector("#computer-" + otherId));
+        hideLevels(otherId);
+        
+    } else hideLevels(id); 
 }
 
