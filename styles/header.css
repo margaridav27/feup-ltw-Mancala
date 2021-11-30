@@ -1,10 +1,7 @@
 header {
   display: grid;
-  grid-template-areas:
-    "logo username password"
-    "logo empty button";
-  grid-template-rows: 5vh 5vh;
-  grid-template-columns: 2fr 1fr;
+  grid-template-areas: "logo . auth";
+  grid-template-rows: 10vh;
   align-items: center;
   margin-bottom: 10px;
   font-size: 10px;
@@ -21,6 +18,16 @@ header {
   height: 50px;
 }
 
+.authentication {
+  grid-area: auth;
+  display: grid;
+  grid-template-areas:
+    "username password"
+    ". login";
+  grid-template-rows: 5vh;
+  align-items: center;
+  justify-self: end;
+}
 .auth-username {
   grid-area: username;
   justify-self: end;
@@ -30,26 +37,30 @@ header {
   justify-self: end;
 }
 #login {
-  grid-area: button;
+  grid-area: login;
   justify-self: end;
 }
 
-@media (max-width: 680px) {
+@media (max-width: 685px) {
   header {
-    grid-template-areas:
-      "logo logo logo"
-      "username password button";
-    grid-template-rows: 9vh 5vh;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: "logo auth";
+    grid-template-rows: 15vh;
   }
 
   .logo {
-    justify-self: center;
+    justify-self: start;
   }
   #logo {
     padding-left: 0px;
   }
 
+  .authentication {
+    grid-template-areas:
+      "username"
+      "password"
+      "login";
+    grid-template-rows: 5vh 5vh 5vh;
+  }
   .auth-username {
     justify-self: start;
     margin-left: auto;
@@ -65,21 +76,28 @@ header {
 @media (max-width: 535px) {
   header {
     grid-template-areas:
-      "logo logo logo logo"
-      "username username button button"
-      "password password button button";
-
-    grid-template-rows: 9vh 5vh 5vh;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+      "logo"
+      "auth";
+    grid-template-rows: 9vh 7vh;
   }
 
+  .logo {
+    justify-self: center;
+    grid-template-rows: 9vh;
+  }
+
+  .authentication {
+    grid-template-areas: "username password login";
+    grid-template-rows: 7vh;
+    justify-self: center;
+  }
   .auth-username {
-    justify-self: end;
+    justify-self: start;
   }
   .auth-password {
-    justify-self: end;
+    justify-self: start;
   }
   #login {
-    justify-self: center;
+    justify-self: start;
   }
 }
