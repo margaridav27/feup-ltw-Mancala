@@ -9,13 +9,14 @@ button {
   font-family: inherit;
   font-size: inherit;
   font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
   height: 25px;
   margin-right: 5px;
   margin-left: 5px;
   background: rgba(255, 255, 255, 0.55);
   border: none;
   cursor: pointer;
-  text-align: center;
 }
 
 button {
