@@ -64,6 +64,10 @@
   text-align: center;
 }
 
+.hide-panel {
+  display: none;
+}
+
 @media (max-width: 1200px) {
   .default-panel img,
   .instructions-panel img,

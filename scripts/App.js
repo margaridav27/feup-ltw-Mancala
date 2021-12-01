@@ -1,10 +1,38 @@
 
-/* 
-- add event listeners 
-- define correspondent event handlers
-- create necessary object instances 
-- etc
-*/
+function hidePanel(selector) {
+    document.querySelector(selector).className = selector.substring(1) + " hide-panel";
+}
+
+function showPanel(selector) {
+    document.querySelector(selector).className = selector.substring(1);
+}
+
+function startPreview() {
+    hidePanel(".default-panel");
+    showPanel(".board-panel");
+
+    let board = document.querySelector(".board-panel");
+
+    // TODO: collect board configurations and construct board accordingly
+    board.innerHTML = "<div class='warehouse'></div>";
+
+    for (let i = 0; i < 4; i++) 
+        board.innerHTML += `<div class='row-1' id='col-${i}'></div>`
+
+    for (let i = 0; i < 4; i++) 
+        board.innerHTML += `<div class='row-2' id='col-${i}'></div>`
+
+    board.innerHTML += "<div class=class='warehouse'></div>";
+}
+
+function stopPreview() {
+    hidePanel(".board-panel");
+    showPanel(".default-panel");
+
+    let board = document.querySelector(".board-panel");
+
+    board.innerHTML = "";
+}
 
 function hideLevels(id) {
     document.querySelector("#player-card-" + id).className = "card player-card levels-hide"

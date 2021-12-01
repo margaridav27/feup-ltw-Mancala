@@ -83,17 +83,11 @@
   display: none;
 }
 
-.board-card #save {
-  background-color: rgba(183, 228, 199, 0.55);
+.board-card #preview {
+  background-color: rgba(232, 172, 101, 0.55);
 }
-.board-card #save:hover {
-  background-color: #b7e4c7;
-}
-.board-card #cancel {
-  background-color: rgba(228, 11, 11, 0.4);
-}
-.board-card #cancel:hover {
-  background-color: rgba(228, 11, 11, 0.6);
+.board-card #preview:hover {
+  background-color: #d08c60;
 }
 
 @media (max-width: 1020px) {
