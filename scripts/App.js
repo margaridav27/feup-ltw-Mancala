@@ -108,49 +108,48 @@ function enable(element) {
 }
 
 function gameHandler() {
-    const play = document.getElementById("play-btn");
+    const playBtn = document.getElementById("play-btn");
     let configs = document.getElementById("configurations");
 
-    if (play.innerHTML == "PLAY") {
-        play.innerHTML = "QUIT";
-        disable(configs);
+    if (playBtn.innerHTML == "PLAY") {
         configs.classList.add("disable");
 
+        // fetch players configurations
+        const player1 = document.getElementById("name-1").value;
+        const player2 = document.getElementById("name-2").value;
 
-        let holes = document.getElementById("holes").value;
-        let seeds = document.getElementById("seeds").value;
-        let player1 = document.getElementById("name-1").value;
-        let player2 = document.getElementById("name-2").value;
-        var checkRadio = document.querySelector('input[name="level"]:checked');
-        var info = document.getElementById("info");
-
+        // check player vs computer
         if (player1 == "COMPUTER") {
-            if(checkRadio.id.match(/level-1/)){
-                level = checkRadio.value;
-            }
-        }
-        else if (player2 == "COMPUTER") {
-            if(checkRadio.id.match(/level-2/)){
-                level = checkRadio.value;
-            }
+            const radioBtn = document.querySelector("input[name=\"level-1\"]:checked");
+            if (radioBtn.id.match(/level-1/)) level = radioBtn.value;            
+        } else if (player2 == "COMPUTER") {
+            const radioBtn = document.querySelector("input[name=\"level-2\"]:checked");
+            if (radioBtn.id.match(/level-2/)) level = radioBtn.value;
         }
 
-        let players = [player1, player2];
-        if (player1 == "" || player2 == "") {
+        // check if user filled in all the necessary data
+        if (player1.length === 0 || player2.length === 0) {
+            const info = document.getElementById("info");
             info.innerHTML = "You have to choose a name ESTA CONDIÇÃO NAO ESTA BEM AINDA";
+            return; // TODO: fix executing disable configs even when entering this if
         }
 
-        let board = new Board(seeds, holes);
+        console.log("js é merdaaaaaaa como caralhos executa esta parte");
 
-        const game = new Game(board, players, level);
-    }
+        // fetch board configurations
+        const holes = document.getElementById("holes").value;
+        const seeds = document.getElementById("seeds").value;
+        
+        let players = [player1, player2];
+        //let board = new Board(seeds, holes);
+        //let game = new Game(board, players, level);
 
-    else {
-        play.innerHTML = "PLAY";
+        playBtn.innerHTML = "QUIT";
+        disable(configs);
+        
+    } else {
+        playBtn.innerHTML = "PLAY";
         enable(configs);
         configs.classList.remove("disable");
-    }
-    
+    } 
 }
-
-
