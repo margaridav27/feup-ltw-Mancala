@@ -112,8 +112,6 @@ function gameHandler() {
     let configs = document.getElementById("configurations");
 
     if (playBtn.innerHTML == "PLAY") {
-        configs.classList.add("disable");
-
         // fetch players configurations
         const player1 = document.getElementById("name-1").value;
         const player2 = document.getElementById("name-2").value;
@@ -130,11 +128,9 @@ function gameHandler() {
         // check if user filled in all the necessary data
         if (player1.length === 0 || player2.length === 0) {
             const info = document.getElementById("info");
-            info.innerHTML = "You have to choose a name ESTA CONDIÇÃO NAO ESTA BEM AINDA";
-            return; // TODO: fix executing disable configs even when entering this if
+            info.innerHTML = "Please provide a name for the players.";
+            return; 
         }
-
-        console.log("js é merdaaaaaaa como caralhos executa esta parte");
 
         // fetch board configurations
         const holes = document.getElementById("holes").value;
@@ -144,6 +140,8 @@ function gameHandler() {
         //let board = new Board(seeds, holes);
         //let game = new Game(board, players, level);
 
+        configs.classList.add("disable");
+        info.innerHTML = "Let the game begin!";
         playBtn.innerHTML = "QUIT";
         disable(configs);
         
