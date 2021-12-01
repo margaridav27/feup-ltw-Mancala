@@ -63,7 +63,7 @@
             <input type="text" id="name" name="name">
           </div>
           <div>
-            <label for="computer-2" onclick="computerClickHandler(2)">Computer</label>
+            <label for="computer-2" onclick="computerClickHandler()">Computer</label>
             <input type="checkbox" id="computer-2" name="computer">
           </div>
           <div class="level-2">
@@ -76,20 +76,18 @@
       </div>
     </div>
 
-    <form class="card board-configurations">
-      <label for="configsButton" onclick="showConfigs">Configurations</label>
-      <input type="checkbox" id="configsButton" name="configurations">
+    <form class="card board-configurations" id="board-conf">
       <legend>Board Configurations</legend>
       <div>
         <label for="holes">Number of holes</label>
-        <input type="number" id="holes" name="holes" min="2" max="6">
+        <input type="number" id="holes" name="holes" min="4" max="6">
       </div>
       <div>
         <label for="seeds">Number of seeds on each hole</label>
-        <input type="number" id="seeds" name="seeds" min="4" max="10">
+        <input type="number" id="seeds" name="seeds" min="4" max="8">
       </div>
       <div>
-        <button id="save">Save</button>
+        <button id="save" onclick="enableConfigs()">Save</button>
         <button id="cancel">Cancel</button>
       </div>
     </form>
