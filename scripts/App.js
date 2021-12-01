@@ -19,6 +19,21 @@ function enablePlaceholder(selector) {
     document.querySelector(selector).disabled = false;
 }
 
+function enableConfigs() {
+    //let selector = ".configurations";
+    document.getElementById("board-conf").addEventListener('submit', e => {
+        e.preventDefault();
+    });
+    //let div = document.querySelector(selector);
+    //document.getElementById("board-conf").style.pointerEvents = "none";
+    //document.getElementById("board-conf").disabled = true;
+    //document.getElementById("board-conf").style['pointer-events'] = "none";
+    //div.style.pointerEvents = "none";
+    // console.log(document.getElementById("board-conf").style.pointerEvents);
+     document.getElementById("board-conf").style.pointerEvents = "none";
+    // console.log(document.getElementById("board-conf").style.pointerEvents);
+
+}
 function disablePlaceholder(selector) {
     document.querySelector(selector).placeholder = "COMPUTER";
     document.querySelector(selector).disabled = true;
@@ -42,4 +57,7 @@ function computerCheckHandler(id) {
         enablePlaceholder("#name-" + otherId);
     }
 }
+
+
+
 
