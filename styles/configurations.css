@@ -4,6 +4,7 @@
   justify-items: center;
   font-size: 10px;
 }
+
 #player-card-1 {
   grid-area: player1;
 }
@@ -35,6 +36,11 @@
 }
 .board-card img {
   transform: rotate(-45deg);
+}
+
+/* to grey the disabled area */
+.disable {
+  filter: brightness(80%);
 }
 
 /* to when the level radio buttons are not hidden */
@@ -123,3 +129,4 @@
     justify-self: center;
   }
 }
+

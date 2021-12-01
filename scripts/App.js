@@ -15,36 +15,14 @@ function showLevels(id) {
 }
 
 function enablePlaceholder(selector) {
-    document.querySelector(selector).placeholder = "";
+    if (document.querySelector(selector).value == "COMPUTER") {
+        document.querySelector(selector).value = "";
+    }
     document.querySelector(selector).disabled = false;
 }
 
-function disableConfigs(id) {
-    document.getElementById(id).style.pointerEvents = "none";
-}
-
-function enableConfigs(id) {
-     document.getElementById(id).style.pointerEvents = "auto";
-}
-
-function gameHandler() {
-    const play = document.getElementById("play-btn");
-
-    if (play.innerHTML == "PLAY") {
-        play.innerHTML = "QUIT";
-        disableConfigs('board-card');
-        const game = new Game();
-    }
-
-    else {
-        play.innerHTML = "PLAY";
-        enableConfigs('board-card');
-    }
-    
-}
-
 function disablePlaceholder(selector) {
-    document.querySelector(selector).placeholder = "COMPUTER";
+    document.querySelector(selector).value = "COMPUTER";
     document.querySelector(selector).disabled = true;
 }
 
@@ -67,6 +45,58 @@ function computerCheckHandler(id) {
     }
 }
 
+function disable(element) {
+    element.style.pointerEvents = "none";
+}
 
+function enable(element) {
+    element.style.pointerEvents = "auto";
+}
+
+function gameHandler() {
+    const play = document.getElementById("play-btn");
+    let configs = document.getElementById("configurations");
+
+    if (play.innerHTML == "PLAY") {
+        play.innerHTML = "QUIT";
+        disable(configs);
+        configs.classList.add("disable");
+
+
+        let holes = document.getElementById("holes").value;
+        let seeds = document.getElementById("seeds").value;
+        let player1 = document.getElementById("name-1").value;
+        let player2 = document.getElementById("name-2").value;
+        var checkRadio = document.querySelector('input[name="level"]:checked');
+        var info = document.getElementById("info");
+
+        if (player1 == "COMPUTER") {
+            if(checkRadio.id.match(/level-1/)){
+                level = checkRadio.value;
+            }
+        }
+        else if (player2 == "COMPUTER") {
+            if(checkRadio.id.match(/level-2/)){
+                level = checkRadio.value;
+            }
+        }
+
+        let players = [player1, player2];
+        if (player1 == "" || player2 == "") {
+            info.innerHTML = "You have to choose a name ESTA CONDIÇÃO NAO ESTA BEM AINDA";
+        }
+
+        let board = new Board(seeds, holes);
+
+        const game = new Game(board, players, level);
+    }
+
+    else {
+        play.innerHTML = "PLAY";
+        enable(configs);
+        configs.classList.remove("disable");
+    }
+    
+}
 
 

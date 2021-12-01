@@ -32,7 +32,7 @@
     </form>
   </header>
 
-  <div class="configurations">
+  <div class="configurations" id ="configurations">
     <form class="card player-card levels-hide" id="player-card-1">
       <img src="assets/player-1-icon.png" alt="Player 1 Icon">
       <div class="name">
@@ -45,8 +45,8 @@
       </div>
       <div class="levels">
         <label for="level-1-1">Level 1</label>
-        <input type="radio" id="level-1-1" name="level">
-        <input type="radio" id="level-1-2" name="level">
+        <input type="radio" id="level-1-1" name="level" value ="1" checked="checked">
+        <input type="radio" id="level-1-2" name="level" value ="2">
         <label for="level-1-2">Level 2</label>
       </div>
     </form>
@@ -62,8 +62,8 @@
       </div>
       <div class="levels">
         <label for="level-2-1">Level 1</label>
-        <input type="radio" id="level-2-1" name="level">
-        <input type="radio" id="level-2-2" name="level">
+        <input type="radio" id="level-2-1" name="level" value="1" checked="checked">
+        <input type="radio" id="level-2-2" name="level" value="2">
         <label for="level-2-2">Level 2</label>
       </div>
     </form>
@@ -71,11 +71,11 @@
       <img src="assets/mancala.png" alt="Player 1 Icon">
       <div class="holes">
         <label for="holes">Number of holes</label>
-        <input type="number" id="holes" name="holes" min="4" max="6">
+        <input type="number" id="holes" name="holes" min="4" max="6" value="4">
       </div>
       <div class="seeds">
         <label for="seeds">Number of seeds on each hole</label>
-        <input type="number" id="seeds" name="seeds" min="4" max="8">
+        <input type="number" id="seeds" name="seeds" min="4" max="8" value="4">
       </div>
       <div class="buttons">
         <button type="button" id="save">Save</button>
@@ -95,7 +95,7 @@
       <img src="assets/player-1-icon.png" alt="Default Panel Background">
       0
     </div>
-    <div class="info">
+    <div class="info" id="info" value="Welcome to Mancala! Here will appear your messages and alerts.">
       Welcome to Mancala! Here will appear your messages and alerts.
     </div>
     <div class="score">

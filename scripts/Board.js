@@ -1,6 +1,5 @@
 class Board {
-    constructor(board, seeds, holes) {
-        this.board = board;
+    constructor(seeds, holes) {
         this.seeds = seeds;
         this.holes = holes;
     }
