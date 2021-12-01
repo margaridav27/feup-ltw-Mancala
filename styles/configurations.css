@@ -1,72 +1,94 @@
-.configurations,
-.players-configurations {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  font-size: 12px;
+.configurations {
+  display: grid;
+  grid-template-areas: "player1 player2 board";
+  justify-items: center;
+  font-size: 10px;
 }
-
-.player-configurations,
-.board-configurations {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
+#player-card-1 {
+  grid-area: player1;
 }
-
-.player-configurations div,
-.board-configurations div {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+#player-card-2 {
+  grid-area: player2;
 }
-
-.card .player-configurations .level-1,
-.card .player-configurations .level-2 {
-  display: none;
-}
-
-.board-configurations #save {
-  background-color: rgba(183, 228, 199, 0.55);
-}
-
-.board-configurations #save:hover {
-  background-color: #b7e4c7;
-}
-
-.board-configurations #cancel {
-  background-color: rgba(228, 11, 11, 0.4);
-}
-
-.board-configurations #cancel:hover {
-  background-color: rgba(228, 11, 11, 0.6);
+#board-card {
+  grid-area: board;
 }
 
 .card {
-  display: flex;
+  display: grid;
+  grid-template-areas:
+    "img r1"
+    "img r2"
+    "img r3";
+  justify-items: center;
   align-items: center;
-  justify-content: space-evenly;
-  width: 400px;
-  height: 170px;
-  margin: 20px;
-  padding: 10px;
+  height: 150px;
+  padding: 5px;
   border-radius: 30px;
   background-color: rgba(230, 204, 178, 0.3);
 }
-
-.card legend {
-  font-size: 20px;
-  font-weight: bold;
-  color: rgba(155, 121, 87, 0.7);
+.player-card {
+  width: 310px;
+}
+.board-card {
+  width: 350px;
 }
 
+/* to when the level radio buttons are not hidden */
 .card img {
-  width: 170px;
-  height: 166px;
+  grid-area: img;
+
+  width: 120px;
+  height: 120px;
+}
+.player-card .name,
+.board-card .holes {
+  grid-area: r1;
+}
+.player-card .computer,
+.board-card .seeds {
+  grid-area: r2;
+}
+.player-card .levels,
+.board-card .buttons {
+  grid-area: r3;
 }
 
+/* to when the level radio buttons are hidden */
+.player-card.levels-hide {
+  display: grid;
+  grid-template-areas:
+    "img r1"
+    "img r2";
+}
+.player-card.levels-hide .name {
+  grid-area: r1;
+  align-self: end;
+}
+.player-card.levels-hide .computer {
+  grid-area: r2;
+  align-self: start;
+  margin-top: 10px;
+}
+.player-card.levels-hide .levels {
+  display: none;
+}
+
+.board-card #save {
+  background-color: rgba(183, 228, 199, 0.55);
+}
+.board-card #save:hover {
+  background-color: #b7e4c7;
+}
+.board-card #cancel {
+  background-color: rgba(228, 11, 11, 0.4);
+}
+.board-card #cancel:hover {
+  background-color: rgba(228, 11, 11, 0.6);
+}
+
+/* TODO: responsivness */
+/*
 @media (max-width: 1250px) {
   .configurations {
     display: flex;
@@ -79,4 +101,4 @@
     display: flex;
     flex-wrap: wrap;
   }
-}
+} */

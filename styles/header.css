@@ -1,48 +1,103 @@
 header {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-rows: 10vh;
+  grid-template-areas: "logo . auth";
+  grid-template-rows: 10vh;
   align-items: center;
+  margin-bottom: 10px;
+  font-size: 10px;
   background: rgba(155, 121, 87, 0.7);
 }
 
 .logo {
+  grid-area: logo;
+  justify-self: start;
+}
+#logo {
+  padding-left: 20px;
   width: 312px;
   height: 50px;
-  padding-left: 20px;
 }
 
 .authentication {
-  height: 100%;
-  padding-right: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: space-evenly;
-  font-size: 12px;
+  grid-area: auth;
+  display: grid;
+  grid-template-areas:
+    "username password"
+    ". login";
+  grid-template-rows: 5vh;
+  align-items: center;
+  justify-self: end;
+}
+.auth-username {
+  grid-area: username;
+  justify-self: end;
+}
+.auth-password {
+  grid-area: password;
+  justify-self: end;
+}
+#login {
+  grid-area: login;
+  justify-self: end;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 685px) {
   header {
-    grid-auto-rows: 15vh;
+    grid-template-areas: "logo auth";
+    grid-template-rows: 15vh;
   }
 
-  .authentication label,
-  .authentication input {
-    display: block;
+  .logo {
+    justify-self: start;
   }
-}
-
-@media (max-width: 550px) {
-  header {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 10vh;
-    justify-items: center;
+  #logo {
+    padding-left: 0px;
   }
 
   .authentication {
-    padding-right: 0px;
-    flex-direction: row;
-    align-items: center;
+    grid-template-areas:
+      "username"
+      "password"
+      "login";
+    grid-template-rows: 5vh 5vh 5vh;
+  }
+  .auth-username {
+    justify-self: start;
+    margin-left: auto;
+  }
+  .auth-password {
+    justify-self: start;
+  }
+  #login {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 535px) {
+  header {
+    grid-template-areas:
+      "logo"
+      "auth";
+    grid-template-rows: 9vh 7vh;
+  }
+
+  .logo {
+    justify-self: center;
+    grid-template-rows: 9vh;
+  }
+
+  .authentication {
+    grid-template-areas: "username password login";
+    grid-template-rows: 7vh;
+    justify-self: center;
+  }
+  .auth-username {
+    justify-self: start;
+  }
+  .auth-password {
+    justify-self: start;
+  }
+  #login {
+    justify-self: start;
   }
 }

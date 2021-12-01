@@ -7,13 +7,16 @@ html body {
 input,
 button {
   font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
   height: 25px;
   margin-right: 5px;
   margin-left: 5px;
   background: rgba(255, 255, 255, 0.55);
   border: none;
   cursor: pointer;
-  text-align: center;
 }
 
 button {
@@ -27,12 +30,12 @@ button:hover {
 
 input[type="text"],
 input[type="password"] {
-  width: 160px;
+  width: 130px;
   border-radius: 20px;
 }
 
 input[type="number"] {
-  width: 50px;
+  width: 45px;
 }
 
 input[type="checkbox"],
@@ -47,23 +50,13 @@ input[type="radio"]:checked {
   background: rgba(102, 187, 106, 1);
 }
 
+label {
+  cursor: pointer;
+  vertical-align: middle;
+}
+
 li {
   margin: 10px 0;
 }
 
-/* Scroll bar */
-::-webkit-scrollbar {
-  width: 10px;
-}
 
-::-webkit-scrollbar-track {
-  background: #ede5df;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgb(155, 155, 155);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #888888;
-}

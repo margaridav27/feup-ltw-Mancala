@@ -7,19 +7,16 @@
 */
 
 function hideLevels(id) {
-    let selector = ".card .player-configurations .level-{id}";
-    let div = document.querySelector({selector});
-    div.style.display = "none"
+    document.querySelector("#player-card-" + id).className = "card player-card levels-hide"
 }
 
 function showLevels(id) {
-    let selector = ".card .player-configurations .level-{id}";
-    let div = document.querySelector({selector});
-    div.style.display = "block"
+    document.querySelector("#player-card-" + id).className = "card player-card"
 }
 
-function computerClickHandler(id) {
-    showLevels(id); 
+function enablePlaceholder(selector) {
+    document.querySelector(selector).placeholder = "";
+    document.querySelector(selector).disabled = false;
 }
 
 function enableConfigs() {
@@ -35,6 +32,30 @@ function enableConfigs() {
     // console.log(document.getElementById("board-conf").style.pointerEvents);
      document.getElementById("board-conf").style.pointerEvents = "none";
     // console.log(document.getElementById("board-conf").style.pointerEvents);
+
+}
+function disablePlaceholder(selector) {
+    document.querySelector(selector).placeholder = "COMPUTER";
+    document.querySelector(selector).disabled = true;
+}
+
+function computerCheckHandler(id) {
+    let otherId = (id === '1') ? '2' : '1';
+
+    if (document.querySelector("#computer-" + id).checked) {
+        showLevels(id);
+
+        document.querySelector("#computer-" + otherId).checked = false;
+        hideLevels(otherId);
+
+        disablePlaceholder("#name-" + id);
+        enablePlaceholder("#name-" + otherId);
+    } else {
+        hideLevels(id);
+        
+        enablePlaceholder("#name-" + id);
+        enablePlaceholder("#name-" + otherId);
+    }
 }
 
 
