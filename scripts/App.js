@@ -1,4 +1,3 @@
-
 function hidePanel(selector) {
     document.querySelector(selector).className = selector.substring(1) + " hide-panel";
 }
@@ -14,15 +13,42 @@ function startPreview() {
     let board = document.querySelector(".board-panel");
 
     // TODO: collect board configurations and construct board accordingly
-    board.innerHTML = "<div class='warehouse'></div>";
 
-    for (let i = 0; i < 4; i++) 
-        board.innerHTML += `<div class='row-1' id='col-${i}'></div>`
+    // warehouses
+    let wh1 = document.createElement("div");
+    wh1.className = "wh";
+    wh1.id = "wh-1";
+    let wh2 = document.createElement("div");
+    wh2.className = "wh";
+    wh2.id = "wh-2";
 
-    for (let i = 0; i < 4; i++) 
-        board.innerHTML += `<div class='row-2' id='col-${i}'></div>`
+    // rows
+    let r1 = document.createElement("div");
+    r1.className = "row";
+    r1.id = "row-1";
+    let r2 = document.createElement("div");
+    r2.className = "row";
+    r2.id = "row-2";
 
-    board.innerHTML += "<div class=class='warehouse'></div>";
+    board.appendChild(wh1);
+    board.appendChild(r1);
+    board.appendChild(r2);
+    board.appendChild(wh2);
+
+    // columns (holes)
+    for (let i = 0; i < 4; i++) {
+        let col = document.createElement("div");
+        col.className = "col";
+        col.id = `col-${i}`;
+        r1.appendChild(col);
+    }
+        
+    for (let i = 0; i < 4; i++) {
+        let col = document.createElement("div");
+        col.className = "col";
+        col.id = `col-${i+4}`;
+        r2.appendChild(col);
+    }
 }
 
 function stopPreview() {
@@ -43,9 +69,9 @@ function showLevels(id) {
 }
 
 function enablePlaceholder(selector) {
-    if (document.querySelector(selector).value == "COMPUTER") {
+    if (document.querySelector(selector).value == "COMPUTER") 
         document.querySelector(selector).value = "";
-    }
+    
     document.querySelector(selector).disabled = false;
 }
 
