@@ -19,21 +19,30 @@ function enablePlaceholder(selector) {
     document.querySelector(selector).disabled = false;
 }
 
-function enableConfigs() {
-    //let selector = ".configurations";
-    document.getElementById("board-conf").addEventListener('submit', e => {
-        e.preventDefault();
-    });
-    //let div = document.querySelector(selector);
-    //document.getElementById("board-conf").style.pointerEvents = "none";
-    //document.getElementById("board-conf").disabled = true;
-    //document.getElementById("board-conf").style['pointer-events'] = "none";
-    //div.style.pointerEvents = "none";
-    // console.log(document.getElementById("board-conf").style.pointerEvents);
-     document.getElementById("board-conf").style.pointerEvents = "none";
-    // console.log(document.getElementById("board-conf").style.pointerEvents);
-
+function disableConfigs(id) {
+    document.getElementById(id).style.pointerEvents = "none";
 }
+
+function enableConfigs(id) {
+     document.getElementById(id).style.pointerEvents = "auto";
+}
+
+function gameHandler() {
+    const play = document.getElementById("play-btn");
+
+    if (play.innerHTML == "PLAY") {
+        play.innerHTML = "QUIT";
+        disableConfigs('board-card');
+        const game = new Game();
+    }
+
+    else {
+        play.innerHTML = "PLAY";
+        enableConfigs('board-card');
+    }
+    
+}
+
 function disablePlaceholder(selector) {
     document.querySelector(selector).placeholder = "COMPUTER";
     document.querySelector(selector).disabled = true;
