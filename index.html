@@ -78,8 +78,9 @@
         <input type="number" id="seeds" name="seeds" min="4" max="8">
       </div>
       <div class="buttons">
-        <button type="button" id="save">Save</button>
-        <button type="button" id="cancel">Cancel</button>
+        <button type="button" id="preview"
+                onmousedown="startPreview()"
+                onmouseup="stopPreview()">Preview</button>
       </div>
     </form>
   </div>
@@ -108,9 +109,7 @@
     <img src="assets/default-panel-background.png" alt="Default Panel Background">
   </div> 
 
-  <div class="board-panel">
-    
-  </div>
+  <div class="board-panel hide-panel"></div>
   
   <!--
   <div class="instructions-panel">
