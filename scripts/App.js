@@ -12,8 +12,6 @@ function startPreview() {
 
     let board = document.querySelector(".board-panel");
 
-    // TODO: collect board configurations and construct board accordingly
-
     // warehouses
     let wh1 = document.createElement("div");
     wh1.className = "wh";
@@ -24,7 +22,7 @@ function startPreview() {
 
     // rows
     let r1 = document.createElement("div");
-    r1.className = "row";
+    r1.className = "row curr-player"; //starts with player 1 as current player
     r1.id = "row-1";
     let r2 = document.createElement("div");
     r2.className = "row";
@@ -36,14 +34,16 @@ function startPreview() {
     board.appendChild(wh2);
 
     // columns (holes)
-    for (let i = 0; i < 4; i++) {
+    const holes = document.getElementById("holes").value;
+
+    for (let i = 0; i < holes; i++) {
         let col = document.createElement("div");
         col.className = "col";
         col.id = `col-${i}`;
         r1.appendChild(col);
     }
         
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < holes; i++) {
         let col = document.createElement("div");
         col.className = "col";
         col.id = `col-${i+4}`;
@@ -137,7 +137,10 @@ function gameHandler() {
         const seeds = document.getElementById("seeds").value;
         
         let players = [player1, player2];
-        //let board = new Board(seeds, holes);
+        let board = new Board(seeds, holes);
+
+        hidePanel(".default-panel");
+        board.renderBoard();
         //let game = new Game(board, players, level);
 
         configs.classList.add("disable");
