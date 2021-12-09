@@ -2,13 +2,14 @@ class Board {
     constructor(seeds, holes) {
         this.nrSeeds = seeds; // holds the number of seeds on each hole
         this.nrHoles = holes; // holds the number of holes on each side
-
-        this.warehouses = [0,0]; // both warehouses are initially empty
         this.holes = Array(this.nrHoles * 2).fill(this.nrSeeds);
+        this.warehouses = [0,0]; // both warehouses are initially empty
     }
 
     getNrHoles() { return this.nrHoles; }
-        
+
+    getHoles() { return this.holes; }
+    
     renderBoard() { 
         let board = document.querySelector(".board-panel");
         board.className = "board-panel"; // make board visible
@@ -44,7 +45,6 @@ class Board {
             col.className = "col";
             col.id = `col-${i}`;
             col.innerText = `col ${i} : ${this.nrSeeds} seeds`; 
-            col.onclick = () => { this.updateBoard(i); };
             r1.appendChild(col);
         }
             
@@ -53,7 +53,6 @@ class Board {
             col.className = "col";
             col.id = `col-${i+4}`;
             col.innerText = `col ${i+4} : ${this.nrSeeds} seeds`; 
-            col.onclick = () => { this.updateBoard(i+4); };
             r2.appendChild(col);
         }
     }

@@ -143,7 +143,7 @@ function gameHandler() {
 
         hidePanel(".default-panel");
         board.renderBoard();
-        //let game = new Game(board, players, level);
+        let game = new Game(board, players, 0);
 
         configs.classList.add("disable");
         info.innerHTML = "Let the game begin!";
