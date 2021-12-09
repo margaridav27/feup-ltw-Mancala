@@ -6,7 +6,7 @@ function showPanel(selector) {
     document.querySelector(selector).className = selector.substring(1);
 }
 
-function startPreview() {
+function startBoardPreview() {
     hidePanel(".default-panel");
     showPanel(".board-panel");
 
@@ -33,25 +33,27 @@ function startPreview() {
     board.appendChild(r2);
     board.appendChild(wh2);
 
-    // columns (holes)
     const holes = document.getElementById("holes").value;
+    const seeds = document.getElementById("seeds").value;
 
     for (let i = 0; i < holes; i++) {
         let col = document.createElement("div");
         col.className = "col";
         col.id = `col-${i}`;
+        col.innerText = `${seeds}`; 
         r1.appendChild(col);
     }
         
-    for (let i = 0; i < holes; i++) {
+    for (let i = holes - 1; i >= 0; i--) {
         let col = document.createElement("div");
         col.className = "col";
         col.id = `col-${i+4}`;
+        col.innerText = `${seeds}`; 
         r2.appendChild(col);
     }
 }
 
-function stopPreview() {
+function stopBoardPreview() {
     hidePanel(".board-panel");
     showPanel(".default-panel");
 

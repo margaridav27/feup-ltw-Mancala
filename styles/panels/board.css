@@ -45,6 +45,11 @@
   margin-left: 3px;
   border-radius: 50px;
   background-color: #6f4518;
+
+  /* just to test while we do not have the actual seeds */
+  text-align: center;
+  font-size: 12px;
+  color: white;
 }
 
 .board-panel .row.curr-player .col {

@@ -4,6 +4,17 @@ class Game {
         this.board = board;
         this.players = players;
         this.score = [0,0];
+        this.currentPlayer = 0; 
+    }
+
+    isValidPlay(playedHole) {
+        const holes = this.board.getNrHoles();
+        return (this.currentPlayer === 0 && playedHole >= 0 && playedHole < (holes / 2)) ||
+               (this.currentPlayer === 1 && playedHole >= (holes / 2) && playedHole < holes);
+    }
+
+    performPlay(playedHole) {
+        this.board.updateBoard(playedHole);
     }
 
     /* game logic - player vs player */
