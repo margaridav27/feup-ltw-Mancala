@@ -10,6 +10,36 @@ class Board {
 
     getHoles() { return this.holes; }
     
+    setValidHoles(rowid, clickHandler) {
+        const nrHoles = this.nrHoles;
+
+        if (rowid == 0) {
+            document.getElementById("row-1").classList.add("curr-player");
+            document.getElementById("row-2").classList.remove("curr-player");
+
+            for (let i = 0; i < nrHoles; i++) {
+                let c1 = parseInt(i);
+                let c2 = parseInt(i) + parseInt(nrHoles);
+
+                document.getElementById(`col-${c1}`).onclick = () => { clickHandler(i); };
+                document.getElementById(`col-${c2}`).onclick = undefined;
+
+                console.log(document.getElementById(`col-${c1}`).onclick)
+            }
+        } else {
+            document.getElementById("row-1").classList.remove("curr-player");
+            document.getElementById("row-2").classList.add("curr-player");
+
+            for (let i = 0; i < nrHoles; i++) {
+                let c1 = parseInt(i);
+                let c2 = parseInt(i) + parseInt(nrHoles);
+
+                document.getElementById(`col-${c1}`).onclick = undefined;
+                document.getElementById(`col-${c2}`).onclick = () => { clickHandler(i); }
+            }
+        }
+    }
+
     renderBoard() { 
         let board = document.querySelector(".board-panel");
         board.className = "board-panel"; // make board visible
@@ -27,7 +57,7 @@ class Board {
 
         // rows
         let r1 = document.createElement("div");
-        r1.className = "row curr-player"; //starts with player 1 as current player
+        r1.className = "row"; //starts with player 1 as current player
         r1.id = "row-1";
 
         let r2 = document.createElement("div");
