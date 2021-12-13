@@ -10,10 +10,10 @@ class Board {
 
     getHoles() { return this.holes; }
     
-    setValidHoles(rowid, clickHandler) {
+    setValidHoles(rid, clickHandler) {
         const nrHoles = this.nrHoles;
 
-        if (rowid == 0) {
+        if (rid == 0) {
             document.getElementById("row-1").classList.add("curr-player");
             document.getElementById("row-2").classList.remove("curr-player");
 
@@ -87,7 +87,7 @@ class Board {
         }
     }
 
-    #updateBoard() {
+    updateBoard() {
         document.getElementById("wh-1").innerText = `wh1 : ${this.warehouses[0]} seeds`;
         document.getElementById("wh-2").innerText = `wh2 : ${this.warehouses[1]} seeds`;
 
@@ -95,27 +95,74 @@ class Board {
             document.getElementById(`col-${i}`).innerText = `col ${i} : ${this.holes[`${i}`]} seeds`;
     }
 
-    updateBoard(playedHole) {
-        const seeds = this.holes[playedHole];
-        let mightBeWarehouse = true; // determines if the next hole can be a warehouse or not
-        this.holes[playedHole] = 0; // empty the played hole
-        playedHole = (playedHole + 1) % (this.nrHoles * 2); // next hole
+    updateBoardUponSowing(hid) {
+        let res = { lastSowingOnWarehouse: false,
+                    lastSowingOnHole: false, 
+                    lastSowing: -1 };         // response to retrieve upon the sow completion
 
+        const seeds = this.holes[hid];        // number of seeds to sow
+        let mightBeWarehouse = true;          // determines if the next hole can be a warehouse or not
+        this.holes[hid] = 0;                  // empty the played hole
+        hid = (hid + 1) % (this.nrHoles * 2); // next hole
+        
+        console.log("nr of seeds to sow:",seeds)
         for (let i = seeds; i > 0; i--) {
-            if (mightBeWarehouse && playedHole == 0) {
+            let lastSeed = (i - 1 == 0);
+            console.log("is last seed",lastSeed);
+            console.log("nr of seeds on next hole",this.holes[hid])
+
+            if (mightBeWarehouse && hid == 0) {
+                if (lastSeed)
+                    res = { lastSowingOnWarehouse: true, 
+                            lastSowingOnHole: false, 
+                            lastSowing: 0 };
+
                 this.warehouses[0]++;
                 mightBeWarehouse = false;
-            } else if (mightBeWarehouse && playedHole == this.nrHoles) {
+
+            } else if (mightBeWarehouse && hid == this.nrHoles) {
+                if (lastSeed)
+                    res = { lastSowingOnWarehouse: true, 
+                            lastSowingOnHole: false, 
+                            lastSowing: 1 };
+
                 this.warehouses[1]++;
                 mightBeWarehouse = false;
+
             } else { 
-                this.holes[playedHole]++;
-                playedHole = (++playedHole) % (this.nrHoles * 2); 
+                if (lastSeed && this.holes[hid] == 0)
+                    res = { lastSowingOnWarehouse: false, 
+                            lastSowingOnHole: true, 
+                            lastSowing: hid };
+                
+                this.holes[hid]++;
+                hid = (++hid) % (this.nrHoles * 2); 
                 mightBeWarehouse = true; 
             } 
         }
 
-        // render updated elements
-        this.#updateBoard();
+        // render updated board
+        this.updateBoard();
+        return res;
+    }
+
+    updateBoardUponCapture(hid) {
+        console.log("capture!!!")
+        // capture seeds from the opposite hole
+        const oppositeHole = this.nrHoles * 2 - 1 - hid  
+        this.board[hid] += this.board[oppositeHole];
+        this.board[oppositeHole] = 0;
+
+        // move captured seeds into the correspondent player's wh
+        if (hid >= 0 && hid < this.nrHoles) { 
+            this.warehouses[0] += this.board[hid];
+            this.board[hid] = 0;
+        } else {
+            this.warehouses[1] += this.board[hid];
+            this.board[hid] = 0;
+        }
+
+        // render updated board
+        this.updateBoard();
     }
 }

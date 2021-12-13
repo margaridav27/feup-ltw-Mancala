@@ -8,6 +8,28 @@ class Game {
         this.setValidMoves();
     }
 
+    sowedInOwnWarehouse(sowedWarehouse) { 
+        return this.currentPlayer == sowedWarehouse; 
+    }
+
+    sowedInOwnHole(sowedHole) {
+        if (sowedHole == -1) return false;
+        
+        const nrHoles = this.board.getNrHoles();
+        if (this.currentPlayer == 0) 
+            return sowedHole >= 0 && sowedHole < nrHoles;
+        else 
+            return sowedHole >= nrHoles && sowedHole < 2 * nrHoles;
+    }
+
+    sow(playedHole) {
+        return this.board.updateBoardUponSowing(playedHole);
+    }
+
+    capture(lastSowingedHole) {
+       this.board.updateBoardUponCapture(lastSowingedHole);
+    }
+
     setValidMoves() {
         if (this.currentPlayer == 0) 
             this.board.setValidHoles(0, (i) => { this.performPlay(i); });
@@ -16,34 +38,30 @@ class Game {
     }
 
     setCurrentPlayer() {
-        if (this.currentPlayer == 0) 
-            this.currentPlayer = 1;
-        else 
-            this.currentPlayer = 0;
+        this.currentPlayer = this.currentPlayer == 0 ? 1 : 0;
     }
 
     performPlay(playedHole) {
-        console.log(playedHole)
-        this.board.updateBoard(playedHole);
-        this.setCurrentPlayer();
+        let res = this.sow(playedHole);
+        console.log(res);
+
+        // last sowing did not occur on the current player's warehouse
+        if (!(res.lastSowingOnWarehouse && this.sowedInOwnWarehouse(res.lastSowing))) 
+            this.setCurrentPlayer();
+        // last sowing occured in one of the current player's holes
+        else if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing)) 
+            this.capture(res.lastSowing);
+
         this.setValidMoves();
-    }
 
-    /* game logic - player vs player */
-    standard() {
-    }
-
-    /* game logic - player vs pc (level 1) */
-    AILevel1() {
-    }
-
-    /* game logic - player vs pc (level 2) */
-    AILevel2() {
-    }
-
-    start() {
-        if (this.level === 0) standard();
-        else if (this.level === 1) AILevel1();
-        else if (this.level === 2) AILevel2();
+        /* 
+        here we will check the AI level and act accordingly, i.e.,
+            - if the AI level is =1, 
+                we will automatically calculate the next move based on algorithm x
+            - if the AI level is =2, 
+                we will automatically calculate the next move based on algorithm y
+            - if the AI level is =0 (player vs player) 
+                we don't need to calculate the next move, just wait for the player to perfom it
+        */
     }
 }
