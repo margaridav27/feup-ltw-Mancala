@@ -22,12 +22,6 @@ class Game {
             this.currentPlayer = 0;
     }
 
-    isValidPlay(playedHole) {
-        const holes = this.board.getNrHoles();
-        return (this.currentPlayer === 0 && playedHole >= 0 && playedHole < (holes / 2)) ||
-               (this.currentPlayer === 1 && playedHole >= (holes / 2) && playedHole < holes);
-    }
-
     performPlay(playedHole) {
         console.log(playedHole)
         this.board.updateBoard(playedHole);
