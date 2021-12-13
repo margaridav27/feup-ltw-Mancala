@@ -19,12 +19,10 @@ class Board {
 
             for (let i = 0; i < nrHoles; i++) {
                 let c1 = parseInt(i);
-                let c2 = parseInt(i) + parseInt(nrHoles);
-
-                document.getElementById(`col-${c1}`).onclick = () => { clickHandler(i); };
+                let c2 = c1 + parseInt(nrHoles);
+                
+                document.getElementById(`col-${c1}`).onclick = () => { clickHandler(c1); };
                 document.getElementById(`col-${c2}`).onclick = undefined;
-
-                console.log(document.getElementById(`col-${c1}`).onclick)
             }
         } else {
             document.getElementById("row-1").classList.remove("curr-player");
@@ -32,10 +30,10 @@ class Board {
 
             for (let i = 0; i < nrHoles; i++) {
                 let c1 = parseInt(i);
-                let c2 = parseInt(i) + parseInt(nrHoles);
+                let c2 = c1 + parseInt(nrHoles);
 
                 document.getElementById(`col-${c1}`).onclick = undefined;
-                document.getElementById(`col-${c2}`).onclick = () => { clickHandler(i); }
+                document.getElementById(`col-${c2}`).onclick = () => { clickHandler(c2); }
             }
         }
     }
@@ -72,17 +70,19 @@ class Board {
         // columns (holes)
         for (let i = 0; i < this.nrHoles; i++) {
             let col = document.createElement("div");
-            col.className = "col";
             col.id = `col-${i}`;
+            col.className = "col";
             col.innerText = `col ${i} : ${this.nrSeeds} seeds`; 
             r1.appendChild(col);
         }
             
         for (let i = this.nrHoles - 1; i >= 0; i--) {
+            let c = parseInt(i) + parseInt(this.nrSeeds);
+
             let col = document.createElement("div");
+            col.id = `col-${c}`;
             col.className = "col";
-            col.id = `col-${i+4}`;
-            col.innerText = `col ${i+4} : ${this.nrSeeds} seeds`; 
+            col.innerText = `col ${c} : ${this.nrSeeds} seeds`; 
             r2.appendChild(col);
         }
     }
@@ -105,11 +105,12 @@ class Board {
         this.holes[hid] = 0;                  // empty the played hole
         hid = (hid + 1) % (this.nrHoles * 2); // next hole
         
-        console.log("nr of seeds to sow:",seeds)
+        console.log("played hole:",hid)
+        console.log("total nr of seeds to sow:",seeds)
+
         for (let i = seeds; i > 0; i--) {
             let lastSeed = (i - 1 == 0);
-            console.log("is last seed",lastSeed);
-            console.log("nr of seeds on next hole",this.holes[hid])
+            console.log("is last seed",lastSeed,"nr of seeds",this.holes[hid]);
 
             if (mightBeWarehouse && hid == 0) {
                 if (lastSeed)

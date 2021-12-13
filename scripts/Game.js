@@ -14,7 +14,7 @@ class Game {
 
     sowedInOwnHole(sowedHole) {
         if (sowedHole == -1) return false;
-        
+
         const nrHoles = this.board.getNrHoles();
         if (this.currentPlayer == 0) 
             return sowedHole >= 0 && sowedHole < nrHoles;
@@ -38,7 +38,8 @@ class Game {
     }
 
     setCurrentPlayer() {
-        this.currentPlayer = this.currentPlayer == 0 ? 1 : 0;
+        if (this.currentPlayer == 0) this.currentPlayer = 1;
+        else this.currentPlayer = 0;
     }
 
     performPlay(playedHole) {
@@ -46,11 +47,11 @@ class Game {
         console.log(res);
 
         // last sowing did not occur on the current player's warehouse
-        if (!(res.lastSowingOnWarehouse && this.sowedInOwnWarehouse(res.lastSowing))) 
-            this.setCurrentPlayer();
+        if (res.lastSowingOnWarehouse && this.sowedInOwnWarehouse(res.lastSowing)) console.log("js é merda") ;
         // last sowing occured in one of the current player's holes
-        else if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing)) 
-            this.capture(res.lastSowing);
+        else if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing)) this.capture(res.lastSowing);
+        // swap players normally
+        else this.setCurrentPlayer();
 
         this.setValidMoves();
 
