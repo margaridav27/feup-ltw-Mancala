@@ -23,7 +23,7 @@ function startBoardPreview() {
 
     // rows
     let r1 = document.createElement("div");
-    r1.className = "row curr-player"; //starts with player 1 as current player
+    r1.className = "row"; //starts with player 1 as current player
     r1.id = "row-1";
     let r2 = document.createElement("div");
     r2.className = "row";
@@ -40,7 +40,7 @@ function startBoardPreview() {
     for (let i = 0; i < holes; i++) {
         let col = document.createElement("div");
         col.className = "col";
-        col.id = `col-${i}`;
+        col.id = `col-${i} curr-player`;
         col.innerText = `${seeds}`; 
         r1.appendChild(col);
     }
@@ -130,10 +130,12 @@ function gameState(state) {
             gameHandler(playBtn, configs);
             break;
         case 'instructions':
+            resetScore();
             backToPlay();
             changeState(".instructions-panel");
             break;
         case 'records':
+            resetScore();
             backToPlay();
             changeState(".record-panel");
             hidePanel(".scores-record")
@@ -150,8 +152,6 @@ function gameHandler(button, configs) {
         const player1 = document.getElementById("name-1").value;
         const player2 = document.getElementById("name-2").value;
 
-        console.log(player1);
-        console.log(player2);
         // check player vs computer
         if (player1 == "COMPUTER") {
             const radioBtn = document.querySelector("input[name=\"level-1\"]:checked");
@@ -184,13 +184,25 @@ function gameHandler(button, configs) {
         disable(configs);
 
         game = new Game(board, players, 0);
-        //tratar scores
+        
+        
+        if (!game.setValidMoves()) {
+            console.log("FINISHED!");
+        }
         
     } else {
+        resetScore();
         button.innerHTML = "PLAY";
         enable(configs);
         configs.classList.remove("disable");
     } 
+}
+
+function resetScore() {
+    const scoreP1 = document.getElementById("score-1");
+    scoreP1.innerHTML = 0;
+    const scoreP2 = document.getElementById("score-2");
+    scoreP2.innerHTML = 0;
 }
 
 function backToPlay() {

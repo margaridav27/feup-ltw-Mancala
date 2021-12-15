@@ -52,10 +52,10 @@
   color: white;
 }
 
-.board-panel .row.curr-player .col {
+.curr-player {
   border: 2px solid #ffca3a;
 }
-.board-panel .row.curr-player .col:hover {
+.curr-player:hover {
   border-width: 4px;
 }
 

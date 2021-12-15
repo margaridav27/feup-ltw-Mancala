@@ -15,38 +15,38 @@ class Board {
         let validHoles = 0;
 
         if (rid == 0) {
-            document.getElementById("row-1").classList.add("curr-player");
-            document.getElementById("row-2").classList.remove("curr-player");
-
             for (let i = 0; i < nrHoles; i++) {
                 let c1 = parseInt(i);
                 let c2 = c1 + parseInt(nrHoles);
 
                 if (this.holes[c1] == 0) {
-                    document.getElementById(`col-${c1}`).style.pointerEvents = "none";
+                    document.getElementById(`col-${c1}`).classList.remove("curr-player");
+                    document.getElementById(`col-${c1}`).onclick = undefined;
                 }
                 else {
-                    document.getElementById(`col-${c1}`).style.pointerEvents = "auto";
                     document.getElementById(`col-${c1}`).onclick = () => { clickHandler(c1); };
-                    document.getElementById(`col-${c2}`).onclick = undefined;
+                    document.getElementById(`col-${c1}`).classList.add("curr-player");
                     validHoles++;
                 }
+                document.getElementById(`col-${c2}`).onclick = undefined;
+                document.getElementById(`col-${c2}`).classList.remove("curr-player");
             }
         } else {
-            document.getElementById("row-1").classList.remove("curr-player");
-            document.getElementById("row-2").classList.add("curr-player");
 
             for (let i = 0; i < nrHoles; i++) {
                 let c1 = parseInt(i);
                 let c2 = c1 + parseInt(nrHoles);
-
-                if (this.holes[c2] == 0) document.getElementById(`col-${c2}`).style.pointerEvents = "none";
+                if (this.holes[c2] == 0) {
+                    document.getElementById(`col-${c2}`).classList.remove("curr-player");
+                    document.getElementById(`col-${c2}`).onclick = undefined;
+                }
                 else {
-                    document.getElementById(`col-${c2}`).style.pointerEvents = "auto";
-                    document.getElementById(`col-${c1}`).onclick = undefined;
+                    document.getElementById(`col-${c2}`).classList.add("curr-player");
                     document.getElementById(`col-${c2}`).onclick = () => { clickHandler(c2); }
                     validHoles++;
                 }
+                document.getElementById(`col-${c1}`).classList.remove("curr-player");
+                document.getElementById(`col-${c1}`).onclick = undefined;
 
             }
         }
