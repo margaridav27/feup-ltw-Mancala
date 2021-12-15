@@ -12,6 +12,7 @@ class Board {
     
     setValidHoles(rid, clickHandler) {
         const nrHoles = this.nrHoles;
+        let validHoles = 0;
 
         if (rid == 0) {
             document.getElementById("row-1").classList.add("curr-player");
@@ -20,9 +21,16 @@ class Board {
             for (let i = 0; i < nrHoles; i++) {
                 let c1 = parseInt(i);
                 let c2 = c1 + parseInt(nrHoles);
-                
-                document.getElementById(`col-${c1}`).onclick = () => { clickHandler(c1); };
-                document.getElementById(`col-${c2}`).onclick = undefined;
+
+                if (this.holes[c1] == 0) {
+                    document.getElementById(`col-${c1}`).style.pointerEvents = "none";
+                }
+                else {
+                    document.getElementById(`col-${c1}`).style.pointerEvents = "auto";
+                    document.getElementById(`col-${c1}`).onclick = () => { clickHandler(c1); };
+                    document.getElementById(`col-${c2}`).onclick = undefined;
+                    validHoles++;
+                }
             }
         } else {
             document.getElementById("row-1").classList.remove("curr-player");
@@ -32,14 +40,22 @@ class Board {
                 let c1 = parseInt(i);
                 let c2 = c1 + parseInt(nrHoles);
 
-                document.getElementById(`col-${c1}`).onclick = undefined;
-                document.getElementById(`col-${c2}`).onclick = () => { clickHandler(c2); }
+                if (this.holes[c2] == 0) document.getElementById(`col-${c2}`).style.pointerEvents = "none";
+                else {
+                    document.getElementById(`col-${c2}`).style.pointerEvents = "auto";
+                    document.getElementById(`col-${c1}`).onclick = undefined;
+                    document.getElementById(`col-${c2}`).onclick = () => { clickHandler(c2); }
+                    validHoles++;
+                }
+
             }
         }
+        return validHoles;
     }
 
     renderBoard() { 
         let board = document.querySelector(".board-panel");
+        document.getElementById("board-panel").innerHTML = '';
         board.className = "board-panel"; // make board visible
 
         // warehouses
@@ -88,82 +104,98 @@ class Board {
     }
 
     updateBoard() {
+        console.log( document.getElementById("wh-1").innerText);
         document.getElementById("wh-1").innerText = `wh1 : ${this.warehouses[0]} seeds`;
+        console.log( document.getElementById("wh-1").innerText);
         document.getElementById("wh-2").innerText = `wh2 : ${this.warehouses[1]} seeds`;
 
         for (let i = 0; i < (this.nrHoles * 2); i++) 
             document.getElementById(`col-${i}`).innerText = `col ${i} : ${this.holes[`${i}`]} seeds`;
     }
 
-    updateBoardUponSowing(hid) {
+    updateBoardUponSowing(hid, currentPlayer) {
+        
         let res = { lastSowingOnWarehouse: false,
                     lastSowingOnHole: false, 
-                    lastSowing: -1 };         // response to retrieve upon the sow completion
+                    lastSowing: -1, 
+                    score: -1};         // response to retrieve upon the sow completion
 
         const seeds = this.holes[hid];        // number of seeds to sow
         let mightBeWarehouse = true;          // determines if the next hole can be a warehouse or not
         this.holes[hid] = 0;                  // empty the played hole
-        hid = (hid + 1) % (this.nrHoles * 2); // next hole
-        
+        let previouseHole = hid;
+        hid = ((this.nrHoles * 2) + (hid - 1)) % (this.nrHoles * 2); // next hole
+
         console.log("played hole:",hid)
         console.log("total nr of seeds to sow:",seeds)
 
         for (let i = seeds; i > 0; i--) {
             let lastSeed = (i - 1 == 0);
-            console.log("is last seed",lastSeed,"nr of seeds",this.holes[hid]);
+            console.log("is last seed",lastSeed,"nr of seeds",seeds);
 
-            if (mightBeWarehouse && hid == 0) {
+            if (mightBeWarehouse && (currentPlayer == 0) && (previouseHole == 0)) {
+                this.warehouses[0]++;
                 if (lastSeed)
                     res = { lastSowingOnWarehouse: true, 
-                            lastSowingOnHole: false, 
-                            lastSowing: 0 };
-
-                this.warehouses[0]++;
+                            lastSowingOnHole: false };
                 mightBeWarehouse = false;
 
-            } else if (mightBeWarehouse && hid == this.nrHoles) {
+
+            } else if (mightBeWarehouse && (currentPlayer == 1) && (previouseHole == this.nrHoles)) { 
+                this.warehouses[1]++;
                 if (lastSeed)
                     res = { lastSowingOnWarehouse: true, 
-                            lastSowingOnHole: false, 
-                            lastSowing: 1 };
-
-                this.warehouses[1]++;
+                            lastSowingOnHole: false };
                 mightBeWarehouse = false;
 
             } else { 
-                if (lastSeed && this.holes[hid] == 0)
+                if (lastSeed && this.holes[hid] == 0) {
                     res = { lastSowingOnWarehouse: false, 
                             lastSowingOnHole: true, 
-                            lastSowing: hid };
+                            lastSowing: hid, 
+                          };
+                    }
                 
                 this.holes[hid]++;
-                hid = (++hid) % (this.nrHoles * 2); 
+                previouseHole = hid;
+                hid = ((this.nrHoles * 2) + (hid - 1)) % (this.nrHoles * 2); // next hole
                 mightBeWarehouse = true; 
             } 
         }
 
         // render updated board
         this.updateBoard();
+        res.score = this.warehouses[currentPlayer];
         return res;
     }
 
-    updateBoardUponCapture(hid) {
-        console.log("capture!!!")
+    updateBoardUponCapture(hid, currentPlayer) {
         // capture seeds from the opposite hole
         const oppositeHole = this.nrHoles * 2 - 1 - hid  
-        this.board[hid] += this.board[oppositeHole];
-        this.board[oppositeHole] = 0;
-
-        // move captured seeds into the correspondent player's wh
-        if (hid >= 0 && hid < this.nrHoles) { 
-            this.warehouses[0] += this.board[hid];
-            this.board[hid] = 0;
-        } else {
-            this.warehouses[1] += this.board[hid];
-            this.board[hid] = 0;
-        }
+        this.warehouses[currentPlayer] += this.holes[oppositeHole] + this.holes[hid];
+        this.holes[oppositeHole] = 0;
+        this.holes[hid] = 0;
 
         // render updated board
         this.updateBoard();
+
+        return this.warehouses[currentPlayer];
+    }
+
+    updateBoardUponCleaning() {
+        //clean the holes from both sides to the respective warehouse
+        for (let i = 0; i < this.nrHoles; i++) {
+            this.warehouses[0] += this.holes[i];
+            this.holes[i] = 0;
+        }
+        for (let i = 4; i < this.nrHoles*2; i++) {
+            this.warehouses[1] += this.holes[i];
+            this.holes[i] = 0;
+        }
+
+        // render updated board
+        this.updateBoard();   
+        
+        return this.warehouses;
     }
 }

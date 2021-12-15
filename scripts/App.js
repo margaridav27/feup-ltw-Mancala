@@ -1,4 +1,5 @@
 function hidePanel(selector) {
+    console.log(document.querySelector(selector).className);
     document.querySelector(selector).className = selector.substring(1) + " hide-panel";
 }
 
@@ -109,15 +110,48 @@ function enable(element) {
     element.style.pointerEvents = "auto";
 }
 
-function gameHandler() {
-    const playBtn = document.getElementById("play-btn");
-    let configs = document.getElementById("configurations");
+function changeState(board) {
+    if (board == ".board-panel") showPanel(board);
+    else hidePanel(".board-panel");
+    if (board == ".instructions-panel") showPanel(board);
+    else hidePanel(".instructions-panel");
+    if (board == ".record-panel") showPanel(board);
+    else hidePanel(".record-panel");
+    if (board == ".default-panel") showPanel(board);
+    else hidePanel(".default-panel");
+}
 
-    if (playBtn.innerHTML == "PLAY") {
+function gameState(state) {
+    switch(state) {
+        case 'play':
+            changeState(".default-panel");
+            const playBtn = document.getElementById("play-btn");
+            let configs = document.getElementById("configurations");
+            gameHandler(playBtn, configs);
+            break;
+        case 'instructions':
+            backToPlay();
+            changeState(".instructions-panel");
+            break;
+        case 'records':
+            backToPlay();
+            changeState(".record-panel");
+            hidePanel(".scores-record")
+            break;
+        default:
+            break;
+    }
+}
+
+function gameHandler(button, configs) {
+    let game;
+    if (button.innerHTML == "PLAY") {
         // fetch players configurations
         const player1 = document.getElementById("name-1").value;
         const player2 = document.getElementById("name-2").value;
 
+        console.log(player1);
+        console.log(player2);
         // check player vs computer
         if (player1 == "COMPUTER") {
             const radioBtn = document.querySelector("input[name=\"level-1\"]:checked");
@@ -141,18 +175,28 @@ function gameHandler() {
         let players = [player1, player2];
         let board = new Board(seeds, holes);
 
-        hidePanel(".default-panel");
+        changeState(".board-panel");
         board.renderBoard();
-        let game = new Game(board, players, 0);
 
         configs.classList.add("disable");
         info.innerHTML = "Let the game begin!";
-        playBtn.innerHTML = "QUIT";
+        button.innerHTML = "QUIT";
         disable(configs);
+
+        game = new Game(board, players, 0);
+        //tratar scores
         
     } else {
-        playBtn.innerHTML = "PLAY";
+        button.innerHTML = "PLAY";
         enable(configs);
         configs.classList.remove("disable");
     } 
+}
+
+function backToPlay() {
+    const playBtn = document.getElementById("play-btn");
+    let configs = document.getElementById("configurations");
+    playBtn.innerHTML = "PLAY";
+    enable(configs);
+    configs.classList.remove("disable");
 }

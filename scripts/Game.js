@@ -5,11 +5,12 @@ class Game {
         this.players = players;
         this.score = [0,0];
         this.currentPlayer = 0; 
+        this.finished = false;
         this.setValidMoves();
     }
 
-    sowedInOwnWarehouse(sowedWarehouse) { 
-        return this.currentPlayer == sowedWarehouse; 
+    hasFinished() {
+        return this.finished;
     }
 
     sowedInOwnHole(sowedHole) {
@@ -23,35 +24,65 @@ class Game {
     }
 
     sow(playedHole) {
-        return this.board.updateBoardUponSowing(playedHole);
+        return this.board.updateBoardUponSowing(playedHole, this.currentPlayer);
     }
 
     capture(lastSowingedHole) {
-       this.board.updateBoardUponCapture(lastSowingedHole);
+       return this.board.updateBoardUponCapture(lastSowingedHole, this.currentPlayer);
     }
 
     setValidMoves() {
-        if (this.currentPlayer == 0) 
-            this.board.setValidHoles(0, (i) => { this.performPlay(i); });
-        else 
-            this.board.setValidHoles(1, (i) => { this.performPlay(i); });
+        if (!(this.board.setValidHoles(this.currentPlayer, (i) => { this.performPlay(i); }))) {
+            //update message
+            const info = document.getElementById("info");
+            info.innerHTML = "Player " + this.players[this.currentPlayer] + " can't make any more moves";
+
+            //end game
+            this.endGame();
+        }
     }
 
     setCurrentPlayer() {
-        if (this.currentPlayer == 0) this.currentPlayer = 1;
-        else this.currentPlayer = 0;
+        this.currentPlayer = Math.abs(this.currentPlayer - 1);
+    }
+
+    endGame() {
+        this.score = this.board.updateBoardUponCleaning();
+        this.updateScore(true);
+        document.getElementById("row-1").classList.remove("curr-player");
+        document.getElementById("row-2").classList.remove("curr-player");
+        this.finished = true;
+    }
+
+    updateScore(totalScore) {
+        if (totalScore) {
+            const scoreP1 = document.getElementById("score-1");
+            scoreP1.innerHTML = this.score[0];
+            const scoreP2 = document.getElementById("score-2");
+            scoreP2.innerHTML = this.score[1];
+        }
+        else {
+            const score = document.getElementById("score-" + (this.currentPlayer + 1));
+            score.innerHTML = this.score[this.currentPlayer];
+        }
     }
 
     performPlay(playedHole) {
+
         let res = this.sow(playedHole);
-        console.log(res);
+
+        this.score[this.currentPlayer] = res.score;
 
         // last sowing did not occur on the current player's warehouse
-        if (res.lastSowingOnWarehouse && this.sowedInOwnWarehouse(res.lastSowing)) console.log("js é merda") ;
+        if (res.lastSowingOnWarehouse) console.log("Play Again!"); //because the player plays again
         // last sowing occured in one of the current player's holes
-        else if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing)) this.capture(res.lastSowing);
+        else if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing)) {
+            this.score[this.currentPlayer] = this.capture(res.lastSowing);
+        }
         // swap players normally
         else this.setCurrentPlayer();
+
+        this.updateScore();
 
         this.setValidMoves();
 

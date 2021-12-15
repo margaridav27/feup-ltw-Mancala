@@ -86,21 +86,21 @@
   </div>
 
   <div class="menu">
-    <button class="menu-btn" id="play-btn" onclick="gameHandler()">PLAY</button>
-    <button class="menu-btn" id="instructions-btn">INSTRUCTIONS</button>
-    <button class="menu-btn" id="records-btn">RECORDS</button>
+    <button class="menu-btn" id="play-btn" onclick="gameState('play')">PLAY</button>
+    <button class="menu-btn" id="instructions-btn" onclick="gameState('instructions')">INSTRUCTIONS</button>
+    <button class="menu-btn" id="records-btn" onclick="gameState('records')">RECORDS</button>
   </div>
 
   <div class="info-panel">
     <div class="score">
       <img src="assets/player-1-icon.png" alt="Default Panel Background">
-      0
+      <section id ="score-1"> 0 </section>
     </div>
     <div class="info" id="info" value="Welcome to Mancala! Here will appear your messages and alerts.">
       Welcome to Mancala! Here will appear your messages and alerts.
     </div>
     <div class="score">
-      0
+      <section id ="score-2"> 0 </section>
       <img src="assets/player-2-icon.png" alt="Default Panel Background">
     </div>
   </div>
@@ -109,10 +109,10 @@
     <img src="assets/default-panel-background.png" alt="Default Panel Background">
   </div> 
 
-  <div class="board-panel hide-panel"></div>
+  <div class="board-panel hide-panel" id ="board-panel"></div>
   
-  <!--
-  <div class="instructions-panel">
+  
+  <div class="instructions-panel hide-panel">
     <img src="assets/instructions-panel-background.png" alt="Instructions Panel Background">
     <div class="instructions">
       Each player has a certain number of holes, by deafult 4, which can be defined at the beginning of the game, and a warehouse, the big hole on the side.
@@ -130,7 +130,7 @@
      </div>
   </div>
 
-  <div class="record-panel">
+  <div class="record-panel hide-panel">
     <div class="game-record">
       <img src="assets/records-panel-background.png" alt="Game Record Panel Background">
       <h1 class="record-titles">Game Record</h1>
@@ -237,7 +237,7 @@
       </table>
     </div>
   </div>
-  -->
+
     <script src="scripts/Board.js"></script>
     <script src="scripts/Game.js"></script>
     <script src="scripts/App.js"></script>
