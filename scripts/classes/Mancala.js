@@ -24,7 +24,7 @@ class Mancala {
         let validMoves = false;
 
         if (!this.hasFinished()) { 
-            validMoves = this.board.setValidHoles(this.currentPlayer, (i) => { this.performPlay(i); });
+            validMoves = this.board.setValidHoles(this.currentPlayer);
             
             if (!validMoves) {
                 const info = document.getElementById("info");
@@ -84,19 +84,33 @@ class Mancala {
             info.innerHTML = `It's ${this.players[this.currentPlayer]} turn. Make your move.`;
     }
 
-    performPlay(playedHole) {
-        let res = this.sow(playedHole);
+    isValidMove(playedHole) {
+        const nrHoles = this.board.getNrHoles();
+        return (this.currentPlayer == 0 && playedHole >= 0 && playedHole < nrHoles) || 
+               (this.currentPlayer == 1 && playedHole >= nrHoles && playedHole < nrHoles * 2);
+    }
 
-        this.score[this.currentPlayer] = res.score;
-        this.updateScore();
+    performMove(playedHole) {
+        if (this.isValidMove(playedHole)) {
+            let res = this.sow(playedHole);
 
-        if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing))   // last sowing occured in one of the current player's holes
-            this.score[this.currentPlayer] = this.capture(res.lastSowing);
-        else if (!res.lastSowingOnWarehouse)                               // last sowing did not occur in the current player's warehouse
-            this.setCurrentPlayer();                                       // swap players normally
-                                                             
-        if (!this.setValidMoves()) 
-            this.endGame();
+            this.score[this.currentPlayer] = res.score;
+            this.updateScore();
+
+            if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing))   // last sowing occured in one of the current player's holes
+                this.score[this.currentPlayer] = this.capture(res.lastSowing);
+            else if (!res.lastSowingOnWarehouse)                               // last sowing did not occur in the current player's warehouse
+                this.setCurrentPlayer();                                       // swap players normally
+                                                                
+            if (!this.setValidMoves()) {
+                this.endGame();
+                return false;
+            }
+            
+            return true;
+        }
+        
+        return false;
     }
 
     /* 

@@ -10,7 +10,7 @@ class Board {
 
     getHoles() { return this.holes; }
     
-    setValidHoles(rid, clickHandler) {
+    setValidHoles(rid) {
         const nrHoles = this.nrHoles;
         let validHoles = false;
 
@@ -20,17 +20,12 @@ class Board {
                 let c2 = c1 + parseInt(nrHoles);
 
                 if (this.holes[c1] == 0) {
-                    document.getElementById(`col-${c1}`).onclick = undefined;
                     document.getElementById(`col-${c1}`).classList.remove("curr-player");
-                }
-                else {
-                    document.getElementById(`col-${c1}`).onclick = () => { clickHandler(c1); };
+                } else {
                     document.getElementById(`col-${c1}`).classList.add("curr-player");
-                    
                     validHoles = true;
                 }
 
-                document.getElementById(`col-${c2}`).onclick = undefined;
                 document.getElementById(`col-${c2}`).classList.remove("curr-player");
             }
         } else {
@@ -39,17 +34,13 @@ class Board {
                 let c2 = c1 + parseInt(nrHoles);
                 
                 if (this.holes[c2] == 0) {
-                    document.getElementById(`col-${c2}`).onclick = undefined;
                     document.getElementById(`col-${c2}`).classList.remove("curr-player");
                 }
                 else {
-                    document.getElementById(`col-${c2}`).onclick = () => { clickHandler(c2); }
                     document.getElementById(`col-${c2}`).classList.add("curr-player");
-                    
                     validHoles = true;
                 }
 
-                document.getElementById(`col-${c1}`).onclick = undefined;
                 document.getElementById(`col-${c1}`).classList.remove("curr-player");
             }
         }

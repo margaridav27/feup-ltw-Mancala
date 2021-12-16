@@ -33,12 +33,30 @@ function setupBoard() {
     return new Board(seeds, holes);
 }
 
+function setupBoardMoveHandlers(board) {
+    const nrHoles = board.getNrHoles();
+    for (let i = 0; i < nrHoles * 2; i++) 
+        document.getElementById(`col-${i}`).onclick = () => { moveHandler(i); };
+}
+
+function moveHandler(move) {
+    switch (gameState) {
+        case 'PLAYING':
+            let succeeded = mancala.performMove(move);
+            if (!succeeded) gameState = 'DEFAULT';
+            break;
+        default:
+            break;
+    }
+}
+
 function startGame() {
     let players = setupPlayers();
     if (!players) return false;
 
     let board = setupBoard();
     board.renderBoard();
+    setupBoardMoveHandlers(board);
 
     let infoPanel = document.getElementsByClassName("info-panel");
     let playButton = document.getElementById("game-btn");
@@ -50,7 +68,7 @@ function startGame() {
     disable(configurations);
     
     mancala = new Mancala(board, players);
-    gameState = 'PLAY'
+    gameState = 'PLAYING'
     return true;
 }
 
