@@ -86,9 +86,9 @@
   </div>
 
   <div class="menu">
-    <button class="menu-btn" id="play-btn" onclick="gameState('play')">PLAY</button>
-    <button class="menu-btn" id="instructions-btn" onclick="gameState('instructions')">INSTRUCTIONS</button>
-    <button class="menu-btn" id="records-btn" onclick="gameState('records')">RECORDS</button>
+    <button class="menu-btn" id="game-btn" onclick="gameClickHandler()">PLAY</button>
+    <button class="menu-btn" id="instructions-btn" onclick="instructionsClickHandler()">INSTRUCTIONS</button>
+    <button class="menu-btn" id="records-btn" onclick="recordsClickHandler()">RECORDS</button>
   </div>
 
   <div class="info-panel">
@@ -111,7 +111,6 @@
 
   <div class="board-panel hide-panel" id ="board-panel"></div>
   
-  
   <div class="instructions-panel hide-panel">
     <img src="assets/instructions-panel-background.png" alt="Instructions Panel Background">
     <div class="instructions">
@@ -130,7 +129,7 @@
      </div>
   </div>
 
-  <div class="record-panel hide-panel">
+  <div class="records-panel hide-panel">
     <div class="game-record">
       <img src="assets/records-panel-background.png" alt="Game Record Panel Background">
       <h1 class="record-titles">Game Record</h1>
@@ -238,10 +237,12 @@
     </div>
   </div>
 
-    <script src="scripts/Board.js"></script>
-    <script src="scripts/Game.js"></script>
-    <script src="scripts/App.js"></script>
-
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/configurations.js"></script>
+  <script src="scripts/classes/Board.js"></script>
+  <script src="scripts/classes/Mancala.js"></script>
+  <script src="scripts/game.js"></script>
+  <script src="scripts/app.js"></script>
 </body>
 
 </html>

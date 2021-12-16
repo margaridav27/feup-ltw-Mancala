@@ -71,7 +71,7 @@
 @media (max-width: 1200px) {
   .default-panel img,
   .instructions-panel img,
-  .record-panel img {
+  .records-panel img {
     width: 95%;
   }
 
@@ -95,7 +95,7 @@
 
 
 
-.record-panel {
+.records-panel {
   color: white;
   font-weight: bold;
 }
@@ -106,7 +106,7 @@
   top: 9%;
 }
 
-.record-panel table {
+.records-panel table {
   font-family: Brush Script, cursive;
   position: absolute;
   font-size: 20px;

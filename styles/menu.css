@@ -23,11 +23,11 @@
   }
 }
 
-#play-btn {
+#game-btn {
   background-color: rgba(25, 130, 196, 0.4);
 }
 
-#play-btn:hover
+#game-btn:hover
 {
   background-color: #1982C4
 }
