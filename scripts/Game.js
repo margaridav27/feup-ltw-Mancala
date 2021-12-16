@@ -43,7 +43,10 @@ function moveHandler(move) {
     switch (gameState) {
         case 'PLAYING':
             let succeeded = mancala.performMove(move);
-            if (!succeeded) gameState = 'DEFAULT';
+            if (!succeeded) {
+                endGame();
+                gameState = 'DEFAULT';
+            }
             break;
         default:
             break;
@@ -86,7 +89,27 @@ function quitGame() {
     infoPanel.innerHTML = "Mancala Game";
     playButton.innerHTML = "PLAY";
     configurations.classList.remove("disable");
-    disable(configurations);
+    enable(configurations);
+
+    mancala = undefined;
+    gameState = undefined;
+}
+
+function endGame() {
+    // reset scores
+    const scoreP1 = document.getElementById("score-1");
+    scoreP1.innerHTML = 0;
+    const scoreP2 = document.getElementById("score-2");
+    scoreP2.innerHTML = 0;
+
+    let infoPanel = document.getElementsByClassName("info-panel");
+    let playButton = document.getElementById("game-btn");
+    let configurations = document.getElementById("configurations");
+
+    infoPanel.innerHTML = "Mancala Game";
+    playButton.innerHTML = "PLAY";
+    configurations.classList.remove("disable");
+    enable(configurations);
 
     mancala = undefined;
     gameState = undefined;
