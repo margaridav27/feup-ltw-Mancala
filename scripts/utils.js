@@ -1,10 +1,22 @@
 function hidePanel(selector) {
-    console.log(document.querySelector(selector).className);
-    document.querySelector(selector).className = selector.substring(1) + " hide-panel";
+    let panel = document.querySelector(selector);
+    panel.className = '';
+
+    let classes = selector.split('.');
+    for (const c of classes) panel.className += c + ' ';
+
+    panel.className += "hide-panel";
+    panel.className = panel.className.trim();
 }
 
 function showPanel(selector) {
-    document.querySelector(selector).className = selector.substring(1);
+    let panel = document.querySelector(selector);
+    panel.className = '';
+
+    let classes = selector.split('.');
+    for (const c of classes) panel.className += c + ' '; 
+        
+    panel.className = panel.className.trim();
 }
 
 function enablePlaceholder(selector) {
@@ -18,7 +30,6 @@ function disablePlaceholder(selector) {
     document.querySelector(selector).value = "COMPUTER";
     document.querySelector(selector).disabled = true;
 }
-
 
 function disable(element) {
     element.style.pointerEvents = "none";

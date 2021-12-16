@@ -21,12 +21,17 @@ function gameClickHandler() {
 function instructionsClickHandler() {
     switch (appState) {
         case 'DEFAULT':
-            hidePanel(".board-panel");
+            hidePanel(".default-panel");
             showPanel(".instructions-panel");
             appState = 'INSTRUCTIONS';
             break;
-        case 'RECORDS':
-            hidePanel(".records-panel");
+        case 'GAME-RECORDS':
+            hidePanel(".records-panel.game-records");
+            showPanel(".instructions-panel");
+            appState = 'INSTRUCTIONS';
+            break;
+        case 'SCORE-RECORDS':
+            hidePanel(".records-panel.score-records");
             showPanel(".instructions-panel");
             appState = 'INSTRUCTIONS';
             break;
@@ -38,14 +43,30 @@ function instructionsClickHandler() {
 function recordsClickHandler() {
     switch (appState) {
         case 'DEFAULT':
-            hidePanel(".board-panel");
-            showPanel(".instructions-panel");
-            appState = 'RECORDS';
+            hidePanel(".default-panel");
+            showPanel(".records-panel.game-records");
+            appState = 'GAME-RECORDS';
             break;
         case 'INSTRUCTIONS':
-            hidePanel(".board-panel");
-            showPanel(".instructions-panel");
-            appState = 'RECORDS';
+            hidePanel(".instructions-panel");
+            showPanel(".records-panel.game-records");
+            appState = 'GAME-RECORDS';
+        default:
+            break;
+    }
+}
+
+function recordClickHandler() {
+    switch (appState) {
+        case 'GAME-RECORDS':
+            hidePanel(".records-panel.game-records");
+            showPanel(".records-panel.score-records");
+            appState = 'SCORE-RECORDS';
+            break;
+        case 'SCORE-RECORDS':
+            hidePanel(".records-panel.score-records");
+            showPanel(".records-panel.game-records");
+            appState = 'GAME-RECORDS';
         default:
             break;
     }

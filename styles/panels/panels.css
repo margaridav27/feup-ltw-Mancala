@@ -1,17 +1,16 @@
 .default-panel,
+.info-panel,
 .instructions-panel,
-.game-record,
-.scores-record {
+.records-panel {
   width: 100%;
   display: flex;
   justify-content: center;
-  position: relative;
+  align-items: center;
 }
 
 .default-panel img,
 .instructions-panel img,
-.game-record img,
-.scores-record img {
+.records-panel img {
   width: 70%;
   height: 100%;
   margin-top: 10px;
@@ -26,13 +25,6 @@
   top: 16%;
   left: 19%;
   overflow: auto;
-}
-
-.info-panel {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .info-panel .score,
@@ -114,7 +106,7 @@
   height: 60%;
 }
 
-#games-made {
+#games {
   width: 30%;
   top: 27%;
   border-spacing: 0 15px;
