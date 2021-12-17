@@ -1,16 +1,23 @@
 .configurations {
+  width: 80vw;
+  height: 25vh;
   display: grid;
   grid-template-areas: "player1 player2 board";
+  grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
+  align-items: center;
   font-size: 10px;
+  margin: auto;
 }
 
 #player-card-1 {
   grid-area: player1;
 }
+
 #player-card-2 {
   grid-area: player2;
 }
+
 #board-card {
   grid-area: board;
 }
@@ -23,17 +30,13 @@
     "img r3";
   justify-items: center;
   align-items: center;
-  height: 150px;
+  width: 90%;
+  height: 80%;
   padding: 5px;
   border-radius: 30px;
   background-color: rgba(230, 204, 178, 0.3);
 }
-.player-card {
-  width: 310px;
-}
-.board-card {
-  width: 350px;
-}
+
 .board-card img {
   transform: rotate(-45deg);
 }
@@ -46,18 +49,21 @@
 /* to when the level radio buttons are not hidden */
 .card img {
   grid-area: img;
-
   width: 120px;
   height: 120px;
+  margin: 5px;
 }
+
 .player-card .name,
 .board-card .holes {
   grid-area: r1;
 }
+
 .player-card .computer,
 .board-card .seeds {
   grid-area: r2;
 }
+
 .player-card .levels,
 .board-card .buttons {
   grid-area: r3;
@@ -70,15 +76,18 @@
     "img r1"
     "img r2";
 }
+
 .player-card.levels-hide .name {
   grid-area: r1;
   align-self: end;
 }
+
 .player-card.levels-hide .computer {
   grid-area: r2;
   align-self: start;
   margin-top: 10px;
 }
+
 .player-card.levels-hide .levels {
   display: none;
 }
@@ -86,41 +95,59 @@
 .board-card #preview {
   background-color: rgba(232, 172, 101, 0.55);
 }
+
 .board-card #preview:hover {
   background-color: #d08c60;
 }
 
-@media (max-width: 1020px) {
+@media (max-width: 1395px) {
   .configurations {
-    grid-template-areas:
-      "player1 player2"
-      "board board";
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
-  }
-  #player-card-1 {
-    justify-self: end;
-  }
-  #player-card-2 {
-    justify-self: start;
+    width: 90vw;
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1245px) {
   .configurations {
+    width: 95vw;
+  }
+}
+
+@media (max-width: 970px) {
+  .configurations {
+    width: 90vw;
+    height: 50vh;
+    grid-template-areas:
+      "player1 player2"
+      "board board";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .board-card {
+    width: 45%;
+  }
+}
+
+@media (max-width: 705px) {
+  .configurations {
+    width: 90vw;
+    height: 75vh;
     grid-template-areas:
       "player1"
       "player2"
       "board";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
   }
-  .player-card {
-    width: 350px;
-  }
-  #player-card-1 {
-    justify-self: center;
-  }
-  #player-card-2 {
+
+  .card {
+    width: 60%;
     justify-self: center;
   }
 }
 
+@media (max-width: 530px) {
+  .card {
+    width: 70%;
+  }
+}

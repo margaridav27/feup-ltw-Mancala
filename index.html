@@ -19,7 +19,7 @@
     <div class="logo">
       <img id="logo" alt="Mancala Logo" src="assets/mancala-logo.png">
     </div>
-    <form class="authentication">
+    <form class="auth">
       <div class="auth-username">
         <label for="username"><img src="assets/user.png" alt="Username"></label>
         <input type="text" id="username" name="username">
@@ -70,11 +70,11 @@
     <form class="card board-card" id="board-card">
       <img src="assets/mancala.png" alt="Player 1 Icon">
       <div class="holes">
-        <label for="holes">Number of holes</label>
+        <label for="holes">Holes</label>
         <input type="number" id="holes" name="holes" min="4" max="6" value="4">
       </div>
       <div class="seeds">
-        <label for="seeds">Number of seeds on each hole</label>
+        <label for="seeds">Seeds (each hole)</label>
         <input type="number" id="seeds" name="seeds" min="4" max="8" value="4">
       </div>
       <div class="buttons">
@@ -106,13 +106,11 @@
   </div>
 
   <div class="default-panel">
-    <img src="assets/default-panel-background.png" alt="Default Panel Background">
   </div> 
 
   <div class="board-panel hide-panel" id ="board-panel"></div>
   
   <div class="instructions-panel hide-panel">
-    <img src="assets/instructions-panel-background.png" alt="Instructions Panel Background">
     <div class="instructions">
       Each player has a certain number of holes, by deafult 4, which can be defined at the beginning of the game, and a warehouse, the big hole on the side.
       <p>You can only control the holes on your side.<p>
@@ -130,11 +128,7 @@
   </div>
 
   <div class="records-panel game-records hide-panel">
-    <img src="assets/records-panel-background.png" alt="Game Record Panel Background">
-    <h1 class="record-titles">Game Record</h1>
-    <div>
-      <button class="record-btn" id="scores-btn" onclick="recordClickHandler()">Scores</button>
-    </div>
+    <h1 class="records-title">Game Record</h1>
     <table id="games">
       <tr>
           <td>Bibs01</td>
@@ -179,16 +173,15 @@
         <td>Bibs01</td>
       </tr>
     </table>
+    <div>
+      <button class="records-btn" id="score-records-btn" onclick="recordClickHandler()">Scores</button>
+    </div>
   </div>
   
   <div class="records-panel score-records hide-panel">
-    <img src="assets/records-panel-background.png" alt="Score Panel Background">
-    <h1 class="record-titles">Scores</h1>
-    <div>
-      <button class="record-btn" id="game-record-btn" onclick="recordClickHandler()">Game Record</button>
-    </div>
+    <h1 class="records-title">Scores</h1>
     <table id="scores">
-      <tr>
+      <tr class="records-header">
         <th>Player</th>
         <th>Leaderboard</th>
         <th>Total Score</th>
@@ -234,7 +227,9 @@
         <td>7</td>
       </tr> 
     </table>
-  </div>
+    <div>
+      <button class="records-btn" id="game-records-btn" onclick="recordClickHandler()">Game Record</button>
+    </div>
   </div>
 
   <script src="scripts/utils.js"></script>

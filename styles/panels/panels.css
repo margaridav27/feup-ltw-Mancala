@@ -1,38 +1,49 @@
+/* ---------- general panel styling properties ---------- */
+
 .default-panel,
-.info-panel,
 .instructions-panel,
 .records-panel {
-  width: 100%;
+  width: 70vw;
+  height: 45vh;
+  margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 }
 
-.default-panel img,
-.instructions-panel img,
-.records-panel img {
-  width: 70%;
-  height: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
+.default-panel {
+  background-image: url("../../assets/default-panel-background.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
-.instructions {
-  font-size: 12px;
-  position: absolute;
-  width: 55%;
-  height: 40%;
-  top: 16%;
-  left: 19%;
-  overflow: auto;
+/* ---------- info panel specific ---------- */
+
+.info-panel {
+  width: 70vw;
+  height: 10vh;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1vh;
 }
 
 .info-panel .score,
 .info-panel .info {
+  height: 70%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 12px;
+}
+
+.info-panel .info {
+  width: 80%;
+  border-radius: 15px;
+  background-color: rgba(230, 204, 178, 0.3);
+  text-align: center;
 }
 
 .info-panel .score {
@@ -46,94 +57,27 @@
   margin-right: 5px;
 }
 
-.info-panel .info {
-  width: 50%;
-  height: 50px;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 15px;
-  background-color: rgba(230, 204, 178, 0.3);
-  text-align: center;
+/* ---------- instructions panel ---------- */
+
+.instructions-panel {
+  background-image: url("../../assets/instructions-panel-background.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: start;
+  align-items: flex-start;
 }
 
-.hide-panel {
-  display: none;
+.instructions {
+  font-size: 12px;
+  width: 80%;
+  height: 50%;
+  margin-top: 3%;
+  margin-left: 5%;
+  overflow: auto;
 }
 
-@media (max-width: 1200px) {
-  .default-panel img,
-  .instructions-panel img,
-  .records-panel img {
-    width: 95%;
-  }
-
-  .info-panel .score {
-    width: 10%;
-  }
-
-  .info-panel .info {
-    width: 70%;
-  }
-}
-
- 
-
-
-
-
-
-
-
-
-
-
-.records-panel {
-  color: white;
-  font-weight: bold;
-}
-
-.record-titles {
-  font-family: Brush Script, cursive;
-  position: absolute;
-  top: 9%;
-}
-
-.records-panel table {
-  font-family: Brush Script, cursive;
-  position: absolute;
-  font-size: 20px;
-  text-align: center;
-  height: 60%;
-}
-
-#games {
-  width: 30%;
-  top: 27%;
-  border-spacing: 0 15px;
-}
-
-#scores {
-  top: 19%;
-}
-
-#scores td {
-  padding: 0 70px;
-}
-
-#scores th {
-  font-size: 25px;
-  padding: 29px;
-}
-
-.record-btn {
-  color: #ffffff;
-  background-color: rgba(189, 141, 90, 0.4);
-  position: absolute;
-  top: 82%;
-  left: 18%;
-}
-
-.record-btn:hover {
+.records-btn:hover {
   background: rgba(189, 141, 90, 0.8);
 }
 
@@ -151,5 +95,40 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #888888;
-} 
+}
 
+/* ---------- records panel ---------- */
+
+.records-panel {
+  background-image: url("../../assets/records-panel-background.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.records-panel {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-family: Brush Script, cursive;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.records-panel table td {
+  text-align: center;
+}
+
+.records-btn {
+  color: #ffffff;
+  background-color: rgba(189, 141, 90, 0.4);
+}
+
+/* ---------- to hide the panels ---------- */
+
+.hide-panel {
+  display: none;
+}

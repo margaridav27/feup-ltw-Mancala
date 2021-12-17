@@ -53,10 +53,5 @@ input[type="radio"]:checked {
 label {
   cursor: pointer;
   vertical-align: middle;
+  margin-left: 5px;
 }
-
-li {
-  margin: 10px 0;
-}
-
-

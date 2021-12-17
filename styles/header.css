@@ -18,7 +18,7 @@ header {
   height: 50px;
 }
 
-.authentication {
+.auth {
   grid-area: auth;
   display: grid;
   grid-template-areas:
@@ -54,7 +54,7 @@ header {
     padding-left: 0px;
   }
 
-  .authentication {
+  .auth {
     grid-template-areas:
       "username"
       "password"
@@ -86,7 +86,7 @@ header {
     grid-template-rows: 9vh;
   }
 
-  .authentication {
+  .auth {
     grid-template-areas: "username password login";
     grid-template-rows: 7vh;
     justify-self: center;
