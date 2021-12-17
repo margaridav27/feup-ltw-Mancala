@@ -1,0 +1,56 @@
+.instructions-panel {
+  width: 80vw;
+  height: 60vh;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  background-image: url("../../assets/instructions-panel-background.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: start;
+  align-items: flex-start;
+}
+
+.instructions {
+  font-size: 12px;
+  width: 80%;
+  height: 50%;
+  margin-top: 3%;
+  margin-left: 5%;
+  overflow: auto;
+}
+
+.records-btn:hover {
+  background: rgba(189, 141, 90, 0.8);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ede5df;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(155, 155, 155);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+}
+
+@media (max-width: 1395px) {
+  .instructions-panel {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 1245px) {
+  .instructions-panel {
+    width: 95vw;
+  }
+}

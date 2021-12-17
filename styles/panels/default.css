@@ -1,0 +1,28 @@
+.default-panel {
+  width: 80vw;
+  height: 60vh;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  background-image: url("../../assets/default-panel-background.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.hide-panel {
+  display: none;
+}
+
+@media (max-width: 1395px) {
+  .default-panel {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 1245px) {
+  .default-panel {
+    width: 95vw;
+  }
+}

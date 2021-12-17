@@ -3,8 +3,8 @@ var mancala = undefined;
 
 function setupPlayers() {
     // fetch players configurations
-    const player1 = document.getElementById("name-1").value;
-    const player2 = document.getElementById("name-2").value;
+    let player1 = document.getElementById("name-1").value;
+    let player2 = document.getElementById("name-2").value;
 
     // check player vs computer
     if (player1 == "COMPUTER") {
@@ -15,12 +15,8 @@ function setupPlayers() {
         if (radioBtn.id.match(/level-2/)) level = radioBtn.value;
     }
 
-    // check if user filled in all the necessary data
-    if (player1.length === 0 || player2.length === 0) {
-        const info = document.getElementById("info");
-        info.innerHTML = "Please provide a name for the players.";
-        return undefined; 
-    }
+    if (player1.length === 0) player1 = "Player 1";
+    else if (player2.length === 1) player1 = "Player 2";
 
     return [player1, player2];
 }
@@ -55,24 +51,19 @@ function moveHandler(move) {
 
 function startGame() {
     let players = setupPlayers();
-    if (!players) return false;
 
     let board = setupBoard();
     board.renderBoard();
     setupBoardMoveHandlers(board);
 
     let infoPanel = document.getElementsByClassName("info-panel");
-    let playButton = document.getElementById("game-btn");
-    let configurations = document.getElementById("configurations");
-
     infoPanel.innerHTML = "Let the game begin!";
+
+    let playButton = document.getElementById("game-btn");
     playButton.innerHTML = "QUIT";
-    configurations.classList.add("disable");
-    disable(configurations);
     
     mancala = new Mancala(board, players);
     gameState = 'PLAYING'
-    return true;
 }
 
 function quitGame() {
@@ -82,14 +73,15 @@ function quitGame() {
     const scoreP2 = document.getElementById("score-2");
     scoreP2.innerHTML = 0;
 
-    let infoPanel = document.getElementsByClassName("info-panel");
     let playButton = document.getElementById("game-btn");
-    let configurations = document.getElementById("configurations");
-
-    infoPanel.innerHTML = "Mancala Game";
     playButton.innerHTML = "PLAY";
-    configurations.classList.remove("disable");
-    enable(configurations);
+
+    hidePanel(".info-panel");
+    hidePanel(".board-panel");
+    showPanel(".default-panel");
+
+    let menuButtons = document.querySelectorAll(".menu-btn");
+    menuButtons.forEach(button => { enable(button); });
 
     mancala = undefined;
     gameState = undefined;
@@ -102,14 +94,15 @@ function endGame() {
     const scoreP2 = document.getElementById("score-2");
     scoreP2.innerHTML = 0;
 
-    let infoPanel = document.getElementsByClassName("info-panel");
     let playButton = document.getElementById("game-btn");
-    let configurations = document.getElementById("configurations");
-
-    infoPanel.innerHTML = "Mancala Game";
     playButton.innerHTML = "PLAY";
-    configurations.classList.remove("disable");
-    enable(configurations);
+
+    hidePanel(".info-panel");
+    hidePanel(".board-panel");
+    showPanel(".default-panel");
+
+    let menuButtons = document.querySelectorAll(".menu-btn");
+    menuButtons.forEach(button => { enable(button); });
 
     mancala = undefined;
     gameState = undefined;

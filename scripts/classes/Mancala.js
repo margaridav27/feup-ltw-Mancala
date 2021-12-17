@@ -78,10 +78,10 @@ class Mancala {
 
     showTurn() {
         const info = document.getElementById("info");
-        if (info.innerHTML == `It's ${this.players[this.currentPlayer]} turn. Make your move.`) 
+        if (info.innerHTML == `It's ${this.players[this.currentPlayer]}'s turn. Make your move.`) 
             info.innerHTML = `Play again, ${this.players[this.currentPlayer]}.`;
         else 
-            info.innerHTML = `It's ${this.players[this.currentPlayer]} turn. Make your move.`;
+            info.innerHTML = `It's ${this.players[this.currentPlayer]}'s turn. Make your move.`;
     }
 
     isValidMove(playedHole) {

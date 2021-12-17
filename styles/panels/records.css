@@ -1,0 +1,46 @@
+.records-panel {
+  width: 80vw;
+  height: 60vh;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  background-image: url("../../assets/records-panel-background.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.records-panel {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-family: Brush Script, cursive;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.records-panel table td {
+  text-align: center;
+}
+
+.records-btn {
+  color: #ffffff;
+  background-color: rgba(189, 141, 90, 0.4);
+}
+
+@media (max-width: 1395px) {
+  .records-panel {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 1245px) {
+  .records-panel {
+    width: 95vw;
+  }
+}

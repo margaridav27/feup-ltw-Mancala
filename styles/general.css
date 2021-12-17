@@ -2,6 +2,11 @@ html body {
   font-family: "Montserrat", sans-serif;
   padding: 0;
   margin: 0;
+  height: 100vh;
+}
+
+html body {
+  vertical-align: middle;
 }
 
 input,

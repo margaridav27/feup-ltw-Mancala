@@ -1,25 +1,27 @@
-.configurations {
+.settings-panel {
   width: 80vw;
-  height: 25vh;
-  display: grid;
-  grid-template-areas: "player1 player2 board";
-  grid-template-columns: 1fr 1fr 1fr;
-  justify-items: center;
+  height: 20vh;
+  display: flex;
   align-items: center;
+  justify-content: space-evenly;
   font-size: 10px;
   margin: auto;
+  margin-top: 5vh;
 }
 
 #player-card-1 {
   grid-area: player1;
+  justify-self: start;
 }
 
 #player-card-2 {
   grid-area: player2;
+  justify-self: center;
 }
 
 #board-card {
   grid-area: board;
+  justify-self: end;
 }
 
 .card {
@@ -30,8 +32,6 @@
     "img r3";
   justify-items: center;
   align-items: center;
-  width: 90%;
-  height: 80%;
   padding: 5px;
   border-radius: 30px;
   background-color: rgba(230, 204, 178, 0.3);
@@ -101,35 +101,36 @@
 }
 
 @media (max-width: 1395px) {
-  .configurations {
+  .settings-panel {
     width: 90vw;
   }
 }
 
 @media (max-width: 1245px) {
-  .configurations {
+  .settings-panel {
     width: 95vw;
   }
 }
 
 @media (max-width: 970px) {
-  .configurations {
+  .settings-panel {
     width: 90vw;
     height: 50vh;
     grid-template-areas:
       "player1 player2"
       "board board";
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
   }
 
-  .board-card {
-    width: 45%;
+  #player-card-1,
+  #player-card-2,
+  #board-card {
+    justify-self: center;
   }
 }
 
 @media (max-width: 705px) {
-  .configurations {
+  .settings-panel {
     width: 90vw;
     height: 75vh;
     grid-template-areas:

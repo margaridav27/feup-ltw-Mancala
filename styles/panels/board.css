@@ -1,6 +1,42 @@
+.info-panel {
+  width: 80vw;
+  height: 10vh;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-panel .score,
+.info-panel .info {
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+
+.info-panel .info {
+  width: 80%;
+  border-radius: 15px;
+  background-color: rgba(230, 204, 178, 0.3);
+  text-align: center;
+}
+
+.info-panel .score {
+  width: 10%;
+}
+
+.info-panel .score img {
+  width: 40px;
+  height: 40px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .board-panel {
-  width: 70%;
-  height: 275px;
+  width: 80vw;
+  height: 50vh;
   display: grid;
   grid-template-areas:
     "wh-1 r-1 wh-2"
@@ -8,8 +44,6 @@
   grid-template-columns: 1fr 4fr 1fr;
   grid-column-gap: 3px;
   margin: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
   border-radius: 20px;
   padding: 6px;
   background-color: #a47148;

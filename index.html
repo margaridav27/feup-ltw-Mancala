@@ -8,15 +8,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;600&display=swap" rel="stylesheet">
   <link href="styles/general.css" rel="stylesheet">
   <link href="styles/header.css" rel="stylesheet">
-  <link href="styles/configurations.css" rel="stylesheet">
   <link href="styles/menu.css" rel="stylesheet">
   <link href="styles/panels/board.css" rel="stylesheet">
-  <link href="styles/panels/panels.css" rel="stylesheet">
+  <link href="styles/panels/instructions.css" rel="stylesheet">
+  <link href="styles/panels/records.css" rel="stylesheet">
+  <link href="styles/panels/settings.css" rel="stylesheet">
+  <link href="styles/panels/default.css" rel="stylesheet">
 </head>
 
 <body>
   <header>
-    <div class="logo">
+    <div class="logo" onclick="logoClickHandler()">
       <img id="logo" alt="Mancala Logo" src="assets/mancala-logo.png">
     </div>
     <form class="auth">
@@ -32,7 +34,16 @@
     </form>
   </header>
 
-  <div class="configurations" id ="configurations">
+  <div class="menu">
+    <button class="menu-btn" id="game-btn" onclick="gameClickHandler()">PLAY</button>
+    <button class="menu-btn" id="instructions-btn" onclick="instructionsClickHandler()">INSTRUCTIONS</button>
+    <button class="menu-btn" id="records-btn" onclick="recordsClickHandler()">RECORDS</button>
+    <button class="menu-btn" id="settings-btn" onclick="settingsClickHandler()">SETTINGS</button>
+  </div>
+
+  <div class="default-panel"></div>
+
+  <div class="settings-panel hide-panel" id="settings-panel">
     <form class="card player-card levels-hide" id="player-card-1">
       <img src="assets/player-1-icon.png" alt="Player 1 Icon">
       <div class="name">
@@ -78,36 +89,26 @@
         <input type="number" id="seeds" name="seeds" min="4" max="8" value="4">
       </div>
       <div class="buttons">
-        <button type="button" id="preview"
-                onmousedown="startBoardPreview()"
-                onmouseup="stopBoardPreview()">Preview</button>
+        <button type="button" id="preview" onmousedown="startBoardPreview()"
+          onmouseup="stopBoardPreview()">Preview</button>
       </div>
     </form>
   </div>
 
-  <div class="menu">
-    <button class="menu-btn" id="game-btn" onclick="gameClickHandler()">PLAY</button>
-    <button class="menu-btn" id="instructions-btn" onclick="instructionsClickHandler()">INSTRUCTIONS</button>
-    <button class="menu-btn" id="records-btn" onclick="recordsClickHandler()">RECORDS</button>
-  </div>
-
-  <div class="info-panel">
+  <div class="info-panel hide-panel">
     <div class="score">
       <img src="assets/player-1-icon.png" alt="Default Panel Background">
-      <section id ="score-1"> 0 </section>
+      <section id="score-1"> 0 </section>
     </div>
     <div class="info" id="info" value="Welcome to Mancala! Here will appear your messages and alerts.">
       Welcome to Mancala! Here will appear your messages and alerts.
     </div>
     <div class="score">
-      <section id ="score-2"> 0 </section>
+      <section id="score-2"> 0 </section>
       <img src="assets/player-2-icon.png" alt="Default Panel Background">
     </div>
   </div>
-
-  <div class="default-panel">
-  </div> 
-
+  
   <div class="board-panel hide-panel" id ="board-panel"></div>
   
   <div class="instructions-panel hide-panel">
@@ -173,9 +174,6 @@
         <td>Bibs01</td>
       </tr>
     </table>
-    <div>
-      <button class="records-btn" id="score-records-btn" onclick="recordClickHandler()">Scores</button>
-    </div>
   </div>
   
   <div class="records-panel score-records hide-panel">
@@ -227,13 +225,10 @@
         <td>7</td>
       </tr> 
     </table>
-    <div>
-      <button class="records-btn" id="game-records-btn" onclick="recordClickHandler()">Game Record</button>
-    </div>
   </div>
 
   <script src="scripts/utils.js"></script>
-  <script src="scripts/configurations.js"></script>
+  <script src="scripts/settings.js"></script>
   <script src="scripts/classes/Board.js"></script>
   <script src="scripts/classes/Mancala.js"></script>
   <script src="scripts/game.js"></script>
