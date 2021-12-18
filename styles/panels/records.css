@@ -1,17 +1,15 @@
 .records-panel {
   width: 80vw;
   height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin-bottom: 20px;
-  background-image: url("../../assets/records-panel-background.png");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border: 25px solid rgba(155, 121, 87, 0.7);
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: #a5ceac;
 }
 
 .records-panel {

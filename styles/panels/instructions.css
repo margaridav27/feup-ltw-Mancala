@@ -3,24 +3,23 @@
   height: 60vh;
   margin: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  background-image: url("../../assets/instructions-panel-background.png");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  display: flex;
   justify-content: start;
   align-items: flex-start;
+  margin-bottom: 20px;
+  background-color: rgba(164, 113, 72, 0.1);
+  border-radius: 30px;
 }
 
 .instructions {
   font-size: 12px;
-  width: 80%;
+  width: 70%;
   height: 50%;
-  margin-top: 3%;
-  margin-left: 5%;
+  margin-top: 2%;
+  margin-left: 2%;
+  padding: 2%;
   overflow: auto;
+  background: rgba(155, 121, 87, 0.5);
+  border-radius: 20px 0px 0px 20px;
 }
 
 .records-btn:hover {
