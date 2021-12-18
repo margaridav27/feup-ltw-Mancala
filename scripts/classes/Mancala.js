@@ -9,6 +9,10 @@ class Mancala {
         this.setValidMoves();
     }
 
+    getPlayers() { return this.players; }
+
+    getScore() { return this.score; }
+
     hasFinished() {
         return this.finished;
     }

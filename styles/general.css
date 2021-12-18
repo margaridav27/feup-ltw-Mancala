@@ -5,10 +5,6 @@ html body {
   height: 100vh;
 }
 
-html body {
-  vertical-align: middle;
-}
-
 input,
 button {
   font-family: inherit;
@@ -25,7 +21,7 @@ button {
 }
 
 button {
-  width: 100px;
+  width: 130px;
   border-radius: 20px;
 }
 
@@ -35,7 +31,7 @@ button:hover {
 
 input[type="text"],
 input[type="password"] {
-  width: 130px;
+  width: 150px;
   border-radius: 20px;
 }
 
@@ -45,7 +41,8 @@ input[type="number"] {
 
 input[type="checkbox"],
 input[type="radio"] {
-  width: 25px;
+  width: 30px;
+  height: 30px;
   appearance: none;
   border-radius: 50%;
 }

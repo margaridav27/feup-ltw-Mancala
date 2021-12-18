@@ -1,34 +1,60 @@
 .records-panel {
   width: 80vw;
   height: 60vh;
+  position: relative;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   margin: auto;
   margin-bottom: 20px;
   border: 25px solid rgba(155, 121, 87, 0.7);
   box-sizing: border-box;
   border-radius: 20px;
   background: #a5ceac;
-}
-
-.records-panel {
-  display: flex;
-  flex-direction: column;
   color: white;
-  font-family: Brush Script, cursive;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   text-align: center;
 }
 
-.records-panel table td {
-  text-align: center;
+.records-panel img {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
-.records-btn {
-  color: #ffffff;
-  background-color: rgba(189, 141, 90, 0.4);
+.records-panel table {
+  height: 80%;
+  width: 70%;
+}
+
+.records-panel table tbody {
+  display: block;
+  overflow-y: scroll;
+  height: 80%;
+  width: 100%;
+}
+
+.records-panel table tr {
+  display: grid;
+  padding: 5px;
+}
+
+.records-panel.score-records table thead {
+  display: grid;
+  margin-bottom: 20px;
+  font-size: 25px;
+}
+
+.records-panel.score-records table tr {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.records-panel.game-records table tr {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 @media (max-width: 1395px) {

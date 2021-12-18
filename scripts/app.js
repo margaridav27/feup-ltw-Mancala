@@ -9,10 +9,12 @@ function logoClickHandler() {
         case 'GAME-RECORDS':
             hidePanel(".records-panel.game-records");
             recordsButton.innerText = "RECORDS";
+            GameHistory.cleanHistory();
             break;
         case 'SCORE-RECORDS':
             hidePanel(".records-panel.score-records");
             recordsButton.innerText = "RECORDS";
+            GameHistory.cleanHistory();
             break;
         case 'SETTINGS':
             hidePanel(".settings-panel");
@@ -43,9 +45,13 @@ function gameClickHandler() {
             break;
         case 'GAME-RECORDS':
             hidePanel(".records-panel.game-records");
+            recordsButton.innerText = "RECORDS";
+            GameHistory.cleanHistory();
             break;
         case 'SCORE-RECORDS':
             hidePanel(".records-panel.score-records");
+            recordsButton.innerText = "RECORDS";
+            GameHistory.cleanHistory();
             break;
         case 'SETTINGS':
             hidePanel(".settings-panel");
@@ -77,10 +83,12 @@ function instructionsClickHandler() {
         case 'GAME-RECORDS':
             hidePanel(".records-panel.game-records");
             recordsButton.innerText = "RECORDS";
+            GameHistory.cleanHistory();
             break;
         case 'SCORE-RECORDS':
             hidePanel(".records-panel.score-records");
             recordsButton.innerText = "RECORDS";
+            GameHistory.cleanHistory();
             break;
         case 'SETTINGS':
             hidePanel(".settings-panel");
@@ -101,31 +109,40 @@ function recordsClickHandler() {
             hidePanel(".default-panel");
             showPanel(".records-panel.game-records");
             appState = 'GAME-RECORDS';
+            GameHistory.renderLocalGames();
             break;
         case 'INSTRUCTIONS':
             hidePanel(".instructions-panel");
             showPanel(".records-panel.game-records");
             appState = 'GAME-RECORDS';
+            GameHistory.renderLocalGames();
         case 'GAME-RECORDS':
             hidePanel(".records-panel.game-records");
             showPanel(".records-panel.score-records");
             appState = 'SCORE-RECORDS';
+            GameHistory.cleanHistory();
+            GameHistory.renderLocalScores();
             break;
         case 'SCORE-RECORDS':
             hidePanel(".records-panel.score-records");
             showPanel(".records-panel.game-records");
             appState = 'GAME-RECORDS';
+            GameHistory.cleanHistory();
+            GameHistory.renderLocalGames();
             break;
         case 'SETTINGS':
             hidePanel(".settings-panel");
             showPanel(".records-panel.game-records");
             appState = 'GAME-RECORDS';
+            GameHistory.renderLocalGames();
             break;
         case 'PLAYING':
             return;
         default:
             break;
     }
+
+    console.log(appState)
 
     let recordsButton = document.getElementById("records-btn");
     if (recordsButton.innerText === "SCORE RECORDS") recordsButton.innerText = "GAME RECORDS";
@@ -142,10 +159,12 @@ function settingsClickHandler() {
         case 'INSTRUCTIONS':
             hidePanel(".instructions-panel");
             recordsButton.innerText = "RECORDS";
+            GameHistory.cleanHistory();
             break;
         case 'GAME-RECORDS':
             hidePanel(".records-panel.game-records");
             recordsButton.innerText = "RECORDS";
+            GameHistory.cleanHistory();
             break;
         case 'SCORE-RECORDS':
             hidePanel(".records-panel.score-records");
@@ -159,5 +178,3 @@ function settingsClickHandler() {
     showPanel(".settings-panel");
     appState = 'SETTINGS';
 }
-
-

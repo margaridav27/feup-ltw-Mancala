@@ -6,11 +6,11 @@ function setupPlayers() {
     let player1 = document.getElementById("name-1").value;
     let player2 = document.getElementById("name-2").value;
 
-    // check player vs computer
-    if (player1 == "COMPUTER") {
+    // check player vs bot
+    if (player1 == "BOT") {
         const radioBtn = document.querySelector("input[name=\"level-1\"]:checked");
         if (radioBtn.id.match(/level-1/)) level = radioBtn.value;            
-    } else if (player2 == "COMPUTER") {
+    } else if (player2 == "BOT") {
         const radioBtn = document.querySelector("input[name=\"level-2\"]:checked");
         if (radioBtn.id.match(/level-2/)) level = radioBtn.value;
     }

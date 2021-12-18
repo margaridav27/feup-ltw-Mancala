@@ -8,11 +8,10 @@ header {
   background: rgba(155, 121, 87, 0.7);
 }
 
-.logo {
+#logo {
   grid-area: logo;
   justify-self: start;
-}
-#logo {
+  cursor: pointer;
   padding-left: 20px;
   width: 312px;
   height: 50px;
