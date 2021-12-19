@@ -142,8 +142,6 @@ function recordsClickHandler() {
             break;
     }
 
-    console.log(appState)
-
     let recordsButton = document.getElementById("records-btn");
     if (recordsButton.innerText === "SCORE RECORDS") recordsButton.innerText = "GAME RECORDS";
     else recordsButton.innerText = "SCORE RECORDS";
