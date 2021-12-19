@@ -43,8 +43,7 @@ class Bot {
     let pointsBestMove = 0;
     let bestMove = -1;
     let boardBestMove = board;
-    const validMoves = turn == 0 ? [...Array(nrHoles).keys()].map(i => i + 0) : 
-                                   [...Array(nrHoles).keys()].map(i => i + nrHoles);
+    const validMoves = turn == 0 ? range(0, nrHoles) : range(nrHoles, nrHoles * 2);
 
     for (move in validMoves) {
       const result = simulateMoveExecution(holes[i], board, turn);
@@ -61,8 +60,7 @@ class Bot {
 
   calculateBestMoveRec(level, currentLevel, turn, bestMove, pointsBestMove, board, boardBestMove) {
     const nrHoles = board.getNrHoles();
-    const validMoves = turn == 0 ? [...Array(nrHoles).keys()].map(i => i + 0) : 
-                                   [...Array(nrHoles).keys()].map(i => i + nrHoles);
+    const validMoves = turn == 0 ? range(0, nrHoles) : range(nrHoles, nrHoles * 2);
 
     for (move in validMoves) {
       const result = simulateMoveExecution(move, board, turn);

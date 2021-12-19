@@ -26,3 +26,8 @@ function disable(element) {
 function enable(element) {
     element.style.pointerEvents = "auto";
 }
+
+function range(start, end) {
+    const size = end - start;
+    return [...Array(size).keys()].map(i => i + start)
+}
