@@ -1,5 +1,4 @@
 class Bot {
-  // simula jogada para calcular pontos que poderão ser obtidos com ela
   simulateMoveExecution(house, board) {
     let res = {pointsMove: -1, boardMove: -1};
     let currentHole = house;
@@ -87,6 +86,8 @@ class Bot {
   calculateBestMove(level, turn, board) {
     return this.calculateBestMoveRec(level, turn, 1, -1, board, board);
   }
+}
+
 
 
 /*
@@ -139,5 +140,4 @@ simularJogada(i, board) {
 
   return {pontosObtidosComJogada, boardApósJogada} // nr de seeds com que a wh do jogador fica
 
-}
-*/
+}*/
