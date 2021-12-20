@@ -86,13 +86,11 @@ class Board {
             r1.appendChild(col);
         }
             
-        for (let i = this.nrHoles - 1; i >= 0; i--) {
-            let c = parseInt(i) + parseInt(this.nrSeeds);
-
-            let col = document.createElement("div");
-            col.id = `col-${c}`;
-            col.className = "col";
-            col.innerText = `col ${c} : ${this.nrSeeds} seeds`; 
+        for (let i = this.nrHoles * 2 - 1; i >= this.nrHoles; i--) {
+            let col = document.createElement('div');
+            col.id = `col-${i}`;
+            col.className = 'col';
+            col.innerText = `col ${i} : ${this.nrSeeds} seeds`;
             r2.appendChild(col);
         }
     }
