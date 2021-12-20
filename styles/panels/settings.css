@@ -11,11 +11,6 @@
 }
 
 .card {
-  display: grid;
-  grid-template-areas:
-    "img r1"
-    "img r2"
-    "img r3";
   justify-items: center;
   align-items: center;
   width: 30%;
@@ -26,17 +21,6 @@
   border-radius: 30px;
   background-color: rgba(230, 204, 178, 0.3);
 }
-
-.board-card img {
-  transform: rotate(-45deg);
-}
-
-/* to grey the disabled area */
-.disable {
-  filter: brightness(80%);
-}
-
-/* to when the level radio buttons are not hidden */
 .card img {
   grid-area: img;
   width: 120px;
@@ -44,18 +28,21 @@
   margin: 5px;
 }
 
-.player-card .name,
-.board-card .holes {
+/* to when the level radio buttons are not hidden */
+.player-card {
+  display: grid;
+  grid-template-areas:
+    'img r1'
+    'img r2'
+    'img r3';
+}
+.player-card .name {
   grid-area: r1;
 }
-
-.player-card .bot,
-.board-card .seeds {
+.player-card .bot {
   grid-area: r2;
 }
-
-.player-card .levels,
-.board-card .buttons {
+.player-card .levels {
   grid-area: r3;
 }
 
@@ -63,31 +50,44 @@
 .player-card.levels-hide {
   display: grid;
   grid-template-areas:
-    "img r1"
-    "img r2";
+    'img r1'
+    'img r2';
 }
-
 .player-card.levels-hide .name {
   grid-area: r1;
   align-self: end;
 }
-
 .player-card.levels-hide .bot {
   grid-area: r2;
   align-self: start;
-  margin-top: 10px;
+  margin-top: 15px;
 }
-
 .player-card.levels-hide .levels {
   display: none;
 }
 
-.board-card #preview {
-  background-color: rgba(232, 172, 101, 0.55);
+.board-card {
+  display: grid;
+  grid-template-areas:
+    'img r1'
+    'img r2';
+}
+.board-card .holes {
+  grid-area: r1;
+  align-self: end;
+}
+.board-card .seeds {
+  grid-area: r2;
+  align-self: start;
+  margin-top: 15px;
+}
+.board-card img {
+  transform: rotate(-45deg);
 }
 
-.board-card #preview:hover {
-  background-color: #d08c60;
+/* to grey the disabled area */
+.disable {
+  filter: brightness(80%);
 }
 
 @media (max-width: 1395px) {

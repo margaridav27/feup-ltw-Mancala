@@ -51,7 +51,6 @@ class Board {
     renderBoard() { 
         let board = document.querySelector(".board-panel");
         document.getElementById("board-panel").innerHTML = '';
-        board.className = "board-panel"; // make board visible
 
         // warehouses
         let wh1 = document.createElement("div");
@@ -99,9 +98,7 @@ class Board {
     }
 
     updateBoard() {
-        console.log( document.getElementById("wh-1").innerText);
         document.getElementById("wh-1").innerText = `wh1 : ${this.warehouses[0]} seeds`;
-        console.log( document.getElementById("wh-1").innerText);
         document.getElementById("wh-2").innerText = `wh2 : ${this.warehouses[1]} seeds`;
 
         for (let i = 0; i < (this.nrHoles * 2); i++) 
