@@ -31,9 +31,8 @@ class Board {
 
     const totalWidth = window.innerWidth;
     const totalHeight = window.innerHeight;
-    const marginOfError = 30; // due to the margins etc
-    const holeWidth = vwToPx(((2 / 3) * 80) / this.nrHoles, totalWidth) - marginOfError;
-    const holeHeight = vhToPx((1 / 2) * 50, totalHeight) - marginOfError;
+    const holeWidth = vwToPx(((2 / 3) * 80) / this.nrHoles, totalWidth);
+    const holeHeight = vhToPx((1 / 2) * 50, totalHeight);
     return { w: holeWidth, h: holeHeight };
   }
 
@@ -112,7 +111,11 @@ class Board {
         let col = document.createElement('div');
         col.id = `col-${i}`;
         col.className = 'col';
-        col.innerText = this.nrSeeds;
+
+        let value = document.createElement('span');
+        value.innerText = this.nrSeeds;
+
+        col.appendChild(value);
         r1.appendChild(col);
       }
     } else {
@@ -122,7 +125,11 @@ class Board {
         let col = document.createElement('div');
         col.id = `col-${i}`;
         col.className = 'col';
-        col.innerText = this.nrSeeds;
+        
+        let value = document.createElement('span');
+        value.innerText = this.nrSeeds;
+
+        col.appendChild(value);
         r2.appendChild(col);
       }
     }
@@ -141,14 +148,20 @@ class Board {
         seed.className = 'seed';
         seed.id = `seed-${id * this.nrSeeds + i}`;
 
+        // seed dimensions
+        seed.style.width = `${holeWidth / 10}px`;
+        seed.style.height = seed.style.width;
+
         // position relatively to the hole
-        const offsetX = random(30, holeWidth);
+        const marginOfError = 30;
+        const offsetX = random(marginOfError, holeWidth - marginOfError);
         seed.style.left = `${offsetX}px`;
-        const offsetY = random(30, holeHeight);
+        const offsetY = random(marginOfError, holeHeight - marginOfError);
         seed.style.top = `${offsetY}px`;
 
         // color
-        const seedColor = this.seedsColorPalette[random(0, this.seedsColorPalette.length - 1)];
+        const seedColor =
+          this.seedsColorPalette[random(0, this.seedsColorPalette.length - 1)];
         seed.style.backgroundColor = seedColor;
 
         hole.appendChild(seed);
@@ -163,12 +176,12 @@ class Board {
     this.renderSeeds();
   }
 
-  updateBoard() {
-    document.getElementById('wh-1').innerText = this.warehouses[0];
-    document.getElementById('wh-2').innerText = this.warehouses[1];
+  updateBoardValues() {
+    document.querySelector('.wh-1 span').innerText = this.warehouses[0];
+    document.querySelector('.wh-2 span').innerText = this.warehouses[1];
 
     for (let i = 0; i < this.nrHoles * 2; i++)
-      document.getElementById(`col-${i}`).innerText = this.holes[i];
+      document.querySelector(`#col-${i} span`).innerText = this.holes[i];
   }
 
   updateBoardUponSowing(hid, pid) {
@@ -180,28 +193,45 @@ class Board {
       score: -1,
     };
 
-    const seeds = this.holes[hid]; // number of seeds to sow
-    this.holes[hid] = 0; // empty the played hole
+    // seeds and number of seeds to sow
+    const seeds = document.querySelectorAll(`#col-${hid} .seed`);
+    const nrSeeds = this.holes[hid];
+
+    // empty the played hole
+    this.holes[hid] = 0;
+    const playedHole = document.getElementById(`col-${hid}`);
+    seeds.forEach((seed) => playedHole.removeChild(seed));
+
+    console.log(seeds);
     hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2); // next hole
     let mightBeWarehouse = true; // determines if the next hole can be a warehouse or not
 
-    for (let i = seeds; i > 0; i--) {
-      let lastSeed = i - 1 == 0;
+    for (let i = 0; i < nrSeeds; i++) {
+      let lastSeed = i + 1 == nrSeeds;
 
       if (mightBeWarehouse && pid == 0 && hid == this.nrHoles * 2 - 1) {
         this.warehouses[0]++;
+        document.getElementById('wh-1').appendChild(seeds[i]);
+
         mightBeWarehouse = false;
+
         if (lastSeed)
           res = { lastSowingOnWarehouse: true, lastSowingOnHole: false };
       } else if (mightBeWarehouse && pid == 1 && hid == this.nrHoles - 1) {
         this.warehouses[1]++;
+        document.getElementById('wh-2').appendChild(seeds[i]);
+
         mightBeWarehouse = false;
+
         if (lastSeed)
           res = { lastSowingOnWarehouse: true, lastSowingOnHole: false };
       } else {
         this.holes[hid]++;
+        document.getElementById(`col-${hid}`).appendChild(seeds[i]);
+
         hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2);
         mightBeWarehouse = true;
+
         if (lastSeed && this.holes[hid] == 0)
           res = {
             lastSowingOnWarehouse: false,
@@ -211,40 +241,70 @@ class Board {
       }
     }
 
-    // render updated board
-    this.updateBoard();
-
-    res.score = this.warehouses[pid];
+    res.score = this.warehouses[hid];
+    this.updateBoardValues();
     return res;
   }
 
   updateBoardUponCapture(hid, pid) {
-    // capture seeds from the opposite hole
-    const oppositeHole = this.nrHoles * 2 - 1 - hid;
-    this.warehouses[pid] += this.holes[oppositeHole] + this.holes[hid];
-    this.holes[oppositeHole] = 0;
+    // capture seeds from own hole
+    const hole = document.getElementsById(`col-${hid}`);
+    const holeSeeds = document.querySelectorAll(`#col-${hid} .seed`);
     this.holes[hid] = 0;
+    holeSeeds.forEach((capturedSeed) => hole.removeChild(capturedSeed));
 
-    // render updated board
-    this.updateBoard();
+    // capture seeds from opposite hole
+    const oppositeHoleId = this.nrHoles * 2 - 1 - hid;
+    const oppositeHole = document.getElementsById(`col-${oppositeHoleId}`);
+    const oppositeHoleSeeds = document.querySelectorAll(
+      `#col-${oppositeHoleId} .seed`
+    );
+    this.holes[oppositeHoleId] = 0;
+    oppositeHoleSeeds.forEach((capturedSeed) =>
+      oppositeHole.removeChild(capturedSeed)
+    );
 
+    // move the captured seeds to the warehouse
+    this.warehouses[pid] += this.holes[oppositeHoleId] + this.holes[hid];
+    const capturedSeeds = holeSeeds.concat(oppositeHoleSeeds);
+    const warehouse = document.getElementsById(`wh-${pid + 1}`);
+    capturedSeeds.forEach((capturedSeed) =>
+      warehouse.appendChild(capturedSeed)
+    );
+
+    this.updateBoardValues();
     return this.warehouses[pid];
   }
 
   updateBoardUponCleaning() {
-    //clean the holes from both sides to the respective warehouse
+    const wh1 = document.getElementsById('wh-1');
+    const wh2 = document.getElementsById('wh-1');
+
+    // move seeds from each hole to the correspondent warehouse
     for (let i = 0; i < this.nrHoles; i++) {
       this.warehouses[0] += this.holes[i];
       this.holes[i] = 0;
+
+      const hole = document.getElementById(`#col-${hid}`);
+      const seeds = document.querySelectorAll(`#col-${hid} .seed`);
+      seeds.forEach((seed) => {
+        hole.removeChild(seed);
+        wh1.appendChild(seed);
+      });
     }
     for (let i = this.nrHoles - 1; i < this.nrHoles * 2; i++) {
       this.warehouses[1] += this.holes[i];
       this.holes[i] = 0;
+
+      const hole = document.getElementById(`#col-${hid}`);
+      const seeds = document.querySelectorAll(`#col-${hid} .seed`);
+      seeds.forEach((seed) => {
+        hole.removeChild(seed);
+        wh2.appendChild(seed);
+      });
     }
 
-    // render updated board
-    this.updateBoard();
-
+    this.updateBoardValues();
     return this.warehouses;
   }
 }

@@ -85,10 +85,7 @@
   border-radius: 50px;
   background-color: #6f4518;
   /*box-shadow: inset 15px 15px 33px -12px rgba(0, 0, 0, 1);*/
-
-  /* just to test while we do not have the actual seeds */
-  text-align: center;
-  font-size: 12px;
+  font-size: 8px;
   color: white;
 }
 
@@ -114,7 +111,5 @@
 
 .seed {
   position: absolute;
-  width: 10%;
-  height: 10%;
   border-radius: 50%;
 }
