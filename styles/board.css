@@ -1,3 +1,5 @@
+/* -------------------- info panel -------------------- */
+
 .info-panel {
   width: 80vw;
   height: 10vh;
@@ -34,13 +36,15 @@
   margin-right: 5px;
 }
 
+/* -------------------- board panel -------------------- */
+
 .board-panel {
   width: 80vw;
   height: 50vh;
   display: grid;
   grid-template-areas:
-    "wh-1 r-1 wh-2"
-    "wh-1 r-2 wh-2";
+    'wh-1 r-1 wh-2'
+    'wh-1 r-2 wh-2';
   grid-template-columns: 1fr 4fr 1fr;
   grid-column-gap: 3px;
   margin: auto;
@@ -71,6 +75,7 @@
 
 .board-panel .wh,
 .board-panel .row .col {
+  position: relative;
   align-self: center;
   justify-self: center;
   width: 100%;
@@ -79,6 +84,7 @@
   margin-left: 3px;
   border-radius: 50px;
   background-color: #6f4518;
+  /*box-shadow: inset 15px 15px 33px -12px rgba(0, 0, 0, 1);*/
 
   /* just to test while we do not have the actual seeds */
   text-align: center;
@@ -102,4 +108,13 @@
   .board-panel {
     width: 90%;
   }
+}
+
+/* -------------------- seeds -------------------- */
+
+.seed {
+  position: absolute;
+  width: 10%;
+  height: 10%;
+  border-radius: 50%;
 }
