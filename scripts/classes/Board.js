@@ -81,12 +81,18 @@ class Board {
     let wh1 = document.createElement('div');
     wh1.className = 'wh';
     wh1.id = 'wh-1';
-    wh1.innerText = '0';
+
+    let value1 = document.createElement('span');
+    value1.innerText = 0;
+    wh1.appendChild(value1);
 
     let wh2 = document.createElement('div');
     wh2.className = 'wh';
     wh2.id = 'wh-2';
-    wh2.innerText = '0';
+
+    let value2 = document.createElement('span');
+    value2.innerText = 0;
+    wh2.appendChild(value2);
 
     // rows
     let r1 = document.createElement('div');
@@ -125,7 +131,7 @@ class Board {
         let col = document.createElement('div');
         col.id = `col-${i}`;
         col.className = 'col';
-        
+
         let value = document.createElement('span');
         value.innerText = this.nrSeeds;
 
@@ -177,8 +183,8 @@ class Board {
   }
 
   updateBoardValues() {
-    document.querySelector('.wh-1 span').innerText = this.warehouses[0];
-    document.querySelector('.wh-2 span').innerText = this.warehouses[1];
+    document.querySelector('#wh-1 span').innerText = this.warehouses[0];
+    document.querySelector('#wh-2 span').innerText = this.warehouses[1];
 
     for (let i = 0; i < this.nrHoles * 2; i++)
       document.querySelector(`#col-${i} span`).innerText = this.holes[i];
@@ -202,7 +208,6 @@ class Board {
     const playedHole = document.getElementById(`col-${hid}`);
     seeds.forEach((seed) => playedHole.removeChild(seed));
 
-    console.log(seeds);
     hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2); // next hole
     let mightBeWarehouse = true; // determines if the next hole can be a warehouse or not
 
@@ -213,24 +218,27 @@ class Board {
         this.warehouses[0]++;
         document.getElementById('wh-1').appendChild(seeds[i]);
 
-        mightBeWarehouse = false;
-
         if (lastSeed)
-          res = { lastSowingOnWarehouse: true, lastSowingOnHole: false };
+          res = {
+            lastSowingOnWarehouse: true,
+            lastSowingOnHole: false,
+          };
+
+        mightBeWarehouse = false;
       } else if (mightBeWarehouse && pid == 1 && hid == this.nrHoles - 1) {
         this.warehouses[1]++;
         document.getElementById('wh-2').appendChild(seeds[i]);
 
-        mightBeWarehouse = false;
-
         if (lastSeed)
-          res = { lastSowingOnWarehouse: true, lastSowingOnHole: false };
+          res = {
+            lastSowingOnWarehouse: true,
+            lastSowingOnHole: false,
+          };
+
+        mightBeWarehouse = false;
       } else {
         this.holes[hid]++;
         document.getElementById(`col-${hid}`).appendChild(seeds[i]);
-
-        hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2);
-        mightBeWarehouse = true;
 
         if (lastSeed && this.holes[hid] == 0)
           res = {
@@ -238,6 +246,9 @@ class Board {
             lastSowingOnHole: true,
             lastSowing: hid,
           };
+
+        hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2);
+        mightBeWarehouse = true;
       }
     }
 
