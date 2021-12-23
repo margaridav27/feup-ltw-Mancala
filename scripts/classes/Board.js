@@ -6,10 +6,18 @@ class Board {
         this.holes = Array(this.nrHoles * 2).fill(this.nrSeeds);
     }
 
+    setHoles(holes) { this.holes = holes; }
+
+    setWarehouses(warehouses) { this.warehouses = warehouses}
+
     getNrHoles() { return this.nrHoles; }
 
+    getNrSeeds() { return this.nrSeeds; }
+
     getHoles() { return this.holes; }
-    
+
+    getWarehouses() { return this.warehouses; }
+
     setValidHoles(rid) {
         const nrHoles = this.nrHoles;
         let validHoles = false;
@@ -133,16 +141,16 @@ class Board {
                     res = { lastSowingOnWarehouse: true, lastSowingOnHole: false };
 
             } else { 
+                if (lastSeed && this.holes[hid] == 0) 
+                    res = { lastSowingOnWarehouse: false, lastSowingOnHole: true, lastSowing: hid, };
                 this.holes[hid]++;
                 hid = ((this.nrHoles * 2) + (hid - 1)) % (this.nrHoles * 2); 
                 mightBeWarehouse = true; 
-                if (lastSeed && this.holes[hid] == 0) 
-                    res = { lastSowingOnWarehouse: false, lastSowingOnHole: true, lastSowing: hid, };
             } 
         }
 
-        // render updated board
-        this.updateBoard();
+        // // render updated board
+        // this.updateBoard();
 
         res.score = this.warehouses[pid];
         return res;
@@ -156,7 +164,7 @@ class Board {
         this.holes[hid] = 0;
 
         // render updated board
-        this.updateBoard();
+        // this.updateBoard();
 
         return this.warehouses[pid];
     }

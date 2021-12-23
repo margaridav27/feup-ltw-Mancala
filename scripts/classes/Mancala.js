@@ -3,6 +3,7 @@ class Mancala {
         this.level = level; // default value of 0 player vs player case 
         this.board = board;
         this.players = players;
+        this.bot = new Bot();
         this.score = [0,0];
         this.currentPlayer = 0; 
         this.finished = false;
@@ -95,17 +96,23 @@ class Mancala {
     }
 
     performMove(playedHole) {
+        this.bot.calculateBestMoveRec(0, 0, this.currentPlayer, -1, 0, this.board, this.board);
         if (this.isValidMove(playedHole)) {
             let res = this.sow(playedHole);
+            // this.board.updateBoard();
 
             this.score[this.currentPlayer] = res.score;
             this.updateScore();
 
-            if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing))   // last sowing occured in one of the current player's holes
+            if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing)) {  // last sowing occured in one of the current player's holes
                 this.score[this.currentPlayer] = this.capture(res.lastSowing);
+                // this.board.updateBoard();
+            }
             else if (!res.lastSowingOnWarehouse)                               // last sowing did not occur in the current player's warehouse
                 this.setCurrentPlayer();                                       // swap players normally
-                                                                
+             
+            this.board.updateBoard();
+            
             if (!this.setValidMoves()) {
                 this.endGame();
                 return false;

@@ -1,43 +1,57 @@
 class Bot {
-  simulateMoveExecution(house, board) {
-    let res = {pointsMove: -1, boardMove: -1};
-    let currentHole = house;
-    let holes = board.getHoles();
-    const seeds = holes[house];
-    const nrHoles = this.board.getNrHoles();
-    holes[house] = 0;
-    currentHole++;
-    for (let i = seeds; i > 0; i--) {
-      let lastSeed = (i - 1 == 0);
-      
-      holes[currentHole]++;
-      currentHole = ((nrHoles * 2) + (currentHole - 1)) % (nrHoles * 2);
-    
-      if (lastSeed && holes[currentHole] == 0) 
-      res = { lastSowingOnWarehouse: false, lastSowingOnHole: true, lastSowing: hid, };
-      
-    }
+  copyBoard(board) {
+    let nrSeeds = 0;
+    let nrHoles = 0;
+    for (let i = 0; i < board.getNrSeeds(); i++)
+      nrSeeds++;
+    for (let i = 0; i < board.getNrHoles(); i++)
+      nrHoles++;
 
-    return res;
+    let newBoard = new Board(nrSeeds, nrHoles);
+    let holes = [];
+    holes = Array.from(board.getHoles());
+    let warehouses = [];
+    warehouses = Array.from(board.getWarehouses());
+
+    newBoard.setHoles(holes);
+    newBoard.setWarehouses(warehouses);
+    return newBoard
   }
-            
-            // return true;
-        
-    //  if (this.isValidMove(playedHole)) {
-    //   let res = this.sow(playedHole);
+  simulateMoveExecution(house, board, turn) {
+    let move = {pointsMove: -1, boardMove: -1, playAgain: false};
 
-    //   this.score[this.currentPlayer] = res.score;
-    //   this.updateScore();
+    //set up board
+    const nrHoles = board.getNrHoles();
+    // const nrSeeds = board.getNrSeeds();
+    let copyBoard = this.copyBoard(board);
+    // let copyBoard = new Board(copyBoard1.nrSeeds, copyBoard1.nrHoles);
+    // const holes = board.getHoles();
+    // const warehouses = board.getWarehouses(); 
+    // copyBoard.setHoles(copyBoard1.holes);
+    // copyBoard.setWarehouses(copyBoard1.warehouses);
 
-    //   if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing))   // last sowing occured in one of the current player's holes
-    //       this.score[this.currentPlayer] = this.capture(res.lastSowing);
-    //   else if (!res.lastSowingOnWarehouse)                               // last sowing did not occur in the current player's warehouse
-    //       this.setCurrentPlayer();                                       // swap players normally
-                                                          
-    //   if (!this.setValidMoves()) 
-    //       this.endGame();
-    // }
+    //sow
+    let res = copyBoard.updateBoardUponSowing(house, turn)
+
+    //check if last hole was on bot's side and capture if true and hole was empty
+    let ownEmptyHole = false;
+    if (turn == 0) ownEmptyHole = res.lastSowing >= 0 && res.lastSowing < nrHoles
+
+    else if (turn == 1) ownEmptyHole = res.lastSowing >= nrHoles && res.lastSowing < 2 * nrHoles
+
+    if (res.lastSowingOnHole && ownEmptyHole) {
+      copyBoard.updateBoardUponCapture(res.lastSowing, turn);
+      move.playAgain = true;  
+    }   
+    // let poits1 = copyBoard.getWarehouses[turn];
+    // let points2 = v;
+    move.pointsMove = copyBoard.getWarehouses()[turn] - board.getWarehouses()[turn];
+    move.boardMove = copyBoard;
+   
+    return move;
+  }
   
+
   
   anticipateOpponentsBestMove(turn, board) {
     let pointsBestMove = 0;
@@ -58,19 +72,52 @@ class Bot {
     return { bestMove: bestMove, boardBestMove: boardBestMove }; 
   }
 
-  calculateBestMoveRec(level, currentLevel, turn, bestMove, pointsBestMove, board, boardBestMove) {
-    const nrHoles = board.getNrHoles();
-    const validMoves = turn == 0 ? range(0, nrHoles) : range(nrHoles, nrHoles * 2);
+  simulateHolePlay(validMoves, board, pointsPlay, pointsBestMove, bestMove, boardBestMove, turn) {
 
-    for (move in validMoves) {
-      const result = simulateMoveExecution(move, board, turn);
+    let result = { playAgain: true};
 
+    for (let i = 0; i < validMoves.length; i++) {
+      if (holes[validMoves[i]] != 0) {
+        result = this.simulateMoveExecution(validMoves[i], board, turn);
+        pointsPlay += result.pointsMove;
+        if (result.playAgain) {
+          this.simulateHolePlay(validMoves, result.boardMove, pointsPlay);
+        }
+      }
       if (result.pointsMove > pointsBestMove) {
-        bestMove = move;
         pointsBestMove = result.pointsMove;
+        bestMove = validMoves[i];
         boardBestMove = result.boardMove;
       }
     }
+    return {pointsBestMove, bestMove, boardBestMove}
+  }
+
+  calculateBestMoveRec(level, currentLevel, turn, bestMove, pointsBestMove, board, boardBestMove) {
+    const nrHoles = board.getNrHoles();
+    const validMoves = turn == 0 ? range(0, nrHoles) : range(nrHoles, nrHoles * 2);
+    const holes = board.getHoles();
+    
+    this.simulateHolePlay(validMoves, board, 0, 0, -1, board, turn);
+    // let result = { playAgain: true};
+
+    // for (move in validMoves) {
+    //   if (holes[move] != 0) {
+        
+    //     result = simulateMoveExecution(move, board, turn);
+
+    //     holes = result.boardMove.getHoles();
+    //   }
+
+    // }
+
+    // if (result.pointsMove > pointsBestMove) {
+    //   bestMove = move;
+    //   pointsBestMove = result.pointsMove;
+    //   boardBestMove = result.boardMove;
+    // }
+
+
 
     if (currentLevel == level) 
       return { bestMove: bestMove, boardBestMove: boardBestMove };
