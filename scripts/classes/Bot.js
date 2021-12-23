@@ -1,11 +1,7 @@
 class Bot {
   copyBoard(board) {
-    let nrSeeds = 0;
-    let nrHoles = 0;
-    for (let i = 0; i < board.getNrSeeds(); i++)
-      nrSeeds++;
-    for (let i = 0; i < board.getNrHoles(); i++)
-      nrHoles++;
+    let nrSeeds = board.getNrHoles();
+    let nrHoles = board.getNrSeeds();;
 
     let newBoard = new Board(nrSeeds, nrHoles);
     let holes = [];
@@ -17,18 +13,14 @@ class Bot {
     newBoard.setWarehouses(warehouses);
     return newBoard
   }
+
   simulateMoveExecution(house, board, turn) {
     let move = {pointsMove: -1, boardMove: -1, playAgain: false};
 
     //set up board
     const nrHoles = board.getNrHoles();
-    // const nrSeeds = board.getNrSeeds();
+
     let copyBoard = this.copyBoard(board);
-    // let copyBoard = new Board(copyBoard1.nrSeeds, copyBoard1.nrHoles);
-    // const holes = board.getHoles();
-    // const warehouses = board.getWarehouses(); 
-    // copyBoard.setHoles(copyBoard1.holes);
-    // copyBoard.setWarehouses(copyBoard1.warehouses);
 
     //sow
     let res = copyBoard.updateBoardUponSowing(house, turn)
@@ -43,6 +35,9 @@ class Bot {
       copyBoard.updateBoardUponCapture(res.lastSowing, turn);
       move.playAgain = true;  
     }   
+    else if (res.lastSowingOnWarehouse)      
+      move.playAgain = true;                                      
+             
     // let poits1 = copyBoard.getWarehouses[turn];
     // let points2 = v;
     move.pointsMove = copyBoard.getWarehouses()[turn] - board.getWarehouses()[turn];
@@ -72,22 +67,24 @@ class Bot {
     return { bestMove: bestMove, boardBestMove: boardBestMove }; 
   }
 
-  simulateHolePlay(validMoves, board, pointsPlay, pointsBestMove, bestMove, boardBestMove, turn) {
+  simulateHolePlay(validMoves, board, points, pointsBestMove, bestMove, boardBestMove, turn) {
 
     let result = { playAgain: true};
-
+    let pointsPlay = 0;
     for (let i = 0; i < validMoves.length; i++) {
+      pointsPlay = points;
       if (holes[validMoves[i]] != 0) {
         result = this.simulateMoveExecution(validMoves[i], board, turn);
         pointsPlay += result.pointsMove;
         if (result.playAgain) {
-          this.simulateHolePlay(validMoves, result.boardMove, pointsPlay);
+          this.simulateHolePlay(validMoves, result.boardMove, pointsPlay, pointsPlay, -1, result.boardMove, turn);
         }
-      }
-      if (result.pointsMove > pointsBestMove) {
-        pointsBestMove = result.pointsMove;
-        bestMove = validMoves[i];
-        boardBestMove = result.boardMove;
+      
+        if (pointsPlay > pointsBestMove) {
+          pointsBestMove = result.pointsMove;
+          bestMove = validMoves[i];
+          boardBestMove = result.boardMove;
+        }
       }
     }
     return {pointsBestMove, bestMove, boardBestMove}
