@@ -96,7 +96,8 @@ class Mancala {
     }
 
     performMove(playedHole) {
-        this.bot.calculateBestMoveRec(0, 0, this.currentPlayer, -1, 0, this.board, this.board);
+        this.bot.calculateBestMoveRec(0, this.currentPlayer, this.board);
+        
         if (this.isValidMove(playedHole)) {
             let res = this.sow(playedHole);
             // this.board.updateBoard();
