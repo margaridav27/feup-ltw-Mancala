@@ -5,20 +5,21 @@ function setupPlayers() {
     // fetch players configurations
     let player1 = document.getElementById("name-1").value;
     let player2 = document.getElementById("name-2").value;
+    let level;
 
     // check player vs bot
     if (player1 == "BOT") {
         const radioBtn = document.querySelector("input[name=\"level-1\"]:checked");
-        if (radioBtn.id.match(/level-1/)) level = radioBtn.value;            
+        if (radioBtn.id.match(/level-1/)) level = parseInt(radioBtn.value);            
     } else if (player2 == "BOT") {
         const radioBtn = document.querySelector("input[name=\"level-2\"]:checked");
-        if (radioBtn.id.match(/level-2/)) level = radioBtn.value;
+        if (radioBtn.id.match(/level-2/)) level = parseInt(radioBtn.value);
     }
 
     if (player1.length === 0) player1 = "Player 1";
     else if (player2.length === 1) player1 = "Player 2";
 
-    return [player1, player2];
+    return [[player1, player2], level];
 }
 
 function setupBoard() {
@@ -39,6 +40,8 @@ function moveHandler(move) {
     switch (gameState) {
         case 'PLAYING':
             let succeeded = mancala.performMove(move);
+            if (mancala.getPlayers()[mancala.getCurrentPlayer()] == "BOT") 
+                mancala.performBot();
             if (!succeeded) {
                 endGame();
                 gameState = 'DEFAULT';
@@ -50,7 +53,9 @@ function moveHandler(move) {
 }
 
 function startGame() {
-    let players = setupPlayers();
+    let players = setupPlayers()[0];
+
+    let level = setupPlayers()[1];
 
     let board = setupBoard();
     board.renderBoard();
@@ -62,7 +67,7 @@ function startGame() {
     let playButton = document.getElementById("game-btn");
     playButton.innerHTML = "QUIT";
     
-    mancala = new Mancala(board, players);
+    mancala = new Mancala(board, players, level);
     gameState = 'PLAYING'
 }
 

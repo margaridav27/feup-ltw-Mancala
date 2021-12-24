@@ -3,7 +3,7 @@ class Board {
         this.nrSeeds = seeds;    // holds the number of seeds on each hole
         this.nrHoles = holes;    // holds the number of holes on each side
         this.warehouses = [0,0]; // both warehouses are initially empty
-        this.holes = [0,4,4,4,4,4,4,4];
+        this.holes = Array(this.nrHoles * 2).fill(this.nrSeeds);
     }
 
     setHoles(holes) { this.holes = holes; }

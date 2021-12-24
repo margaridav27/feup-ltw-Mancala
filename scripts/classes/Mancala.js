@@ -1,5 +1,5 @@
 class Mancala {
-    constructor(board, players, level = 0) {
+    constructor(board, players, level = 1) {
         this.level = level; // default value of 0 player vs player case 
         this.board = board;
         this.players = players;
@@ -11,6 +11,8 @@ class Mancala {
     }
 
     getPlayers() { return this.players; }
+
+    getCurrentPlayer() { return this.currentPlayer; }
 
     getScore() { return this.score; }
 
@@ -96,8 +98,6 @@ class Mancala {
     }
 
     performMove(playedHole) {
-        this.bot.calculateBestMoveRec(0, this.currentPlayer, this.board);
-        
         if (this.isValidMove(playedHole)) {
             let res = this.sow(playedHole);
             // this.board.updateBoard();
@@ -125,6 +125,12 @@ class Mancala {
         return false;
     }
 
+    performBot() {
+        let id = this.bot.calculateBestMove(this.level, this.currentPlayer, this.board);
+        for (let i = id.length - 1; i >= 0; i--) {
+            setTimeout(() => {  this.performMove(id[i]); }, 2000);
+        }
+    }
     /* 
     here we will check the AI level and act accordingly, i.e.,
         - if the AI level is =1, 
