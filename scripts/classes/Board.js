@@ -252,7 +252,7 @@ class Board {
       }
     }
 
-    res.score = this.warehouses[hid];
+    res.score = this.warehouses[pid];
     this.updateBoardValues();
     return res;
   }
@@ -276,7 +276,7 @@ class Board {
     );
 
     // move the captured seeds to the warehouse
-    this.warehouses[pid] += this.holes[oppositeHoleId] + this.holes[hid];
+    this.warehouses[pid] += holeSeeds.length + oppositeHoleSeeds.length;
     const capturedSeeds = [...holeSeeds,...oppositeHoleSeeds];
     const warehouse = document.getElementById(`wh-${pid + 1}`);
     capturedSeeds.forEach((capturedSeed) =>
