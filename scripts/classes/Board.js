@@ -26,22 +26,22 @@ class Board {
   getBoardDimensions() {
     const totalWidth = window.innerWidth;
     const totalHeight = window.innerHeight;
-    const boardWidth = vwToPx(80, totalWidth);
-    const boardHeight = vhToPx(50, totalHeight);
+    const boardWidth = Math.floor(vwToPx(80, totalWidth));
+    const boardHeight = Math.floor(vhToPx(50, totalHeight));
     return { w: boardWidth, h: boardHeight };
   }
 
   getHoleDimensions() {
     const boardDimensions = this.getBoardDimensions();
-    const holeWidth = ((2 / 3) * boardDimensions.w) / this.nrHoles;
-    const holeHeight = (1 / 2) * boardDimensions.h;
+    const holeWidth = Math.floor(((2 / 3) * boardDimensions.w) / this.nrHoles);
+    const holeHeight = Math.floor((1 / 2) * boardDimensions.h);
     return { w: holeWidth, h: holeHeight };
   }
 
   getWarehouseDimensions() {
     const boardDimensions = this.getBoardDimensions();
-    const whWidth = (1 / 6) * boardDimensions.w;
-    const whHeight = boardDimensions.h;
+    const whWidth = Math.floor((1 / 6) * boardDimensions.w);
+    const whHeight = Math.floor(boardDimensions.h);
     return { w: whWidth, h: whHeight };
   }
 
@@ -388,12 +388,14 @@ class Board {
     let currSeedPos = this.getSeedTopLeftOffsets(seed);
     let P1 = [currSeedPos.l, currSeedPos.t];
     const P4 = [toPos.l + originalSeedPos.l, toPos.t + originalSeedPos.t];
+    console.log(P4)
     const R1 = [0, 1];
     const R4 = [0, -1];
     let t = 0;
 
     // moves seed along the board, from origin to destination
     while (!this.equalPosition(P1, P4)) {
+      //console.log('P1',P1,'P4',P4);
       t += 0.1;
       seed.style.left = `${
         (2 * Math.pow(t, 3) - 3 * Math.pow(t, 2) + 1) * P1[0] +
