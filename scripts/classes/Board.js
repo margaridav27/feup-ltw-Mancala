@@ -23,17 +23,35 @@ class Board {
     return this.holes;
   }
 
-  getHoleDimensions() {
-    /*  board -> width = 80vw | height = 50vh
-        warehouse -> width = 1/6 * 80vw | height = 50vh (each)
-        hole -> width = (2/3 * 80vw) / nrHoles | height = 1/2 * 50vh (each)
-    */
-
+  getBoardDimensions() {
     const totalWidth = window.innerWidth;
     const totalHeight = window.innerHeight;
-    const holeWidth = vwToPx(((2 / 3) * 80) / this.nrHoles, totalWidth);
-    const holeHeight = vhToPx((1 / 2) * 50, totalHeight);
+    const boardWidth = vwToPx(80, totalWidth);
+    const boardHeight = vhToPx(50, totalHeight);
+    return { w: boardWidth, h: boardHeight };
+  }
+
+  getHoleDimensions() {
+    const boardDimensions = this.getBoardDimensions();
+    const holeWidth = ((2 / 3) * boardDimensions.w) / this.nrHoles;
+    const holeHeight = (1 / 2) * boardDimensions.h;
     return { w: holeWidth, h: holeHeight };
+  }
+
+  getWarehouseDimensions() {
+    const boardDimensions = this.getBoardDimensions();
+    const whWidth = (1 / 6) * boardDimensions.w;
+    const whHeight = boardDimensions.h;
+    return { w: whWidth, h: whHeight };
+  }
+
+  getHolePosition(hid) {
+    const holeDimensions = this.getHoleDimensions();
+    const whDimensions = this.getWarehouseDimensions();
+    let holeOffset = hid < this.nrHoles ? hid : hid - this.nrHoles;
+    let leftOffset = whDimensions.w + holeOffset * holeDimensions.w;
+    let topOffset = holeOffset == hid ? 0 : holeDimensions.h;
+    return { l: leftOffset, t: topOffset };
   }
 
   setValidHoles(rid) {
@@ -199,6 +217,8 @@ class Board {
       score: -1,
     };
 
+    const fromhid = hid;
+
     // seeds and number of seeds to sow
     const seeds = document.querySelectorAll(`#col-${hid} .seed`);
     const nrSeeds = this.holes[hid];
@@ -206,7 +226,7 @@ class Board {
     // empty the played hole
     this.holes[hid] = 0;
     const playedHole = document.getElementById(`col-${hid}`);
-    seeds.forEach((seed) => playedHole.removeChild(seed));
+    //seeds.forEach((seed) => playedHole.removeChild(seed));
 
     hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2); // next hole
     let mightBeWarehouse = true; // determines if the next hole can be a warehouse or not
@@ -222,7 +242,8 @@ class Board {
           };
 
         this.warehouses[0]++;
-        document.getElementById('wh-1').appendChild(seeds[i]);
+        this.moveSeed(seeds[i].id, fromhid, -1);
+        //document.getElementById('wh-1').appendChild(seeds[i]);
 
         mightBeWarehouse = false;
       } else if (mightBeWarehouse && pid == 1 && hid == this.nrHoles - 1) {
@@ -233,7 +254,8 @@ class Board {
           };
 
         this.warehouses[1]++;
-        document.getElementById('wh-2').appendChild(seeds[i]);
+        this.moveSeed(seeds[i].id, fromhid, -2);
+        //document.getElementById('wh-2').appendChild(seeds[i]);
 
         mightBeWarehouse = false;
       } else {
@@ -245,7 +267,8 @@ class Board {
           };
 
         this.holes[hid]++;
-        document.getElementById(`col-${hid}`).appendChild(seeds[i]);
+        this.moveSeed(seeds[i].id, fromhid, hid);
+        //document.getElementById(`col-${hid}`).appendChild(seeds[i]);
 
         hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2);
         mightBeWarehouse = true;
@@ -277,7 +300,7 @@ class Board {
 
     // move the captured seeds to the warehouse
     this.warehouses[pid] += holeSeeds.length + oppositeHoleSeeds.length;
-    const capturedSeeds = [...holeSeeds,...oppositeHoleSeeds];
+    const capturedSeeds = [...holeSeeds, ...oppositeHoleSeeds];
     const warehouse = document.getElementById(`wh-${pid + 1}`);
     capturedSeeds.forEach((capturedSeed) =>
       warehouse.appendChild(capturedSeed)
@@ -317,5 +340,95 @@ class Board {
 
     this.updateBoardValues();
     return this.warehouses;
+  }
+
+  equalPosition(pos1, pos2) {
+    return pos1[0] == pos2[0] && pos1[1] == pos2[1];
+  }
+
+  async moveSeed(sid, fromid, toid) {
+    let from = document.getElementById(`col-${fromid}`);
+
+    let to;
+    if (toid < 0) to = document.getElementById(`wh-${Math.abs(toid)}`);
+    else to = document.getElementById(`col-${toid}`);
+
+    let seed = document.getElementById(sid);
+    let board = document.getElementById('board-panel');
+
+    // removes seed from the origin and transfers it to the board, to the same position visually
+    from.removeChild(seed);
+
+    const fromPosition = this.getHolePosition(fromid);
+    const seedTopOffset = parseInt(seed.style.top.replace(/\D/g, ''));
+    const seedLeftOffset = parseInt(seed.style.left.replace(/\D/g, ''));
+
+    board.appendChild(seed);
+    seed.style.top = `${fromPosition.t + seedTopOffset}px`;
+    seed.style.left = `${fromPosition.l + seedLeftOffset}px`;
+
+    let toPosition;
+    if (toid < 0) {
+      // destination is a warehouse
+      if (toid == -1) toPosition = { t: 0, l: 0 };
+      else
+        toPosition = {
+          t: 0,
+          l: this.getBoardDimensions().w - this.getWarehouseDimensions().w,
+        };
+    } else toPosition = this.getHolePosition(toid);
+
+    // bezier curve values
+    let P1 = [
+      Math.floor(parseInt(seed.style.left.slice(0, -2))),
+      Math.floor(parseInt(seed.style.top.slice(0, -2))),
+    ];
+    console.log(seed.style.left, seed.style.top);
+    const P4 = [toPosition.l + seedLeftOffset, toPosition.t + seedTopOffset];
+    const R1 = [0, 1];
+    const R4 = [0, -1];
+    let t = 0;
+
+    // moves seed along the board, from origin to destination
+    while (!this.equalPosition(P1, P4)) {
+      t += 0.1;
+      seed.style.left = `${
+        (2 * Math.pow(t, 3) - 3 * Math.pow(t, 2) + 1) * P1[0] +
+        (-2 * Math.pow(t, 3) + 3 * Math.pow(t, 2)) * P4[0] +
+        (Math.pow(t, 3) - 2 * Math.pow(t, 2) + t) *
+          R1[0] *
+          (Math.pow(t, 3) - Math.pow(t, 2)) *
+          R4[0]
+      }px`;
+      seed.style.top = `${
+        (2 * Math.pow(t, 3) - 3 * Math.pow(t, 2) + 1) * P1[1] +
+        (-2 * Math.pow(t, 3) + 3 * Math.pow(t, 2)) * P4[1] +
+        (Math.pow(t, 3) - 2 * Math.pow(t, 2) + t) *
+          R1[1] *
+          (Math.pow(t, 3) - Math.pow(t, 2)) *
+          R4[1]
+      }px`;
+      P1 = [
+        Math.floor(parseInt(seed.style.left.slice(0, -2))),
+        Math.floor(parseInt(seed.style.top.slice(0, -2))),
+      ];
+      console.log(seed.style.top, seed.style.left);
+
+      await this.animationTime();
+    }
+
+    // removes seed from the board and transfers it to the destination
+    board.removeChild(seed);
+
+    to.appendChild(seed);
+    seed.style.top = `${seedTopOffset}px`;
+    seed.style.left = `${seedLeftOffset}px`;
+
+    console.log('hole onde é suposto acabarem',toPosition.t,toPosition.l)
+    console.log('onde acabam',seed.style.top, seed.style.left);
+  }
+
+  animationTime() {
+    return new Promise((resolve) => setTimeout(resolve, 100));
   }
 }

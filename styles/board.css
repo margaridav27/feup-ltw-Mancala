@@ -39,6 +39,7 @@
 /* -------------------- board panel -------------------- */
 
 .board-panel {
+  position: relative;
   width: 80vw;
   height: 50vh;
   display: grid;
