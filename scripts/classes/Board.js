@@ -369,9 +369,9 @@ class Board {
     const fromPos = this.getHoleTopLeftOffsets(fromid);
     const originalSeedPos = this.getSeedTopLeftOffsets(seed);
 
-    board.appendChild(seed);
     seed.style.top = `${fromPos.t + originalSeedPos.t}px`;
     seed.style.left = `${fromPos.l + originalSeedPos.l}px`;
+    board.appendChild(seed);
 
     let toPos;
     if (toid < 0) {
@@ -388,14 +388,12 @@ class Board {
     let currSeedPos = this.getSeedTopLeftOffsets(seed);
     let P1 = [currSeedPos.l, currSeedPos.t];
     const P4 = [toPos.l + originalSeedPos.l, toPos.t + originalSeedPos.t];
-    console.log(P4)
     const R1 = [0, 1];
     const R4 = [0, -1];
     let t = 0;
 
     // moves seed along the board, from origin to destination
     while (!this.equalPosition(P1, P4)) {
-      //console.log('P1',P1,'P4',P4);
       t += 0.1;
       seed.style.left = `${
         (2 * Math.pow(t, 3) - 3 * Math.pow(t, 2) + 1) * P1[0] +
@@ -423,12 +421,12 @@ class Board {
     // removes seed from the board and transfers it to the destination
     board.removeChild(seed);
 
-    to.appendChild(seed);
     seed.style.top = `${originalSeedPos.t}px`;
     seed.style.left = `${originalSeedPos.l}px`;
+    to.appendChild(seed);
   }
 
   animationTime() {
-    return new Promise((resolve) => setTimeout(resolve, 100));
+    return new Promise((resolve) => setTimeout(resolve, 20));
   }
 }
