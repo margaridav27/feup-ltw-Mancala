@@ -45,13 +45,20 @@ class Board {
     return { w: whWidth, h: whHeight };
   }
 
-  getHolePosition(hid) {
+  getHoleTopLeftOffsets(hid) {
     const holeDimensions = this.getHoleDimensions();
     const whDimensions = this.getWarehouseDimensions();
     let holeOffset = hid < this.nrHoles ? hid : hid - this.nrHoles;
     let leftOffset = whDimensions.w + holeOffset * holeDimensions.w;
     let topOffset = holeOffset == hid ? 0 : holeDimensions.h;
     return { l: leftOffset, t: topOffset };
+  }
+
+  getSeedTopLeftOffsets(seed) {
+    return {
+      t: Math.floor(parseInt(seed.style.top.slice(0, -2))),
+      l: Math.floor(parseInt(seed.style.left.slice(0, -2))),
+    };
   }
 
   setValidHoles(rid) {
@@ -359,32 +366,28 @@ class Board {
     // removes seed from the origin and transfers it to the board, to the same position visually
     from.removeChild(seed);
 
-    const fromPosition = this.getHolePosition(fromid);
-    const seedTopOffset = parseInt(seed.style.top.replace(/\D/g, ''));
-    const seedLeftOffset = parseInt(seed.style.left.replace(/\D/g, ''));
+    const fromPos = this.getHoleTopLeftOffsets(fromid);
+    const originalSeedPos = this.getSeedTopLeftOffsets(seed);
 
     board.appendChild(seed);
-    seed.style.top = `${fromPosition.t + seedTopOffset}px`;
-    seed.style.left = `${fromPosition.l + seedLeftOffset}px`;
+    seed.style.top = `${fromPos.t + originalSeedPos.t}px`;
+    seed.style.left = `${fromPos.l + originalSeedPos.l}px`;
 
-    let toPosition;
+    let toPos;
     if (toid < 0) {
       // destination is a warehouse
-      if (toid == -1) toPosition = { t: 0, l: 0 };
+      if (toid == -1) toPos = { t: 0, l: 0 };
       else
-        toPosition = {
+        toPos = {
           t: 0,
           l: this.getBoardDimensions().w - this.getWarehouseDimensions().w,
         };
-    } else toPosition = this.getHolePosition(toid);
+    } else toPos = this.getHoleTopLeftOffsets(toid);
 
     // bezier curve values
-    let P1 = [
-      Math.floor(parseInt(seed.style.left.slice(0, -2))),
-      Math.floor(parseInt(seed.style.top.slice(0, -2))),
-    ];
-    console.log(seed.style.left, seed.style.top);
-    const P4 = [toPosition.l + seedLeftOffset, toPosition.t + seedTopOffset];
+    let currSeedPos = this.getSeedTopLeftOffsets(seed);
+    let P1 = [currSeedPos.l, currSeedPos.t];
+    const P4 = [toPos.l + originalSeedPos.l, toPos.t + originalSeedPos.t];
     const R1 = [0, 1];
     const R4 = [0, -1];
     let t = 0;
@@ -408,11 +411,9 @@ class Board {
           (Math.pow(t, 3) - Math.pow(t, 2)) *
           R4[1]
       }px`;
-      P1 = [
-        Math.floor(parseInt(seed.style.left.slice(0, -2))),
-        Math.floor(parseInt(seed.style.top.slice(0, -2))),
-      ];
-      console.log(seed.style.top, seed.style.left);
+
+      currSeedPos = this.getSeedTopLeftOffsets(seed);
+      P1 = [currSeedPos.l, currSeedPos.t];
 
       await this.animationTime();
     }
@@ -421,11 +422,8 @@ class Board {
     board.removeChild(seed);
 
     to.appendChild(seed);
-    seed.style.top = `${seedTopOffset}px`;
-    seed.style.left = `${seedLeftOffset}px`;
-
-    console.log('hole onde é suposto acabarem',toPosition.t,toPosition.l)
-    console.log('onde acabam',seed.style.top, seed.style.left);
+    seed.style.top = `${originalSeedPos.t}px`;
+    seed.style.left = `${originalSeedPos.l}px`;
   }
 
   animationTime() {
