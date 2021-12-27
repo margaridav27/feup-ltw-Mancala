@@ -126,10 +126,14 @@ class Mancala {
     }
 
     performBot() {
+        let succeeded;
         let id = this.bot.calculateBestMove(this.level, this.currentPlayer, this.board);
         for (let i = id.length - 1; i >= 0; i--) {
-            setTimeout(() => {  this.performMove(id[i]); }, 2000);
+            succeeded = this.performMove(id[i]);
+            setTimeout(() => {  this.board.updateBoard(); }, 2000);
+
         }
+        return succeeded;
     }
     /* 
     here we will check the AI level and act accordingly, i.e.,

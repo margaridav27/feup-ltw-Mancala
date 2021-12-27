@@ -87,8 +87,15 @@ class Bot {
 
     const bestPlay = this.simulateHolePlay(playersHoles, board, 0, -1, -1, board, turn);
 
+    const holes = board.getHoles();
+    for (let i = 0; i < playersHoles.length; i++) {
+      if (holes[playersHoles[i]] != 0) {
+        validMoves.push(playersHoles[i]);
+      }
+    }
+
     if (level == 1) {
-      return Math.floor(Math.random() * validMoves.length);
+      return [Math.floor(Math.random() * validMoves.length)];
     }
     else if (level == 2) {
       return bestPlay.bestMoves;
@@ -101,6 +108,22 @@ class Bot {
   }
 
   
+//   miniMax(depth, turn) {
+//     if (depth == 0) {
+
+//     }
+
+
+
+//     let succeeded;
+//     let id = this.bot.calculateBestMove(this.level, this.currentPlayer, this.board);
+//     for (let i = id.length - 1; i >= 0; i--) {
+//         succeeded = this.performMove(id[i]);
+//         setTimeout(() => {  this.board.updateBoard(); }, 2000);
+
+//     }
+//     return succeeded;
+// }
 
 
 
