@@ -77,7 +77,7 @@ class Board {
     };
   }
 
-  setValidHoles(rid) {
+  async setValidHoles(rid) {
     const nrHoles = this.nrHoles;
     let validHoles = false;
 
@@ -86,7 +86,14 @@ class Board {
         let c1 = parseInt(i);
         let c2 = c1 + parseInt(nrHoles);
 
-        if (this.holes[c1] == 0) {
+        let nrSeeds = document.querySelectorAll(`#col-${c1} .seed`).length;
+        while (nrSeeds != this.holes[c1]) {
+          await sleep(5).then(() => {
+            nrSeeds = document.querySelectorAll(`#col-${c1} .seed`).length;
+          });
+        }
+
+        if (nrSeeds == 0) {
           document.getElementById(`col-${c1}`).classList.remove('curr-player');
         } else {
           document.getElementById(`col-${c1}`).classList.add('curr-player');
@@ -100,7 +107,14 @@ class Board {
         let c1 = parseInt(i);
         let c2 = c1 + parseInt(nrHoles);
 
-        if (this.holes[c2] == 0) {
+        let nrSeeds = document.querySelectorAll(`#col-${c2} .seed`).length;
+        while (nrSeeds != this.holes[c2]) {
+          await sleep(5).then(() => {
+            nrSeeds = document.querySelectorAll(`#col-${c2} .seed`).length;
+          });
+        }
+
+        if (nrSeeds == 0) {
           document.getElementById(`col-${c2}`).classList.remove('curr-player');
         } else {
           document.getElementById(`col-${c2}`).classList.add('curr-player');
