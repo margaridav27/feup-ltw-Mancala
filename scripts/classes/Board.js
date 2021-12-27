@@ -86,6 +86,7 @@ class Board {
         let c1 = parseInt(i);
         let c2 = c1 + parseInt(nrHoles);
 
+        // syncing
         let nrSeeds = document.querySelectorAll(`#col-${c1} .seed`).length;
         while (nrSeeds != this.holes[c1]) {
           await sleep(5).then(() => {
@@ -107,6 +108,7 @@ class Board {
         let c1 = parseInt(i);
         let c2 = c1 + parseInt(nrHoles);
 
+        // syncing
         let nrSeeds = document.querySelectorAll(`#col-${c2} .seed`).length;
         while (nrSeeds != this.holes[c2]) {
           await sleep(5).then(() => {
@@ -317,20 +319,12 @@ class Board {
     // capture seeds from own hole
     let holeSeeds = document.querySelectorAll(`#col-${hid} .seed`);
 
-    console.log('own seeds nr', this.holes[hid]);
-    console.log('own seeds', holeSeeds);
-
+    // syncing
     while (holeSeeds.length != this.holes[hid]) {
-      console.log('entrou no while');
       await sleep(5).then(() => {
         holeSeeds = document.querySelectorAll(`#col-${hid} .seed`);
-        console.log('waited');
-        console.log('own seeds nr after', this.holes[hid]);
-        console.log('own seeds after', holeSeeds);
       });
     }
-
-    this.holes[hid] = 0;
 
     // capture seeds from opposite hole
     const oppositeHoleId = this.nrHoles * 2 - 1 - hid;
@@ -338,50 +332,27 @@ class Board {
       `#col-${oppositeHoleId} .seed`
     );
 
-    console.log('opposite seeds nr', this.holes[oppositeHoleId]);
-    console.log('opposite hole seeds', oppositeHoleSeeds);
-
+    // syncing
     while (oppositeHoleSeeds.length != this.holes[oppositeHoleId]) {
-      console.log('entrou no while');
-      await sleep(20).then(() => {
+      await sleep(5).then(() => {
         oppositeHoleSeeds = document.querySelectorAll(
           `#col-${oppositeHoleId} .seed`
         );
-        console.log('waited');
-        console.log('opposite seeds nr after', this.holes[oppositeHoleId]);
-        console.log('opposite hole seeds after', oppositeHoleSeeds);
       });
     }
 
+    this.holes[hid] = 0;
     this.holes[oppositeHoleId] = 0;
-
     this.warehouses[pid] += holeSeeds.length + oppositeHoleSeeds.length;
-    let whId = pid == 0 ? -1 : -2;
 
+    let whId = pid == 0 ? -1 : -2;
     holeSeeds.forEach((seed) => {
-      console.log('own hole', seed.id, hid, whId);
       this.moveSeed(seed.id, hid, whId);
     });
     oppositeHoleSeeds.forEach((seed) => {
-      console.log('opposite hole', seed.id, oppositeHoleId, whId);
       this.moveSeed(seed.id, oppositeHoleId, whId);
     });
 
-    // const oppositeHole = document.getElementById(`col-${oppositeHoleId}`);
-
-    /*
-    oppositeHoleSeeds.forEach((capturedSeed) =>
-      oppositeHole.removeChild(capturedSeed)
-    );*/
-
-    // move the captured seeds to the warehouse
-    //const capturedSeeds = [...holeSeeds, ...oppositeHoleSeeds];
-    //const warehouse = document.getElementById(`wh-${pid + 1}`);
-
-    /*
-    capturedSeeds.forEach((capturedSeed) =>
-      warehouse.appendChild(capturedSeed)
-    );*/
     this.updateBoardValues();
     return this.warehouses[pid];
   }
