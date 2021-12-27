@@ -13,12 +13,20 @@ class Mancala {
     return this.players;
   }
 
+  getCurrentPlayer() {
+    return this.currentPlayer;
+  }
+
   getScore() {
     return this.score;
   }
 
   hasFinished() {
     return this.finished;
+  }
+
+  setCurrentPlayer() {
+    this.currentPlayer = Math.abs(this.currentPlayer - 1);
   }
 
   setFinished() {
@@ -44,10 +52,6 @@ class Mancala {
     }
 
     return validMoves;
-  }
-
-  setCurrentPlayer() {
-    this.currentPlayer = Math.abs(this.currentPlayer - 1);
   }
 
   sowedInOwnHole(sowedHole) {
@@ -118,6 +122,8 @@ class Mancala {
       this.score[this.currentPlayer] = this.capture(res.lastSowing);
     else if (!res.lastSowingOnWarehouse) this.setCurrentPlayer();
 
+    this.board.updateBoardValues();
+
     if (!this.setValidMoves()) {
       this.endGame();
       return false;
@@ -126,13 +132,18 @@ class Mancala {
     return true;
   }
 
-  /* 
-    here we will check the AI level and act accordingly, i.e.,
-        - if the AI level is =1, 
-            we will automatically calculate the next move based on algorithm x
-        - if the AI level is =2, 
-            we will automatically calculate the next move based on algorithm y
-        - if the AI level is =0 (player vs player) 
-            we don't need to calculate the next move, just wait for the player to perfom it
-    */
+  async performBot() {
+    await this.botTime();
+    
+    let succeeded = false;
+    let id = Bot.calculateBestMove(this.level, this.currentPlayer, this.board);
+    for (let i = id.length - 1; i >= 0; i--) {
+      succeeded = this.performMove(id[i]);
+    }
+    return succeeded;
+  }
+
+  botTime() {
+    return new Promise((resolve) => setTimeout(resolve, 2000));
+  }
 }

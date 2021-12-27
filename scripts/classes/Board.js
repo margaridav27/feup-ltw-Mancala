@@ -15,12 +15,28 @@ class Board {
     this.warehouses = [0, 0]; // both warehouses are initially empty
   }
 
+  setHoles(holes) {
+    this.holes = holes;
+  }
+
+  setWarehouses(warehouses) {
+    this.warehouses = warehouses;
+  }
+
   getNrHoles() {
     return this.nrHoles;
   }
 
+  getNrSeeds() {
+    return this.nrSeeds;
+  }
+
   getHoles() {
     return this.holes;
+  }
+
+  getWarehouses() {
+    return this.warehouses;
   }
 
   getBoardDimensions() {
@@ -96,6 +112,14 @@ class Board {
     }
 
     return validHoles;
+  }
+
+  updateBoardValues() {
+    document.querySelector('#wh-1 span').innerText = this.warehouses[0];
+    document.querySelector('#wh-2 span').innerText = this.warehouses[1];
+
+    for (let i = 0; i < this.nrHoles * 2; i++)
+      document.querySelector(`#col-${i} span`).innerText = this.holes[i];
   }
 
   renderWarehousesAndRows() {
@@ -207,14 +231,6 @@ class Board {
     this.renderSeeds();
   }
 
-  updateBoardValues() {
-    document.querySelector('#wh-1 span').innerText = this.warehouses[0];
-    document.querySelector('#wh-2 span').innerText = this.warehouses[1];
-
-    for (let i = 0; i < this.nrHoles * 2; i++)
-      document.querySelector(`#col-${i} span`).innerText = this.holes[i];
-  }
-
   updateBoardUponSowing(hid, pid) {
     // response to retrieve upon the sow completion
     let res = {
@@ -232,7 +248,7 @@ class Board {
 
     // empty the played hole
     this.holes[hid] = 0;
-    const playedHole = document.getElementById(`col-${hid}`);
+    //const playedHole = document.getElementById(`col-${hid}`);
     //seeds.forEach((seed) => playedHole.removeChild(seed));
 
     hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2); // next hole
@@ -283,7 +299,6 @@ class Board {
     }
 
     res.score = this.warehouses[pid];
-    this.updateBoardValues();
     return res;
   }
 
@@ -313,7 +328,6 @@ class Board {
       warehouse.appendChild(capturedSeed)
     );
 
-    this.updateBoardValues();
     return this.warehouses[pid];
   }
 
@@ -345,7 +359,6 @@ class Board {
       });
     }
 
-    this.updateBoardValues();
     return this.warehouses;
   }
 
