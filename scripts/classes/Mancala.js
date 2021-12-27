@@ -133,11 +133,10 @@ class Mancala {
   }
 
   async performBot() {
-    await this.botTime();
-    
     let succeeded = false;
     let id = Bot.calculateBestMove(this.level, this.currentPlayer, this.board);
     for (let i = id.length - 1; i >= 0; i--) {
+      await this.botTime();
       succeeded = this.performMove(id[i]);
     }
     return succeeded;
