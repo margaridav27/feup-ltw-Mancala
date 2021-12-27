@@ -115,6 +115,7 @@ class Board {
   }
 
   updateBoardValues() {
+    console.log('upadtando boardxi values');
     document.querySelector('#wh-1 span').innerText = this.warehouses[0];
     document.querySelector('#wh-2 span').innerText = this.warehouses[1];
 
@@ -248,8 +249,6 @@ class Board {
 
     // empty the played hole
     this.holes[hid] = 0;
-    //const playedHole = document.getElementById(`col-${hid}`);
-    //seeds.forEach((seed) => playedHole.removeChild(seed));
 
     hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2); // next hole
     let mightBeWarehouse = true; // determines if the next hole can be a warehouse or not
@@ -266,7 +265,6 @@ class Board {
 
         this.warehouses[0]++;
         this.moveSeed(seeds[i].id, fromhid, -1);
-        //document.getElementById('wh-1').appendChild(seeds[i]);
 
         mightBeWarehouse = false;
       } else if (mightBeWarehouse && pid == 1 && hid == this.nrHoles - 1) {
@@ -278,7 +276,6 @@ class Board {
 
         this.warehouses[1]++;
         this.moveSeed(seeds[i].id, fromhid, -2);
-        //document.getElementById('wh-2').appendChild(seeds[i]);
 
         mightBeWarehouse = false;
       } else {
@@ -291,43 +288,87 @@ class Board {
 
         this.holes[hid]++;
         this.moveSeed(seeds[i].id, fromhid, hid);
-        //document.getElementById(`col-${hid}`).appendChild(seeds[i]);
 
         hid = (this.nrHoles * 2 + (hid - 1)) % (this.nrHoles * 2);
         mightBeWarehouse = true;
       }
     }
 
+    this.updateBoardValues();
     res.score = this.warehouses[pid];
     return res;
   }
 
-  updateBoardUponCapture(hid, pid) {
+  async updateBoardUponCapture(hid, pid) {
     // capture seeds from own hole
-    const hole = document.getElementById(`col-${hid}`);
-    const holeSeeds = document.querySelectorAll(`#col-${hid} .seed`);
+    let holeSeeds = document.querySelectorAll(`#col-${hid} .seed`);
+
+    console.log('own seeds nr', this.holes[hid]);
+    console.log('own seeds', holeSeeds);
+
+    while (holeSeeds.length != this.holes[hid]) {
+      console.log('entrou no while');
+      await sleep(5).then(() => {
+        holeSeeds = document.querySelectorAll(`#col-${hid} .seed`);
+        console.log('waited');
+        console.log('own seeds nr after', this.holes[hid]);
+        console.log('own seeds after', holeSeeds);
+      });
+    }
+
     this.holes[hid] = 0;
-    holeSeeds.forEach((capturedSeed) => hole.removeChild(capturedSeed));
 
     // capture seeds from opposite hole
     const oppositeHoleId = this.nrHoles * 2 - 1 - hid;
-    const oppositeHole = document.getElementById(`col-${oppositeHoleId}`);
-    const oppositeHoleSeeds = document.querySelectorAll(
+    let oppositeHoleSeeds = document.querySelectorAll(
       `#col-${oppositeHoleId} .seed`
     );
+
+    console.log('opposite seeds nr', this.holes[oppositeHoleId]);
+    console.log('opposite hole seeds', oppositeHoleSeeds);
+
+    while (oppositeHoleSeeds.length != this.holes[oppositeHoleId]) {
+      console.log('entrou no while');
+      await sleep(20).then(() => {
+        oppositeHoleSeeds = document.querySelectorAll(
+          `#col-${oppositeHoleId} .seed`
+        );
+        console.log('waited');
+        console.log('opposite seeds nr after', this.holes[oppositeHoleId]);
+        console.log('opposite hole seeds after', oppositeHoleSeeds);
+      });
+    }
+
     this.holes[oppositeHoleId] = 0;
+
+    this.warehouses[pid] += holeSeeds.length + oppositeHoleSeeds.length;
+    let whId = pid == 0 ? -1 : -2;
+
+    holeSeeds.forEach((seed) => {
+      console.log('own hole', seed.id, hid, whId);
+      this.moveSeed(seed.id, hid, whId);
+    });
+    oppositeHoleSeeds.forEach((seed) => {
+      console.log('opposite hole', seed.id, oppositeHoleId, whId);
+      this.moveSeed(seed.id, oppositeHoleId, whId);
+    });
+
+    // const oppositeHole = document.getElementById(`col-${oppositeHoleId}`);
+
+    /*
     oppositeHoleSeeds.forEach((capturedSeed) =>
       oppositeHole.removeChild(capturedSeed)
-    );
+    );*/
 
     // move the captured seeds to the warehouse
-    this.warehouses[pid] += holeSeeds.length + oppositeHoleSeeds.length;
-    const capturedSeeds = [...holeSeeds, ...oppositeHoleSeeds];
-    const warehouse = document.getElementById(`wh-${pid + 1}`);
+    //const capturedSeeds = [...holeSeeds, ...oppositeHoleSeeds];
+    //const warehouse = document.getElementById(`wh-${pid + 1}`);
+
+    /*
     capturedSeeds.forEach((capturedSeed) =>
       warehouse.appendChild(capturedSeed)
-    );
-
+    );*/
+    this.updateBoardValues();
     return this.warehouses[pid];
   }
 
@@ -340,8 +381,8 @@ class Board {
       this.warehouses[0] += this.holes[i];
       this.holes[i] = 0;
 
-      const hole = document.getElementById(`#col-${hid}`);
-      const seeds = document.querySelectorAll(`#col-${hid} .seed`);
+      const hole = document.getElementById(`#col-${i}`);
+      const seeds = document.querySelectorAll(`#col-${i} .seed`);
       seeds.forEach((seed) => {
         hole.removeChild(seed);
         wh1.appendChild(seed);
@@ -351,14 +392,15 @@ class Board {
       this.warehouses[1] += this.holes[i];
       this.holes[i] = 0;
 
-      const hole = document.getElementById(`#col-${hid}`);
-      const seeds = document.querySelectorAll(`#col-${hid} .seed`);
+      const hole = document.getElementById(`#col-${i}`);
+      const seeds = document.querySelectorAll(`#col-${i} .seed`);
       seeds.forEach((seed) => {
         hole.removeChild(seed);
         wh2.appendChild(seed);
       });
     }
 
+    this.updateBoardValues();
     return this.warehouses;
   }
 
@@ -428,7 +470,7 @@ class Board {
       currSeedPos = this.getSeedTopLeftOffsets(seed);
       P1 = [currSeedPos.l, currSeedPos.t];
 
-      await this.animationTime();
+      await sleep(20);
     }
 
     // removes seed from the board and transfers it to the destination
@@ -437,9 +479,5 @@ class Board {
     seed.style.top = `${originalSeedPos.t}px`;
     seed.style.left = `${originalSeedPos.l}px`;
     to.appendChild(seed);
-  }
-
-  animationTime() {
-    return new Promise((resolve) => setTimeout(resolve, 20));
   }
 }

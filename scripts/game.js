@@ -42,8 +42,7 @@ function moveHandler(move) {
   switch (gameState) {
     case 'PLAYING':
       let succeeded = mancala.performMove(move);
-      if (mancala.getPlayers()[mancala.getCurrentPlayer()] == 'BOT')
-        mancala.performBot();
+      if (mancala.isBotCurrentPlayer()) mancala.performBot();
       if (!succeeded) {
         endGame();
         gameState = 'DEFAULT';
@@ -72,7 +71,7 @@ function startGame() {
   mancala = new Mancala(board, players, level);
   gameState = 'PLAYING';
 
-  if (players[0] == 'BOT') mancala.performBot();
+  if (mancala.isBotCurrentPlayer()) mancala.performBot();
 }
 
 function quitGame() {

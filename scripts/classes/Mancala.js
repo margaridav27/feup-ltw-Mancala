@@ -54,6 +54,10 @@ class Mancala {
     return validMoves;
   }
 
+  isBotCurrentPlayer() {
+    return this.level > 0 && this.players[this.currentPlayer] == 'BOT';
+  }
+
   sowedInOwnHole(sowedHole) {
     if (sowedHole == -1) return false;
 
@@ -115,14 +119,13 @@ class Mancala {
     if (!this.isValidMove(playedHole)) return true;
 
     let res = this.sow(playedHole);
+    
     this.score[this.currentPlayer] = res.score;
     this.updateScore();
 
     if (res.lastSowingOnHole && this.sowedInOwnHole(res.lastSowing))
       this.score[this.currentPlayer] = this.capture(res.lastSowing);
     else if (!res.lastSowingOnWarehouse) this.setCurrentPlayer();
-
-    this.board.updateBoardValues();
 
     if (!this.setValidMoves()) {
       this.endGame();
@@ -136,13 +139,9 @@ class Mancala {
     let succeeded = false;
     let id = Bot.calculateBestMove(this.level, this.currentPlayer, this.board);
     for (let i = id.length - 1; i >= 0; i--) {
-      await this.botTime();
+      await sleep(2000);
       succeeded = this.performMove(id[i]);
     }
     return succeeded;
-  }
-
-  botTime() {
-    return new Promise((resolve) => setTimeout(resolve, 2000));
   }
 }

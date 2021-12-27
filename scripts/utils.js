@@ -43,3 +43,7 @@ function vwToPx(vw, totalWidth) {
 function vhToPx(vh, totalHeight) {
   return (vh * totalHeight) / 100;
 }
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
