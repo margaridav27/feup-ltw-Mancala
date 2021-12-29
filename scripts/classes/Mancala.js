@@ -118,6 +118,7 @@ class Mancala {
   performMove(playedHole) {
     if (!this.isValidMove(playedHole)) return true;
 
+    console.log(this.board, playedHole);
     let res = this.sow(playedHole);
     
     this.score[this.currentPlayer] = res.score;
@@ -140,6 +141,7 @@ class Mancala {
     let id = Bot.calculateBestMove(this.level, this.currentPlayer, this.board);
     for (let i = id.length - 1; i >= 0; i--) {
       await sleep(2000);
+      console.log("playing");
       succeeded = this.performMove(id[i]);
     }
     return succeeded;

@@ -96,79 +96,55 @@ class Bot {
     return move;
   }
 
-  static simulateHolePlay(
-    playersHoles,
-    board,
-    points,
-    pointsBestMove,
-    bestMove,
-    boardBestMove,
-    turn
-  ) {
-    let pointsPlay = 0;
-    let result, resultRec;
-    let bestMoves = [],
-      validMoves = [];
-    const holes = board.getHoles();
-    for (let i = 0; i < playersHoles.length; i++) {
-      if (holes[playersHoles[i]] != 0) {
-        validMoves.push(playersHoles[i]);
-      }
-    }
+  // static simulateHolePlay(playersHoles, board, points, pointsBestMove, bestMove, boardBestMove, turn) {
+  //   let pointsPlay = 0;
+  //   let result, resultRec;
+  //   let bestMoves = [], validMoves = [];
+  //   const holes = board.getHoles();
+  //   for (let i = 0; i < playersHoles.length; i++) {
+  //     if (holes[playersHoles[i]] != 0) {
+  //       validMoves.push(playersHoles[i]);
+  //     }
+  //   }
 
-    for (let i = 0; i < validMoves.length; i++) {
-      pointsPlay = points;
+  //   for (let i = 0; i < validMoves.length; i++) {
+  //     pointsPlay = points;
 
-      //simulate move
-      result = this.simulateMoveExecution(validMoves[i], board, turn);
-      pointsPlay += result.pointsMove;
+  //     //simulate move
+  //     result = this.simulateMoveExecution(validMoves[i], board, turn);
+  //     pointsPlay += result.pointsMove;
 
-      //play again
-      if (result.playAgain && validMoves.length > 1) {
-        resultRec = this.simulateHolePlay(
-          playersHoles,
-          result.boardMove,
-          pointsPlay,
-          pointsBestMove,
-          -1,
-          boardBestMove,
-          turn
-        );
-        pointsPlay = resultRec.pointsBestMove;
-        bestMoves = bestMoves.concat(resultRec.bestMoves);
-      }
+  //     //play again
+  //     if (result.playAgain && validMoves.length > 1) {
+  //       resultRec = this.simulateHolePlay( playersHoles, result.boardMove, pointsPlay, pointsBestMove, -1, boardBestMove, turn);
+  //       pointsPlay = resultRec.pointsBestMove;
+  //       bestMoves = bestMoves.concat(resultRec.bestMoves);
+  //     }
 
-      //save higher score
-      if (pointsPlay > pointsBestMove) {
-        pointsBestMove = pointsPlay;
-        bestMove = validMoves[i];
-        boardBestMove = result.boardMove;
-      }
-    }
+  //     //save higher score
+  //     if (pointsPlay > pointsBestMove) {
+  //       pointsBestMove = pointsPlay;
+  //       bestMove = validMoves[i];
+  //       boardBestMove = result.boardMove;
+  //     }
+  //   }
 
-    bestMoves.push(bestMove);
-    return { pointsBestMove, bestMoves, boardBestMove };
-  }
+  //   bestMoves.push(bestMove);
+  //   return { pointsBestMove, bestMoves, boardBestMove };
+  // }
 
   static calculateBestMove(level, turn, board) {
     const nrHoles = board.getNrHoles();
 
     //iniciate arrays with the index of the respective side
-    const playersHoles =
-      turn == 0
-        ? Array.from({ length: nrHoles }, (x, i) => i)
-        : Array.from({ length: nrHoles }, (x, i) => i + 4);
+    let playersHoles = (turn == 0) ? Array.from({ length: nrHoles }, (x, i) => i) : Array.from({ length: nrHoles }, (x, i) => i + 4);
     let validMoves = [];
 
-    const bestPlay = this.simulateHolePlay(
-      playersHoles,
-      board,
-      0,
-      -1,
-      -1,
-      board,
-      turn
-    );
+    const botPlay = this.simulateHolePlay(playersHoles, board, 0, -1, -1, board, turn);
+
+    turn = Math.abs(turn - 1);
+
+    playersHoles = (turn == 0) ? Array.from({ length: nrHoles }, (x, i) => i) : Array.from({ length: nrHoles }, (x, i) => i + 4);
 
     const holes = board.getHoles();
     for (let i = 0; i < playersHoles.length; i++) {
@@ -180,33 +156,166 @@ class Bot {
     if (level == 1) {
       return Math.floor(Math.random() * validMoves.length);
     } else if (level == 2) {
-        return bestPlay.bestMoves;
+        return botPlay.bestMoves;
     } else if (level == 3) {
       //parte de ver as joadas do adeversário(??)
       //outra forma era fazer o que se faz no level 1 e nesse ser 50% maior pontuação ou index random
     }
   }
-
-  
-  opponentsMove(playersHoles, board, points, pointsBestMove, bestMove, boardBestMove, turn) {
-    
+  static changePlayer(turn, board) {
+    let turnOp = Math.abs(turn - 1);
+    let validMovesOp = [];
+    const holes = board.getHoles();
+    const playersHoles = (turnOp == 0) ? Array.from({ length: board.getNrHoles() }, (x, i) => i) : Array.from({ length: board.getNrHoles() }, (x, i) => i + 4);
+    for (let i = 0; i < playersHoles.length; i++) {
+      if (holes[playersHoles[i]] != 0) {
+        validMovesOp.push(playersHoles[i]);
+      }
+    }
+    return validMovesOp;
   }
   
+  // static simulateHolePlay(playersHoles, board, points, pointsBestMove, bestMove, boardBestMove, turn) {
+  //   let pointsPlay = 0;
+  //   let pointsOpPlay = 0;
+  //   let result, resultRec, resultsOp, resultsRecOp;
+  //   let bestMoves = [], validMoves = [], validMovesOp = [];
+  //   const holes = board.getHoles();
+  //   for (let i = 0; i < playersHoles.length; i++) {
+  //     if (holes[playersHoles[i]] != 0) {
+  //       validMoves.push(playersHoles[i]);
+  //     }
+  //   }
+
+  //   for (let i = 0; i < validMoves.length; i++) {
+  //     if (i==3) {
+  //       console.log("oi");
+  //     }
+  //     pointsPlay = points;
+
+  //     //simulate move
+  //     result = this.simulateMoveExecution(validMoves[i], board, turn);
+  //     pointsPlay += result.pointsMove;
+
+  //     //play again
+  //     if (result.playAgain && validMoves.length > 1) {
+  //       resultRec = this.simulateHolePlay( playersHoles, result.boardMove, pointsPlay, pointsBestMove, -1, boardBestMove, turn);
+  //       pointsPlay = resultRec.pointsBestMove;
+  //       bestMoves = bestMoves.concat(resultRec.bestMoves);
+  //     }
+
+  //     validMovesOp = this.changePlayer(turn, result.boardMove);
+
+  //     for (let j = 0; j < validMovesOp.length; j++) {
+  //       pointsOpPlay = 0;
+  
+  //       //simulate move
+  //       resultsOp = this.simulateMoveExecution(validMovesOp[j], result.boardMove, Math.abs(turn - 1));
+  //       pointsOpPlay += result.pointsMove;
+  
+  //       //play again
+  //       if (resultsOp.playAgain && validMovesOp.length > 1) {
+  //         resultsRecOp = this.simulateHolePlay( playersHoles, resultsOp.boardMove, pointsPlay, pointsBestMove, -1, boardBestMove, Math.abs(turn - 1));
+  //         pointsOpPlay = resultsRecOp.pointsBestMove;
+  //         bestMoves = bestMoves.concat(resultsRecOp.bestMoves);
+  //       }
+  //       //save higher score
+  //       if ((pointsPlay - pointsOpPlay) > pointsBestMove) {
+  //         pointsBestMove = pointsPlay- pointsOpPlay;
+  //         bestMove = validMoves[i];
+  //         boardBestMove = result.boardMove;
+  //       }
+  //     }
+  //   }
+
+  //   bestMoves.push(bestMove);
+  //   return { pointsBestMove, bestMoves, boardBestMove };
+  // }
+
+
+  static simulateHolePlay(playersHoles, board, points, pointsBestMove, bestMove, boardMove, turn) {
+    let pointsPlay = 0;
+    let pointsOpPlay = 0;
+    let result, resultRec, resultsOp, resultsRecOp;
+    let bestMoves = [], validMoves = [], validMovesOp = [];
+    const holes = board.getHoles();
+    for (let i = 0; i < playersHoles.length; i++) {
+      if (holes[playersHoles[i]] != 0) {
+        validMoves.push(playersHoles[i]);
+      }
+    }
+
+    for (let i = 0; i < validMoves.length; i++) {
+      pointsPlay = 0;
+      if (i==3) {
+        console.log("oi");
+      }
+
+      //simulate move
+      result = this.simulateMoveExecution(validMoves[i], board, turn);
+
+      //play again
+      if (result.playAgain && validMoves.length > 1) {
+        result = this.simulateHolePlay( playersHoles, result.boardMove, pointsPlay, -1, -1, boardMove, turn);
+        bestMoves = result.bestMoves;
+      }
+
+      pointsPlay = result.boardMove.getWarehouses()[turn] - board.getWarehouses()[turn];
+
+      if (pointsPlay > pointsBestMove) {
+        pointsBestMove = pointsPlay;
+        bestMove = validMoves[i]; 
+        boardMove = result.boardMove;
+      }
+      // validMovesOp = this.changePlayer(turn, result.boardMove);
+
+
+      // for (let j = 0; j < validMovesOp.length; j++) {
+      //   pointsOpPlay = 0;
+  
+      //   //simulate move
+      //   resultsOp = this.simulateMoveExecution(validMovesOp[j], result.boardMove, Math.abs(turn - 1));
+      //   pointsOpPlay += result.pointsMove;
+  
+      //   //play again
+      //   if (resultsOp.playAgain && validMovesOp.length > 1) {
+      //     resultsRecOp = this.simulateHolePlay( playersHoles, resultsOp.boardMove, pointsPlay, pointsBestMove, -1, boardBestMove, Math.abs(turn - 1));
+      //     pointsOpPlay = resultsRecOp.pointsBestMove;
+      //     bestMoves = bestMoves.concat(resultsRecOp.bestMoves);
+      //   }
+      //   //save higher score
+      //   if ((pointsPlay - pointsOpPlay) > pointsBestMove) {
+      //     pointsBestMove = pointsPlay- pointsOpPlay;
+      //     bestMove = validMoves[i];
+      //     boardBestMove = result.boardMove;
+      //   }
+      // }
+    }
+
+    bestMoves.push(bestMove);
+    return { pointsBestMove, bestMoves, boardMove };
+  }
+
+
+
+
+
+
+
   miniMax(depth, turn) {
-    if (depth == 0) {
+    const nrHoles = board.getNrHoles();
 
-    }
+    //iniciate arrays with the index of the respective side
+    let playersHoles = (turn == 0) ? Array.from({ length: nrHoles }, (x, i) => i) : Array.from({ length: nrHoles }, (x, i) => i + 4);
+    let validMoves = [];
+
+    const botPlay = this.simulateHolePlay(playersHoles, board, 0, -1, -1, board, turn);
+
+    turn = Math.abs(turn - 1);
+    
+    playersHoles = (turn == 0) ? Array.from({ length: nrHoles }, (x, i) => i) : Array.from({ length: nrHoles }, (x, i) => i + 4);
 
 
-
-    let succeeded;
-    let id = this.bot.calculateBestMove(this.level, this.currentPlayer, this.board);
-    for (let i = id.length - 1; i >= 0; i--) {
-        succeeded = this.performMove(id[i]);
-        setTimeout(() => {  this.board.updateBoard(); }, 2000);
-
-    }
-    return succeeded;
 }
 
   static anticipateOpponentsBestMove(turn, board) {
