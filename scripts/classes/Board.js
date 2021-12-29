@@ -10,7 +10,7 @@ class Board {
     ];
 
     this.nrHoles = holes; // number of holes on each side
-    this.holes = [5,4,4,4,4,4,4,4]// Array(this.nrHoles * 2).fill(this.nrSeeds);
+    this.holes = [3,5,10,1,2,9,1,1]// Array(this.nrHoles * 2).fill(this.nrSeeds);
 
     this.warehouses = [0, 0]; // both warehouses are initially empty
   }
