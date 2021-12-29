@@ -59,7 +59,7 @@ function loginClickHandler() {
   let loginBtn = document.getElementById('login');
   let loginArea = document.querySelectorAll('.auth div');
 
-  if (!loggedIn) { 
+  if (!loggedIn) {
     loginBtn.innerText = 'Logout';
     loginArea.forEach((field) => disable(field));
     loggedIn = true;
