@@ -18,7 +18,7 @@
 
 <body>
   <header>
-    <div class="logo" onclick="logoClickHandler()">
+    <div class="logo">
       <img id="logo" alt="Mancala Logo" src="assets/mancala-logo.png">
     </div>
     <form class="auth">
@@ -30,15 +30,15 @@
         <label for="password"><img src="assets/key.png" alt="Password"></label>
         <input type="password" id="password" name="password">
       </div>
-      <button id="login">Login</button>
+      <button type="button" id="login">Login</button>
     </form>
   </header>
 
   <div class="menu">
-    <button class="menu-btn" id="game-btn" onclick="gameClickHandler()">PLAY</button>
-    <button class="menu-btn" id="instructions-btn" onclick="instructionsClickHandler()">INSTRUCTIONS</button>
-    <button class="menu-btn" id="records-btn" onclick="recordsClickHandler()">RECORDS</button>
-    <button class="menu-btn" id="settings-btn" onclick="settingsClickHandler()">SETTINGS</button>
+    <button class="menu-btn" id="game-btn">PLAY</button>
+    <button class="menu-btn" id="instructions-btn">INSTRUCTIONS</button>
+    <button class="menu-btn" id="records-btn">RECORDS</button>
+    <button class="menu-btn" id="settings-btn">SETTINGS</button>
   </div>
 
   <div class="default-panel"></div>
@@ -52,7 +52,7 @@
       </div>
       <div class="bot">
         <label for="bot-1">Bot</label>
-        <input type="checkbox" id="bot-1" name="bot" onclick="botCheckHandler('1')">
+        <input type="checkbox" id="bot-1" name="bot">
       </div>
       <div class="levels">
         <label for="level-1-1">1</label>
@@ -71,7 +71,7 @@
       </div>
       <div class="bot">
         <label for="bot-2">Bot</label>
-        <input type="checkbox" id="bot-2" name="bot" onclick="botCheckHandler('2')">
+        <input type="checkbox" id="bot-2" name="bot">
       </div>
       <div class="levels">
         <label for="level-2-1">1</label>
