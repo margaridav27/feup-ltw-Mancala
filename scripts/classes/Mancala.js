@@ -37,12 +37,24 @@ class Mancala {
 
   setValidMoves() {
     this.showTurn();
-    let validMoves = false;
+    let validMoves = -1;
 
     if (!this.hasFinished()) {
-      validMoves = this.board.setValidHoles(this.currentPlayer);
-
+      // validMoves = 
+      this.board.setValidHoles(this.currentPlayer).then(res => {
+        validMoves = res;
+        console.log(validMoves);
+      });
+      // while (validMoves == -1) {
+      //   await sleep(5).then(() => {
+      //   console.log("waiting");
+      // }
+      console.log(validMoves);
+      console.log("valid: ", validMoves);
+      console.log("player:", this.currentPlayer);
+      console.log(" ");
       if (!validMoves) {
+        console.log("Entrei");
         const info = document.getElementById('info');
         info.innerHTML =
           'Player ' +
@@ -75,6 +87,7 @@ class Mancala {
   }
 
   endGame() {
+    console.log("endGame");
     this.score = this.board.updateBoardUponCleaning();
     this.updateScore(true);
     this.setFinished();
@@ -115,6 +128,19 @@ class Mancala {
     );
   }
 
+  isEmpty(turn) {
+    let validMovesOp = [];
+    let nrHoles = this.board.getNrHoles();
+    let holes = this.board.getHoles();
+    const playersHoles = (turn == 0) ? Array.from({ length: nrHoles }, (x, i) => i) : Array.from({ length: nrHoles }, (x, i) => i + 4);
+    for (let i = 0; i < playersHoles.length; i++) {
+      if (holes[playersHoles[i]] != 0) {
+        validMovesOp.push(playersHoles[i]);
+      }
+    }
+    return validMovesOp == 0;
+  }
+
   performMove(playedHole) {
     if (!this.isValidMove(playedHole)) return true;
 
@@ -127,10 +153,12 @@ class Mancala {
       this.score[this.currentPlayer] = this.capture(res.lastSowing);
     else if (!res.lastSowingOnWarehouse) this.setCurrentPlayer();
 
-    if (!this.setValidMoves()) {
+    console.log(this.isEmpty(0), this.isEmpty(1));
+    if (this.isEmpty(0) || this.isEmpty(1)) {
       this.endGame();
       return false;
     }
+    this.setValidMoves();
 
     return true;
   }

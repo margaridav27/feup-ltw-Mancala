@@ -97,24 +97,18 @@ class Bot {
   }
 
   static calculateBestMove(level, turn, board) {
-    if (level == 0) {
+    if (level == 1) {
       let validMoves = this.changePlayer(turn, board);
       return Math.floor(Math.random() * validMoves.length);
     }
-    else if (level == 1) {
-      const botPlay = this.simulateHolePlay(board, turn, 1);
-      console.log(botPlay.bestMoves, botPlay.boardMove)
-      return botPlay;
-    } 
     else if (level == 2) {
-      const botPlay = this.simulateHolePlay(board, turn, 4);
-      console.log(botPlay.bestMoves, botPlay.boardMove)
+      const botPlay = this.simulateHolePlay(board, turn, 1);
       return botPlay;
     } 
     else if (level == 3) {
-      const botPlay = this.simulateHolePlay(board, turn, 8);
+      const botPlay = this.simulateHolePlay(board, turn, 4);
       return botPlay;
-    }
+    } 
   }
 
   static changePlayer(turn, board) {
@@ -128,7 +122,6 @@ class Bot {
     }
     return validMovesOp;
   }
-
 
   static simulateHolePlay(board, turn, depth) {
     if (depth == 0) {
@@ -175,7 +168,6 @@ class Bot {
     bestMoves.push(bestMove);
     return {bestMoves, boardMove};
   }
-
 
   static simulateHoleOpPlay(board, turn, depth) {
     if (depth == 0) {

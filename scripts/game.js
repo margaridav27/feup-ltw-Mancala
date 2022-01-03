@@ -100,6 +100,7 @@ function quitGame() {
 }
 
 function endGame() {
+  console.log("endGame");
   // reset scores
   const scoreP1 = document.getElementById('score-1');
   scoreP1.innerHTML = 0;

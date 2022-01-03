@@ -89,58 +89,104 @@ class Board {
     return validMovesOp == 0;
   }
 
+  // async setValidHoles(rid) {
+  //   const nrHoles = this.nrHoles;
+  //   let validHoles = false;
+
+  //   if (this.isEmpty(0) || this.isEmpty(1)) return false;
+
+  //   if (rid == 0) {
+  //     for (let i = 0; i < nrHoles; i++) {
+  //       let c1 = parseInt(i);
+  //       let c2 = c1 + parseInt(nrHoles);
+
+  //       // syncing
+  //       let nrSeeds = document.querySelectorAll(`#col-${c1} .seed`).length;
+  //       while (nrSeeds != this.holes[c1]) {
+  //         await sleep(5).then(() => {
+  //           nrSeeds = document.querySelectorAll(`#col-${c1} .seed`).length;
+  //         });
+  //       }
+
+  //       if (nrSeeds == 0) {
+  //         document.getElementById(`col-${c1}`).classList.remove('curr-player');
+  //       } else {
+  //         document.getElementById(`col-${c1}`).classList.add('curr-player');
+  //         validHoles = true;
+  //       }
+
+  //       document.getElementById(`col-${c2}`).classList.remove('curr-player');
+  //     }
+  //   } else {
+  //     for (let i = 0; i < nrHoles; i++) {
+  //       let c1 = parseInt(i);
+  //       let c2 = c1 + parseInt(nrHoles);
+
+  //       // syncing
+  //       let nrSeeds = document.querySelectorAll(`#col-${c2} .seed`).length;
+  //       while (nrSeeds != this.holes[c2]) {
+  //         await sleep(5).then(() => {
+  //           nrSeeds = document.querySelectorAll(`#col-${c2} .seed`).length;
+  //         });
+  //       }
+
+  //       if (nrSeeds == 0) {
+  //         document.getElementById(`col-${c2}`).classList.remove('curr-player');
+  //       } else {
+  //         document.getElementById(`col-${c2}`).classList.add('curr-player');
+  //         validHoles = true;
+  //       }
+
+  //       document.getElementById(`col-${c1}`).classList.remove('curr-player');
+  //     }
+  //   }
+    
+
+  //   return validHoles;
+  // }
+
   async setValidHoles(rid) {
     const nrHoles = this.nrHoles;
-    let validHoles = false;
+    let row1IsEmpty = true;
+    let row0IsEmpty = true;
 
-    if (rid == 0) {
-      for (let i = 0; i < nrHoles; i++) {
-        let c1 = parseInt(i);
-        let c2 = c1 + parseInt(nrHoles);
+    for (let i = 0; i < nrHoles; i++) {
+      let c1 = parseInt(i);
+      let c2 = c1 + parseInt(nrHoles);
 
-        // syncing
-        let nrSeeds = document.querySelectorAll(`#col-${c1} .seed`).length;
-        while (nrSeeds != this.holes[c1]) {
-          await sleep(5).then(() => {
-            nrSeeds = document.querySelectorAll(`#col-${c1} .seed`).length;
-          });
-        }
-
-        if (nrSeeds == 0) {
-          document.getElementById(`col-${c1}`).classList.remove('curr-player');
-        } else {
-          document.getElementById(`col-${c1}`).classList.add('curr-player');
-          validHoles = true;
-        }
-
-        document.getElementById(`col-${c2}`).classList.remove('curr-player');
+      // syncing
+      let nrSeedsRow0 = document.querySelectorAll(`#col-${c1} .seed`).length;
+      let nrSeedsRow1 = document.querySelectorAll(`#col-${c2} .seed`).length;
+      while (nrSeedsRow0 != this.holes[c1] || nrSeedsRow1 != this.holes[c2]) {
+        await sleep(5).then(() => {
+          nrSeedsRow0 = document.querySelectorAll(`#col-${c1} .seed`).length;
+          nrSeedsRow1 = document.querySelectorAll(`#col-${c2} .seed`).length;
+        });
       }
-    } else {
-      for (let i = 0; i < nrHoles; i++) {
-        let c1 = parseInt(i);
-        let c2 = c1 + parseInt(nrHoles);
 
-        // syncing
-        let nrSeeds = document.querySelectorAll(`#col-${c2} .seed`).length;
-        while (nrSeeds != this.holes[c2]) {
-          await sleep(5).then(() => {
-            nrSeeds = document.querySelectorAll(`#col-${c2} .seed`).length;
-          });
-        }
+      if (nrSeedsRow0 !== 0) row0IsEmpty = false;
+      if (nrSeedsRow1 !== 0) row1IsEmpty = false;
 
-        if (nrSeeds == 0) {
+      switch (rid) {
+        case 0:
+          if (nrSeedsRow0 == 0) 
+            document.getElementById(`col-${c1}`).classList.remove('curr-player');
+          else 
+            document.getElementById(`col-${c1}`).classList.add('curr-player');
           document.getElementById(`col-${c2}`).classList.remove('curr-player');
-        } else {
-          document.getElementById(`col-${c2}`).classList.add('curr-player');
-          validHoles = true;
-        }
-
-        document.getElementById(`col-${c1}`).classList.remove('curr-player');
+          break;
+        case 1:
+          if (nrSeedsRow1 == 0) 
+            document.getElementById(`col-${c2}`).classList.remove('curr-player');
+          else 
+            document.getElementById(`col-${c2}`).classList.add('curr-player');
+          document.getElementById(`col-${c1}`).classList.remove('curr-player');
+          break;
       }
     }
-    // if (this.isEmpty(0) || this.isEmpty(1)) return false;
 
-    return validHoles;
+    // returns false if one of the rows is empty, i.e. the game is not in conditions to proceed
+    return !(row0IsEmpty || row1IsEmpty);
   }
 
   updateBoardValues() {
