@@ -10,7 +10,8 @@ class Board {
     ];
 
     this.nrHoles = holes; // number of holes on each side
-    this.holes = [3,5,10,1,2,9,1,1]// Array(this.nrHoles * 2).fill(this.nrSeeds);
+    this.holes = Array(this.nrHoles * 2).fill(this.nrSeeds);
+    //[3,5,10,1,2,9,1,1] 
 
     this.warehouses = [0, 0]; // both warehouses are initially empty
   }
@@ -77,6 +78,17 @@ class Board {
     };
   }
 
+  isEmpty(turn) {
+    let validMovesOp = [];
+    const playersHoles = (turn == 0) ? Array.from({ length: this.nrHoles }, (x, i) => i) : Array.from({ length: this.nrHoles }, (x, i) => i + 4);
+    for (let i = 0; i < playersHoles.length; i++) {
+      if (this.holes[playersHoles[i]] != 0) {
+        validMovesOp.push(playersHoles[i]);
+      }
+    }
+    return validMovesOp == 0;
+  }
+
   async setValidHoles(rid) {
     const nrHoles = this.nrHoles;
     let validHoles = false;
@@ -126,6 +138,7 @@ class Board {
         document.getElementById(`col-${c1}`).classList.remove('curr-player');
       }
     }
+    // if (this.isEmpty(0) || this.isEmpty(1)) return false;
 
     return validHoles;
   }

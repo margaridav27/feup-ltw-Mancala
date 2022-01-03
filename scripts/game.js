@@ -41,9 +41,11 @@ function setupBoardMoveHandlers(board) {
 function moveHandler(move) {
   switch (gameState) {
     case 'PLAYING':
+      if (mancala.isBotCurrentPlayer()) mancala.performBot();
       let succeeded = mancala.performMove(move);
       if (mancala.isBotCurrentPlayer()) mancala.performBot();
       if (!succeeded) {
+        mancala.endGame();
         endGame();
         gameState = 'DEFAULT';
       }
