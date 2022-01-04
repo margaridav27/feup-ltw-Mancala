@@ -18,6 +18,10 @@ class Hole extends Cavity {
     return this.warehouse;
   }
 
+  getSeeds() {
+    return this.seeds;
+  }
+
   isEmpty() {
     return this.seeds.length === 0;
   }

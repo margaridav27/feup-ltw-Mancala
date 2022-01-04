@@ -1,29 +1,54 @@
 class Board {
   constructor(seeds, holes) {
     this.board = [];
-    this.nrHoles = holes;
 
-    this.initBoardSide(0, seeds);
-    this.initBoardSide(1, seeds);
+    this.initBoardSide(0, holes, seeds);
+    this.initBoardSide(1, holes, seeds);
 
-    this.boardDisplayer = new BoardDisplayer(this.nrHoles, this.board);
-    this.boardDisplayer.display();
+    this.boardDisplayer = this.setupDisplayer();
   }
 
-  initBoardSide(side, seeds) {
-    const warehouseID = side === 0 ? this.nrHoles : this.nrHoles * 2 + 1;
+  setupDisplayer() {
+    let holes = [];
+    let seeds = [];
 
-    let i = side === 0 ? 0 : this.nrHoles + 1;
+    this.board.forEach((cavity) => {
+      if (cavity instanceof Hole) {
+        // hole data
+        holes.push({
+          hid: cavity.getID(),
+          rid: cavity.getSide(),
+          value: cavity.getInitialNrSeeds(),
+          blocked: cavity.isBlocked(),
+        });
+
+        // hole's seeds data
+        cavity.getSeeds().forEach((seed) => {
+          seeds.push({
+            sid: seed.getID(),
+            hid: cavity.getID(),
+          });
+        });
+      }
+    });
+
+    return new BoardDisplayer({ holes, seeds });
+  }
+
+  initBoardSide(side, holes, seeds) {
+    const warehouseID = side === 0 ? holes : holes * 2 + 1;
+
+    let i = side === 0 ? 0 : holes + 1;
     for (; i < warehouseID; i++) {
-      const adjacentID = (i + 1) % (this.nrHoles * 2 + 2);
-      const oppositeID = (this.nrHoles * 2 - i) % (this.nrHoles * 2 + 1);
+      const adjacentID = (i + 1) % (holes * 2 + 2);
+      const oppositeID = (holes * 2 - i) % (holes * 2 + 1);
 
       let hole = new Hole(i, adjacentID, oppositeID, warehouseID, side, seeds);
       if (side === 1) hole.block();
       this.board.push(hole);
     }
 
-    const adjacentID = (warehouseID + 1) % (this.nrHoles * 2 + 2);
+    const adjacentID = (warehouseID + 1) % (holes * 2 + 2);
 
     let warehouse = new Warehouse(warehouseID, adjacentID, side);
     if (side === 1) warehouse.block();
