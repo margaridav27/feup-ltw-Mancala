@@ -9,7 +9,39 @@ class Mancala {
     this.score = [0, 0];
   }
 
+  /**
+   * determines if the player is about to sow on his opponent's warehouse, what is forbidden
+   */
+  sowIsForbidden(cavity) {
+    return (
+      cavity instanceof Warehouse && cavity.getSide() != this.currentPlayer
+    );
+  }
+
+  /**
+   * determines if the last sowing occured in current player's own warehouse
+   * what will determine if he's playing again or not
+   */
+  sowedLastOwnWarehouse(cavity) {
+    return (
+      cavity instanceof Warehouse && cavity.getSide() === this.currentPlayer
+    );
+  }
+
+  /*
+   * determines if the last sowing occured in current player's own board side
+   * what will determine if he's playing again or not
+   */
+  sowedLastOwnSide(empty, cavity) {
+    return empty && cavity.getSide() === this.currentPlayer;
+  }
+
   performMove(move) {
+    // arrays to retrieve to the board after the move performance so he can pass to the displayer
+    let sow = [];
+    let capture = [];
+    let cleaning = [];
+
     let playedHole = this.board.getCavityByID(move);
 
     // move not allowed, nothing bad happens, just return
@@ -19,45 +51,63 @@ class Mancala {
     let prevCavity = playedHole;
     let wasEmpty = false;
 
-    // sow seeds along the board
+    // sow phase
     for (let seed of seeds) {
       let nextCavity = this.board.getCavityByID(prevCavity.getAdjacent());
 
-      // a player is not allowed to sow in his opponent's warehouse
-      if (
-        nextCavity instanceof Warehouse &&
-        nextCavity.getSide() != this.currentPlayer
-      ) {
+      if (this.sowIsForbidden(nextCavity)) {
         let nextCavityDup = this.board.getCavityByID(nextCavity.getAdjacent());
         nextCavity = nextCavityDup;
       }
 
       if (nextCavity instanceof Hole) wasEmpty = nextCavity.isEmpty();
+
       this.board.transferSeedTo(seed, nextCavity);
+
+      // register sow move
+      sow.push({
+        sid: seed.getID(),
+        from: playedHole.getID(),
+        to: nextCavity.getID(),
+      });
+
       prevCavity = nextCavity;
     }
 
     let prevPlayer = this.currentPlayer;
 
-    // prevCavity represents now the cavity where the player ended up his sowing
-    if (
-      prevCavity instanceof Warehouse &&
-      prevCavity.getSide() === this.currentPlayer
-    ) {
-      // move ended up in his own warehouse -> play again
-    } else if (wasEmpty && prevCavity.getSide() === this.currentPlayer) {
-      // move ended up in one of his empty holes -> capture & play again
+    if (this.sowedLastOwnWarehouse(prevCavity)) {
+      // nothing happens
+    } else if (this.sowedLastOwnSide(wasEmpty, prevCavity)) {
+      // capture phase
+      let destWarehouse = this.board.getCavityByID(prevCavity.getWarehouse());
+      let oppositeHole = this.board.getCavityByID(prevCavity.getOpposite());
+
+      // transfer own seeds to destination warehouse
       let ownSeeds = prevCavity.empty();
-      let opponentSeeds = this.board
-        .getCavityByID(prevCavity.getOpposite())
-        .empty();
+      ownSeeds.forEach((seed) => {
+        this.board.transferSeedTo(seed, destWarehouse);
 
-      let capturedSeeds = [...ownSeeds, ...opponentSeeds];
+        // register capture move
+        capture.push({
+          sid: seed.getID(),
+          from: playedHole.getID(),
+          to: toHole.getID(),
+        });
+      });
 
-      this.board.transferSeedsTo(
-        capturedSeeds,
-        this.board.getCavityByID(prevCavity.getWarehouse())
-      );
+      // transfer opponent's seeds to destination warehouse
+      let opponentSeeds = oppositeHole.empty();
+      opponentSeeds.forEach((seed) => {
+        this.board.transferSeedTo(seed, destWarehouse);
+
+        // register capture move
+        capture.push({
+          sid: seed.getID(),
+          from: oppositeHole.getID(),
+          to: destWarehouse.getID(),
+        });
+      });
     } else {
       // swap players normally
       if (this.currentPlayer === 0) this.currentPlayer = 1;
@@ -71,9 +121,28 @@ class Mancala {
     }
 
     // check if the player that has just played emptied his whole side
-    let canContinue = !this.board.isSideEmpty(this.currentPlayer);
+    let canContinue = !this.board.isSideEmpty(prevPlayer);
+    if (!canContinue) {
+      // cleaning phase
+      this.board.getBoard().forEach((cavity) => {
+        if (cavity instanceof Hole) {
+          let destWarehouse = this.board.getCavityByID(cavity.getWarehouse());
 
-    this.board.boardDisplayer.update();
+          cavity.getSeeds().forEach((seed) => {
+            this.board.transferSeedTo(seed, destWarehouse);
+
+            // register cleaning move
+            cleaning.push({
+              sid: seed.getID(),
+              from: cavity.getID(),
+              to: destWarehouse.getID(),
+            });
+          });
+        }
+      });
+    }
+
+    this.board.performMoveResponse(sow, capture, cleaning);
 
     return canContinue;
   }

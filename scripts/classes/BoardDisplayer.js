@@ -9,6 +9,7 @@ class BoardDisplayer {
     this.constructSeeds(data.seeds);
   }
 
+  /* ---------- DIMENSIONS & POSITIONS ---------- */
   getBoardDimensions() {
     const totalWidth = window.innerWidth;
     const totalHeight = window.innerHeight;
@@ -49,6 +50,7 @@ class BoardDisplayer {
     };
   }
 
+  /* ---------- CONSTRUCTORS ---------- */
   constructWarehouseAndRows() {
     let board = document.querySelector('.board-panel');
     document.getElementById('board-panel').innerHTML = '';
@@ -162,19 +164,113 @@ class BoardDisplayer {
     });
   }
 
-  update() {
-    for (let wh of this.warehouses) {
-      const whid = wh.getSide();
-      document.querySelector(`#wh-${whid} span`).innerText =
-        wh.getSeeds().length;
+  /* ---------- VISUAL UPDATES ---------- */
+  updateStatus(warehouses, holes) {
+    warehouses.forEach((warehouse) => {
+      document.querySelector(`#wh-${warehouse.wid} span`).innerText =
+        warehouse.value;
+    });
+
+    holes.forEach((hole) => {
+      document.querySelector(`#col-${hole.hid} span`).innerText = hole.value;
+      if (hole.blocked)
+        document
+          .getElementById(`#col-${hole.hid}`)
+          .classList.remove('curr-player');
+      else
+        document
+          .getElementById(`#col-${hole.hid}`)
+          .classList.add('curr-player');
+    });
+  }
+
+  executePhase(sow, capture, cleaning) {
+    this.executePhaseMoves(sow).then(
+      this.executePhaseMoves(capture).then(this.executePhaseMoves(cleaning))
+    );
+  }
+
+  async executePhaseMoves(moves) {
+    moves.forEach((move) => {
+      this.moveSeeds(move.sid, move.from, move.to);
+    });
+  }
+
+  async moveSeeds(sid, idFrom, idTo) {
+    let from = document.getElementById(`col-${idFrom}`);
+
+    let to;
+    if (idTo < 0) to = document.getElementById(`wh-${Math.abs(idTo)}`);
+    else to = document.getElementById(`col-${idTo}`);
+
+    let seed = document.getElementById(sid);
+    let board = document.getElementById('board-panel');
+
+    // removes seed from the origin and transfers it to the board, to the same position visually
+    from.removeChild(seed);
+
+    const fromPos = this.getHoleTopLeftOffsets(idFrom);
+    const originalSeedPos = this.getSeedTopLeftOffsets(seed);
+
+    seed.style.top = `${fromPos.t + originalSeedPos.t}px`;
+    seed.style.left = `${fromPos.l + originalSeedPos.l}px`;
+    board.appendChild(seed);
+
+    let toPos;
+    if (idTo < 0) {
+      // destination is a warehouse
+      if (idTo == -1) toPos = { t: 0, l: 0 };
+      else
+        toPos = {
+          t: 0,
+          l: this.getBoardDimensions().w - this.getWarehouseDimensions().w,
+        };
+    } else toPos = this.getHoleTopLeftOffsets(idTo);
+
+    // bezier curve values
+    let currSeedPos = this.getSeedTopLeftOffsets(seed);
+    let P1 = [currSeedPos.l, currSeedPos.t];
+    const P4 = [toPos.l + originalSeedPos.l, toPos.t + originalSeedPos.t];
+    const R1 = [0, 1];
+    const R4 = [0, -1];
+    let t = 0;
+
+    // moves seed along the board, from origin to destination
+    while (!this.equalPosition(P1, P4)) {
+      t += 0.1;
+      seed.style.left = `${
+        (2 * Math.pow(t, 3) - 3 * Math.pow(t, 2) + 1) * P1[0] +
+        (-2 * Math.pow(t, 3) + 3 * Math.pow(t, 2)) * P4[0] +
+        (Math.pow(t, 3) - 2 * Math.pow(t, 2) + t) *
+          R1[0] *
+          (Math.pow(t, 3) - Math.pow(t, 2)) *
+          R4[0]
+      }px`;
+      seed.style.top = `${
+        (2 * Math.pow(t, 3) - 3 * Math.pow(t, 2) + 1) * P1[1] +
+        (-2 * Math.pow(t, 3) + 3 * Math.pow(t, 2)) * P4[1] +
+        (Math.pow(t, 3) - 2 * Math.pow(t, 2) + t) *
+          R1[1] *
+          (Math.pow(t, 3) - Math.pow(t, 2)) *
+          R4[1]
+      }px`;
+
+      currSeedPos = this.getSeedTopLeftOffsets(seed);
+      P1 = [currSeedPos.l, currSeedPos.t];
+
+      await sleep(20);
     }
 
-    for (let hole of this.holes) {
-      const hid = hole.getID();
-      document.querySelector(`#col-${hid} span`).innerText =
-        hole.getSeeds().length;
-    }
+    // removes seed from the board and transfers it to the destination
+    board.removeChild(seed);
 
-    this.setActiveHoles();
+    seed.style.top = `${originalSeedPos.t}px`;
+    seed.style.left = `${originalSeedPos.l}px`;
+    to.appendChild(seed);
+  }
+
+  update(data) {
+    this.updateStatus(data.status.warehouses, data.status.holes);
+    this.executePhase(data.sow, data.capture, data.cleaning);
   }
 }
