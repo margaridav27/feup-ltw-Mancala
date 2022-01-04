@@ -1,6 +1,5 @@
 function changeVisibility(panels) {
   panels.forEach((panel) => {
-    console.log(panel)
     document.querySelector(panel).classList.toggle('hide-panel');
   });
 }

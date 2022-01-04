@@ -1,167 +1,228 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Mancala</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" crossorigin rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link href="styles/general.css" rel="stylesheet" />
+    <link href="styles/header.css" rel="stylesheet" />
+    <link href="styles/menu.css" rel="stylesheet" />
+    <link href="styles/board.css" rel="stylesheet" />
+    <link href="styles/instructions.css" rel="stylesheet" />
+    <link href="styles/records.css" rel="stylesheet" />
+    <link href="styles/settings.css" rel="stylesheet" />
+    <link href="styles/default.css" rel="stylesheet" />
+  </head>
 
-<head>
-  <title>Mancala</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" crossorigin rel="preconnect">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;600&display=swap" rel="stylesheet">
-  <link href="styles/general.css" rel="stylesheet">
-  <link href="styles/header.css" rel="stylesheet">
-  <link href="styles/menu.css" rel="stylesheet">
-  <link href="styles/board.css" rel="stylesheet">
-  <link href="styles/instructions.css" rel="stylesheet">
-  <link href="styles/records.css" rel="stylesheet">
-  <link href="styles/settings.css" rel="stylesheet">
-  <link href="styles/default.css" rel="stylesheet">
-</head>
+  <body>
+    <header>
+      <div class="logo">
+        <img id="logo" alt="Mancala Logo" src="assets/mancala-logo.png" />
+      </div>
+      <form class="auth">
+        <div class="auth-username">
+          <label for="username"
+            ><img src="assets/user.png" alt="Username"
+          /></label>
+          <input type="text" id="username" name="username" />
+        </div>
+        <div class="auth-password">
+          <label for="password"
+            ><img src="assets/key.png" alt="Password"
+          /></label>
+          <input type="password" id="password" name="password" />
+        </div>
+        <button type="button" id="login">Login</button>
+      </form>
+    </header>
 
-<body>
-  <header>
-    <div class="logo">
-      <img id="logo" alt="Mancala Logo" src="assets/mancala-logo.png">
+    <div class="menu">
+      <button class="menu-btn" id="game-btn">PLAY</button>
+      <button class="menu-btn" id="instructions-btn">INSTRUCTIONS</button>
+      <button class="menu-btn" id="records-btn">RECORDS</button>
+      <button class="menu-btn" id="settings-btn">SETTINGS</button>
     </div>
-    <form class="auth">
-      <div class="auth-username">
-        <label for="username"><img src="assets/user.png" alt="Username"></label>
-        <input type="text" id="username" name="username">
-      </div>
-      <div class="auth-password">
-        <label for="password"><img src="assets/key.png" alt="Password"></label>
-        <input type="password" id="password" name="password">
-      </div>
-      <button type="button" id="login">Login</button>
-    </form>
-  </header>
 
-  <div class="menu">
-    <button class="menu-btn" id="game-btn">PLAY</button>
-    <button class="menu-btn" id="instructions-btn">INSTRUCTIONS</button>
-    <button class="menu-btn" id="records-btn">RECORDS</button>
-    <button class="menu-btn" id="settings-btn">SETTINGS</button>
-  </div>
+    <div class="default-panel"></div>
 
-  <div class="default-panel"></div>
-
-  <div class="settings-panel hide-panel" id="settings-panel">
-    <form class="card player-card levels-hide" id="player-card-1">
-      <img src="assets/player-1-icon.png" alt="Player 1 Icon">
-      <div class="name">
-        <label for="name">Name</label>
-        <input type="text" id="name-1" name="name">
-      </div>
-      <div class="bot">
-        <label for="bot-1">Bot</label>
-        <input type="checkbox" id="bot-1" name="bot">
-      </div>
-      <div class="levels">
-        <label for="level-1-1">1</label>
-        <input type="radio" id="level-1-1" name="level-1" checked="checked" value=1>
-        <label for="level-1-2">2</label>
-        <input type="radio" id="level-1-2" name="level-1" value=2>
-        <label for="level-1-3">3</label>
-        <input type="radio" id="level-1-3" name="level-1" value=3>
-      </div>
-    </form>
-    <form class="card player-card levels-hide" id="player-card-2">
-      <img src="assets/player-2-icon.png" alt="Player level2 Icon">
-      <div class="name">
-        <label for="name">Name</label>
-        <input type="text" id="name-2" name="name">
-      </div>
-      <div class="bot">
-        <label for="bot-2">Bot</label>
-        <input type="checkbox" id="bot-2" name="bot">
-      </div>
-      <div class="levels">
-        <label for="level-2-1">1</label>
-        <input type="radio" id="level-2-1" name="level-2" checked="checked" value=1>
-        <label for="level-2-2">2</label>
-        <input type="radio" id="level-2-2" name="level-2" value=2>
-        <label for="level-2-3">3</label>
-        <input type="radio" id="level-2-3" name="level-2" value=3>
-      </div>
-    </form>
-    <form class="card board-card" id="board-card">
-      <img src="assets/mancala.png" alt="Player 1 Icon">
-      <div class="holes">
-        <label for="holes">Holes</label>
-        <input type="number" id="holes" name="holes" min="4" max="6" value="4">
-      </div>
-      <div class="seeds">
-        <label for="seeds">Seeds (each hole)</label>
-        <input type="number" id="seeds" name="seeds" min="4" max="8" value="4">
-      </div>
-    </form>
-  </div>
-
-  <div class="info-panel hide-panel">
-    <div class="score">
-      <img src="assets/player-1-icon.png" alt="Default Panel Background">
-      <section id="score-1"> 0 </section>
+    <div class="settings-panel hide-panel" id="settings-panel">
+      <form class="card player-card levels-hide" id="player-card-1">
+        <img src="assets/player-1-icon.png" alt="Player 1 Icon" />
+        <div class="name">
+          <label for="name">Name</label>
+          <input type="text" id="name-1" name="name" />
+        </div>
+        <div class="bot">
+          <label for="bot-1">Bot</label>
+          <input type="checkbox" id="bot-1" name="bot" />
+        </div>
+        <div class="levels">
+          <label for="level-1-1">1</label>
+          <input
+            type="radio"
+            id="level-1-1"
+            name="level-1"
+            checked="checked"
+            value="1"
+          />
+          <label for="level-1-2">2</label>
+          <input type="radio" id="level-1-2" name="level-1" value="2" />
+          <label for="level-1-3">3</label>
+          <input type="radio" id="level-1-3" name="level-1" value="3" />
+        </div>
+      </form>
+      <form class="card player-card levels-hide" id="player-card-2">
+        <img src="assets/player-2-icon.png" alt="Player level2 Icon" />
+        <div class="name">
+          <label for="name">Name</label>
+          <input type="text" id="name-2" name="name" />
+        </div>
+        <div class="bot">
+          <label for="bot-2">Bot</label>
+          <input type="checkbox" id="bot-2" name="bot" />
+        </div>
+        <div class="levels">
+          <label for="level-2-1">1</label>
+          <input
+            type="radio"
+            id="level-2-1"
+            name="level-2"
+            checked="checked"
+            value="1"
+          />
+          <label for="level-2-2">2</label>
+          <input type="radio" id="level-2-2" name="level-2" value="2" />
+          <label for="level-2-3">3</label>
+          <input type="radio" id="level-2-3" name="level-2" value="3" />
+        </div>
+      </form>
+      <form class="card board-card" id="board-card">
+        <img src="assets/mancala.png" alt="Player 1 Icon" />
+        <div class="holes">
+          <label for="holes">Holes</label>
+          <input
+            type="number"
+            id="holes"
+            name="holes"
+            min="4"
+            max="6"
+            value="4"
+          />
+        </div>
+        <div class="seeds">
+          <label for="seeds">Seeds (each hole)</label>
+          <input
+            type="number"
+            id="seeds"
+            name="seeds"
+            min="4"
+            max="8"
+            value="4"
+          />
+        </div>
+      </form>
     </div>
-    <div class="info" id="info" value="Welcome to Mancala! Here will appear your messages and alerts.">
-      Welcome to Mancala! Here will appear your messages and alerts.
+
+    <div class="info-panel hide-panel">
+      <div class="score">
+        <img src="assets/player-1-icon.png" alt="Default Panel Background" />
+        <section id="score-1">0</section>
+      </div>
+      <div
+        class="info"
+        id="info"
+        value="Welcome to Mancala! Here will appear your messages and alerts."
+      >
+        Welcome to Mancala! Here will appear your messages and alerts.
+      </div>
+      <div class="score">
+        <section id="score-2">0</section>
+        <img src="assets/player-2-icon.png" alt="Default Panel Background" />
+      </div>
     </div>
-    <div class="score">
-      <section id="score-2"> 0 </section>
-      <img src="assets/player-2-icon.png" alt="Default Panel Background">
+
+    <div class="board-panel hide-panel" id="board-panel"></div>
+
+    <div class="instructions-panel hide-panel">
+      <div class="instructions">
+        Each player has a certain number of holes, by deafult 4, which can be
+        defined at the beginning of the game, and a warehouse, the big hole on
+        the side.
+        <p>You can only control the holes on your side.</p>
+        <p></p>
+        <p>
+          The holes have an initial default value of 4 seeds, except for the
+          warehouse that is empty and is where you store the earned seeds.
+          However, this value is also configurable in the settings area.
+        </p>
+        <p></p>
+        <p>
+          In your turn, you take all of the seeds from a small hole of your side
+          and plant them in the following holes, counterclockwise.
+        </p>
+        <p></p>
+        <p>
+          If the hole your planting is your warehouse, drop it. If it is the
+          opponent's warehouse, skip it and put it on the holes of your side.
+        </p>
+        <p>You will play again if the last seed:</p>
+        <p></p>
+        <ul>
+          <li>is planted in your warehouse;</li>
+          <li>
+            is dropped into an empty hole on your side. If so, you store the
+            last seed in the warehouse, as well as the seeds from the opposite
+            hole, the opponent's one.
+          </li>
+        </ul>
+        <p>
+          The game ends when one of the players cannot make another move. The
+          other player stores the leftover seeds in the warehouse.
+        </p>
+        <p></p>
+        <p>Wins whoever has more seeds.</p>
+        <p></p>
+      </div>
+
+      <img src="assets/assistent.png" />
     </div>
-  </div>
-  
-  <div class="board-panel hide-panel" id ="board-panel"></div>
-  
-  <div class="instructions-panel hide-panel">
-    <div class="instructions">
-      Each player has a certain number of holes, by deafult 4, which can be defined at the beginning of the game, and a warehouse, the big hole on the side.
-      <p>You can only control the holes on your side.<p>
-      <p>The holes have an initial default value of 4 seeds, except for the warehouse that is empty and is where you store the earned seeds. However, this value is also configurable in the settings area. <p>
-      <p>In your turn, you take all of the seeds from a small hole of your side and plant them in the following holes, counterclockwise. <p>
-      <p>If the hole your planting is your warehouse, drop it. If it is the opponent's warehouse, skip it and put it on the holes of your side.
-      <p>You will play again if the last seed:<p>
-      <ul>
-        <li>is planted in your warehouse;</li>
-        <li>is dropped into an empty hole on your side. If so, you store the last seed in the warehouse, as well as the seeds from the opposite hole, the opponent's one.</li>
-      </ul>
-      <p>The game ends when one of the players cannot make another move. The other player stores the leftover seeds in the warehouse. <p>
-      <p>Wins whoever has more seeds.<p>
-     </div>
-     <img src="assets/assistent.png">
-  </div>
 
-  <div class="records-panel game-records hide-panel">
-    <table>
-      <tbody id="games">
-      </tbody>
-    </table>
-    <img src="assets/coach.png">
-  </div>
-  
-  <div class="records-panel score-records hide-panel">
-    <table>
-      <thead>
-        <tr>
-          <th>Player</th>
-          <th>Leaderboard</th>
-          <th>Total Score</th>
-        </tr>
-      </thead>
-      <tbody id="scores">
-      </tbody>
-    </table>
-    <img src="assets/coach.png">
-  </div>
+    <div class="records-panel game-records hide-panel">
+      <table>
+        <tbody id="games"></tbody>
+      </table>
+      <img src="assets/coach.png" />
+    </div>
 
-  <script src="scripts/utils.js"></script>
-  <script src="scripts/settings.js"></script>
-  <script src="scripts/classes/Seed.js"></script>
-  <script src="scripts/classes/Hole.js"></script>
-  <script src="scripts/classes/Board.js"></script>
-  <script src="scripts/classes/Mancala.js"></script>
-  <script src="scripts/classes/Bot.js"></script>
-  <script src="scripts/classes/GameHistory.js"></script>
-  <script src="scripts/game.js"></script>
-  <script src="scripts/app.js"></script>
-</body>
+    <div class="records-panel score-records hide-panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Leaderboard</th>
+            <th>Total Score</th>
+          </tr>
+        </thead>
+        <tbody id="scores"></tbody>
+      </table>
+      <img src="assets/coach.png" />
+    </div>
 
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/settings.js"></script>
+    <script src="scripts/classes/Seed.js"></script>
+    <script src="scripts/classes/Warehouse.js"></script>
+    <script src="scripts/classes/Hole.js"></script>
+    <script src="scripts/classes/Board.js"></script>
+    <script src="scripts/classes/BoardDisplayer.js"></script>
+    <script src="scripts/classes/Mancala.js"></script>
+    <script src="scripts/classes/Bot.js"></script>
+    <script src="scripts/classes/GameHistory.js"></script>
+    <script src="scripts/game.js"></script>
+    <script src="scripts/app.js"></script>
+  </body>
 </html>

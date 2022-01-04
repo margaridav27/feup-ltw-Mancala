@@ -5,6 +5,9 @@ class Board {
 
     this.initBoardSide(0, seeds);
     this.initBoardSide(1, seeds);
+
+    this.boardDisplayer = new BoardDisplayer(this.nrHoles, this.board);
+    this.boardDisplayer.display();
   }
 
   initBoardSide(side, seeds) {
@@ -16,15 +19,19 @@ class Board {
       const oppositeID = (this.nrHoles * 2 - i) % (this.nrHoles * 2 + 1);
 
       let hole = new Hole(i, adjacentID, oppositeID, warehouseID, side, seeds);
-      side === 1 && hole.block();
+      if (side === 1) hole.block();
       this.board.push(hole);
     }
 
     const adjacentID = (warehouseID + 1) % (this.nrHoles * 2 + 2);
 
     let warehouse = new Warehouse(warehouseID, adjacentID, side);
-    side === 1 && warehouse.block();
+    if (side === 1) warehouse.block();
     this.board.push(warehouse);
+  }
+
+  getBoard() {
+    return this.board;
   }
 
   getHoleByID(id) {
@@ -33,13 +40,9 @@ class Board {
     }
   }
 
-  transferSeedTo(seed, to) {
+  transferSeedTo(seed, to) {}
 
-  }
-
-  transferSeedsTo(seeds, to) {
-
-  }
+  transferSeedsTo(seeds, to) {}
 }
 
 // class Board {

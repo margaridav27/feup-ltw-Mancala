@@ -6,7 +6,7 @@ class Warehouse {
     this.initialNrSeeds = 0;
     this.seeds = [];
 
-    this.blocked = true;
+    this.blocked = false;
 
     this.side = side;
   }

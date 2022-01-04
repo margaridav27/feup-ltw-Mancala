@@ -176,16 +176,14 @@
 } */
 
 class Mancala {
-  constructor(holes, seeds, players, level = 0) {
-    this.board = new Board(seeds, holes);
+  constructor(board, players, level = 0) {
+    this.board = board;
 
     this.level = level;
 
     this.players = players;
     this.currentPlayer = 0;
     this.score = [0, 0];
-
-    this.finished = false;
   }
 
   performMove(move) {

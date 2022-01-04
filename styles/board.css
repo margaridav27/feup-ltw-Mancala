@@ -44,8 +44,8 @@
   height: 50vh;
   display: grid;
   grid-template-areas:
-    'wh-1 r-1 wh-2'
-    'wh-1 r-2 wh-2';
+    'wh-0 r-0 wh-1'
+    'wh-0 r-1 wh-1';
   grid-template-columns: 1fr 4fr 1fr;
   grid-column-gap: 3px;
   margin: auto;
@@ -54,18 +54,18 @@
   background-color: #a47148;
 }
 
+.board-panel #wh-0 {
+  grid-area: wh-0;
+}
 .board-panel #wh-1 {
   grid-area: wh-1;
 }
-.board-panel #wh-2 {
-  grid-area: wh-2;
+.board-panel #row-0 {
+  grid-area: r-0;
+  margin-bottom: 3px;
 }
 .board-panel #row-1 {
   grid-area: r-1;
-  margin-bottom: 3px;
-}
-.board-panel #row-2 {
-  grid-area: r-2;
   margin-top: 3px;
 }
 
