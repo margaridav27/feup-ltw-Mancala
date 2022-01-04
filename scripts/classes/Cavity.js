@@ -31,10 +31,6 @@ class Cavity {
     return this.adjacent;
   }
 
-  setAdjacent(id) {
-    this.adjacent = id;
-  }
-
   isBlocked() {
     return this.blocked;
   }

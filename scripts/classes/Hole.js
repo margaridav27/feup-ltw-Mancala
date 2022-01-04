@@ -1,11 +1,9 @@
 class Hole extends Cavity {
   constructor(id, adjacent, opposite, warehouse, side, seeds) {
-    super(id, adjacent);
+    super(id, adjacent, side);
 
     this.opposite = opposite;
     this.warehouse = warehouse;
-
-    this.side = side;
 
     this.initialNrSeeds = seeds;
     this.seeds = [];

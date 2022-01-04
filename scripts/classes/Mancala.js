@@ -24,7 +24,10 @@ class Mancala {
       let nextCavity = this.board.getCavityByID(prevCavity.getAdjacent());
 
       // a player is not allowed to sow in his opponent's warehouse
-      if (nextCavity instanceof Warehouse && nextCavity.getSide() != this.currentPlayer) {
+      if (
+        nextCavity instanceof Warehouse &&
+        nextCavity.getSide() != this.currentPlayer
+      ) {
         let nextCavityDup = this.board.getCavityByID(nextCavity.getAdjacent());
         nextCavity = nextCavityDup;
       }
@@ -37,14 +40,24 @@ class Mancala {
     let prevPlayer = this.currentPlayer;
 
     // prevCavity represents now the cavity where the player ended up his sowing
-    if (prevCavity instanceof Warehouse && prevCavity.getSide() === this.currentPlayer) {
+    if (
+      prevCavity instanceof Warehouse &&
+      prevCavity.getSide() === this.currentPlayer
+    ) {
       // move ended up in his own warehouse -> play again
     } else if (wasEmpty && prevCavity.getSide() === this.currentPlayer) {
       // move ended up in one of his empty holes -> capture & play again
       let ownSeeds = prevCavity.empty();
-      let opponentSeeds = this.board.getCavityByID(prevCavity.getOpposite()).empty();
+      let opponentSeeds = this.board
+        .getCavityByID(prevCavity.getOpposite())
+        .empty();
+
       let capturedSeeds = [...ownSeeds, ...opponentSeeds];
-      this.board.transferSeedsTo(capturedSeeds, this.board.getCavityByID(prevCavity.getWarehouse()));
+
+      this.board.transferSeedsTo(
+        capturedSeeds,
+        this.board.getCavityByID(prevCavity.getWarehouse())
+      );
     } else {
       // swap players normally
       if (this.currentPlayer === 0) this.currentPlayer = 1;
@@ -59,9 +72,9 @@ class Mancala {
 
     // check if the player that has just played emptied his whole side
     let canContinue = !this.board.isSideEmpty(this.currentPlayer);
-  
+
     this.board.boardDisplayer.update();
-    
+
     return canContinue;
   }
 }
