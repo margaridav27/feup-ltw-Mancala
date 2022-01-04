@@ -1,4 +1,4 @@
-class Hole extends Warehouse {
+class Hole extends Cavity {
   constructor(id, adjacent, opposite, warehouse, side, seeds) {
     super(id, adjacent);
 
@@ -6,7 +6,7 @@ class Hole extends Warehouse {
     this.warehouse = warehouse;
 
     this.side = side;
-    
+
     this.initialNrSeeds = seeds;
     this.seeds = [];
     for (let i = 0; i < seeds; i++) this.seeds.push(new Seed(id * seeds + i));
@@ -14,6 +14,10 @@ class Hole extends Warehouse {
 
   getOpposite() {
     return this.opposite;
+  }
+
+  getWarehouse() {
+    return this.warehouse;
   }
 
   isEmpty() {

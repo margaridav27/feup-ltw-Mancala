@@ -1,9 +1,18 @@
 class BoardDisplayer {
   constructor(nrHoles, board) {
     this.nrHoles = nrHoles;
-    this.board = board;
+
+    this.holes = [];
+    for (let cavity of board) {
+      if (cavity instanceof Hole) this.holes.push(cavity);
+    }
+
+    this.warehouses = [];
+    for (let cavity of board) {
+      if (cavity instanceof Warehouse) this.warehouses.push(cavity);
+    }
   }
-  
+
   getBoardDimensions() {
     const totalWidth = window.innerWidth;
     const totalHeight = window.innerHeight;
@@ -119,7 +128,13 @@ class BoardDisplayer {
   }
 
   constructSeeds(hid, seeds) {
-    let seedsColorPalette = ['#ffca3a', '#8ac926', '#1982c4', '#ff9f1c', '#ffffff'];
+    let seedsColorPalette = [
+      '#ffca3a',
+      '#8ac926',
+      '#1982c4',
+      '#ff9f1c',
+      '#ffffff',
+    ];
 
     const holeWidth = this.getHoleDimensions().w;
     const holeHeight = this.getHoleDimensions().h;
@@ -144,33 +159,59 @@ class BoardDisplayer {
       seedElement.style.top = `${offsetY}px`;
 
       // color
-      const seedColor = seedsColorPalette[random(0, seedsColorPalette.length - 1)];
+      const seedColor =
+        seedsColorPalette[random(0, seedsColorPalette.length - 1)];
       seedElement.style.backgroundColor = seedColor;
 
       hole.appendChild(seedElement);
     });
   }
 
+  setActiveHoles() {
+    console.log(this.holes);
+    for (let hole of this.holes) {
+      const hid = hole.getID();
+      if (hole.isBlocked() || hole.getSeeds().length === 0)
+        document.getElementById(`col-${hid}`).classList.remove('curr-player');
+      else document.getElementById(`col-${hid}`).classList.add('curr-player');
+    }
+  }
+
   display() {
     this.constructWarehouseAndRows();
 
     let row0Holes = [];
-    for (let cavity of this.board) {
-      if (cavity instanceof Hole && cavity.getSide() === 0)
-        row0Holes.push(cavity);
+    for (let hole of this.holes) {
+      if (hole.getSide() === 0) row0Holes.push(hole);
     }
     this.constructHoles(0, row0Holes);
 
     let row1Holes = [];
-    for (let cavity of this.board) {
-      if (cavity instanceof Hole && cavity.getSide() === 1)
-        row1Holes.push(cavity);
+    for (let hole of this.holes) {
+      if (hole.getSide() === 1) row1Holes.push(hole);
     }
     this.constructHoles(1, row1Holes);
 
-    for (let cavity of this.board) {
-      if (cavity instanceof Hole)
-        this.constructSeeds(cavity.getID(), cavity.getSeeds());
+    for (let hole of this.holes) {
+      this.constructSeeds(hole.getID(), hole.getSeeds());
     }
+
+    this.setActiveHoles();
+  }
+
+  update() {
+    for (let wh of this.warehouses) {
+      const whid = wh.getSide();
+      document.querySelector(`#wh-${whid} span`).innerText =
+        wh.getSeeds().length;
+    }
+
+    for (let hole of this.holes) {
+      const hid = hole.getID();
+      document.querySelector(`#col-${hid} span`).innerText =
+        hole.getSeeds().length;
+    }
+
+    this.setActiveHoles();
   }
 }

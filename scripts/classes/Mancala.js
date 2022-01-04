@@ -1,3 +1,130 @@
+class Mancala {
+  constructor(board, players, level = 0) {
+    this.board = board;
+
+    this.level = level;
+
+    this.players = players;
+    this.currentPlayer = 0;
+    this.score = [0, 0];
+  }
+
+  performMove(move) {
+    let playedHole = this.board.getCavityByID(move);
+
+    // move not allowed, nothing bad happens, just return
+    if (playedHole.isBlocked()) return true;
+
+    let seeds = playedHole.empty();
+    let prevCavity = playedHole;
+    let wasEmpty = false;
+
+    // sow seeds along the board
+    for (let seed of seeds) {
+      let nextCavity = this.board.getCavityByID(prevCavity.getAdjacent());
+
+      // a player is not allowed to sow in his opponent's warehouse
+      if (nextCavity instanceof Warehouse && nextCavity.getSide() != this.currentPlayer) {
+        let nextCavityDup = this.board.getCavityByID(nextCavity.getAdjacent());
+        nextCavity = nextCavityDup;
+      }
+
+      if (nextCavity instanceof Hole) wasEmpty = nextCavity.isEmpty();
+      this.board.transferSeedTo(seed, nextCavity);
+      prevCavity = nextCavity;
+    }
+
+    let prevPlayer = this.currentPlayer;
+
+    // prevCavity represents now the cavity where the player ended up his sowing
+    if (prevCavity instanceof Warehouse && prevCavity.getSide() === this.currentPlayer) {
+      // move ended up in his own warehouse -> play again
+    } else if (wasEmpty && prevCavity.getSide() === this.currentPlayer) {
+      // move ended up in one of his empty holes -> capture & play again
+      let ownSeeds = prevCavity.empty();
+      let opponentSeeds = this.board.getCavityByID(prevCavity.getOpposite()).empty();
+      let capturedSeeds = [...ownSeeds, ...opponentSeeds];
+      this.board.transferSeedsTo(capturedSeeds, this.board.getCavityByID(prevCavity.getWarehouse()));
+    } else {
+      // swap players normally
+      if (this.currentPlayer === 0) this.currentPlayer = 1;
+      else this.currentPlayer = 0;
+
+      // block the cavities that don't belong to the now current player's board side
+      for (let cavity of this.board.getBoard()) {
+        if (cavity.getSide() === this.currentPlayer) cavity.unblock();
+        else cavity.block();
+      }
+    }
+
+    // check if the player that has just played emptied his whole side
+    let canContinue = !this.board.isSideEmpty(this.currentPlayer);
+  
+    this.board.boardDisplayer.update();
+    
+    return canContinue;
+  }
+}
+
+/*
+ 0 1 2 3 4
+ w h h h h
+ h h h h w
+ 9 8 7 6 5
+*/
+// Seed
+// - id
+// - positionInHole { offsetX, offsetY }
+// - positionInBoard { offsetX, offsetY }
+
+// Warehouse
+// - id
+// - adjacent
+// - seeds = 0
+// - positionInBoard { offsetX, offsetY }
+
+// Hole extends Warehouse
+// - opposite
+// - seeds = nr seeds
+
+// Board
+// - 2x nr holes + 2
+
+// Mancala
+// - 2 players
+// - board
+
+// perform play (move)
+
+// let playedHole = getCavityByID (move)
+// if (playedHole.isBlocked())  return false
+
+// let seeds = playedHole.empty()
+// let prevCavity = playedHole
+// let wasEmpty = false
+// for seed of seeds
+//    let nextCavity = prevCavity.getAdjacent()
+//    wasEmpty = nextCavity.getNrSeeds() == 0
+//    transferSeedTo(nextCavity)
+//    prevCavity = nextCavity
+
+// // move ended up in his own warehouse -> play again
+// if (prevCavity instanceof Warehouse && prevCavity.getRow() == currentPlayer)
+//    ;
+
+// // move ended up in one of his empty holes -> capture & play again
+// else if (wasEmpty && prevCavity.getRow() == currentPlayer)
+//     let ownSeeds = prevCavity.empty()
+//     let opponentSeeds = prevCavity.getOpposite().empty()
+//     let capturedSeeds = [..ownSeeds..opponentSeeds]
+//     transferSeedsTo(prevCavity.getWarehouse())
+
+// // swap players
+// else
+//     if (currentPlayer == 0) currentPlayer = 1
+//     else currentPlayer = 0
+//     swapBlockedHoles() // board method
+
 /* class Mancala {
   constructor(board, players, level = 0) {
     this.level = level; // default value of 0 player vs player case
@@ -174,129 +301,3 @@
     return succeeded;
   }
 } */
-
-class Mancala {
-  constructor(board, players, level = 0) {
-    this.board = board;
-
-    this.level = level;
-
-    this.players = players;
-    this.currentPlayer = 0;
-    this.score = [0, 0];
-  }
-
-  performMove(move) {
-    let playedHole = this.board.getCavityByID(move);
-
-    // move not allowed, nothing bad happens, just return
-    if (playedHole.isBlocked()) return true;
-
-    let seeds = playedHole.empty();
-    let prevCavity = playedHole;
-    let wasEmpty = false;
-
-    // sow seeds along the board
-    for (let seed of seeds) {
-      let nextCavity = this.board.getCavityByID(prevCavity.getAdjacent());
-
-      // a player is not allowed to sow in his opponent's warehouse
-      if (nextCavity instanceof Warehouse && nextCavity.getSide() != this.currentPlayer) 
-        nextCavity = this.board.getCavityByID(nextCavity.getAdjacent());
-
-      wasEmpty = nextCavity.isEmpty();
-      this.board.transferSeedTo(seed, nextCavity);
-      prevCavity = nextCavity;
-    }
-
-    let prevPlayer = this.currentPlayer;
-
-    // prevCavity represents now the cavity where the player ended up his sowing
-    if (prevCavity instanceof Warehouse && prevCavity.getSide() === currentPlayer) {
-      // move ended up in his own warehouse -> play again
-    } else if (wasEmpty && prevCavity.getSide() === currentPlayer) {
-      // move ended up in one of his empty holes -> capture & play again
-      let ownSeeds = prevCavity.empty();
-      let opponentSeeds = this.board.getCavityByID(prevCavity.getOpposite()).empty();
-      let capturedSeeds = [...ownSeeds, ...opponentSeeds];
-      transferSeedsTo(capturedSeeds, this.board.getCavityByID(prevCavity.getWarehouse()));
-    } else {
-      // swap players normally
-      if (currentPlayer === 0) currentPlayer = 1;
-      else currentPlayer = 0;
-
-      // block the cavities that don't belong to the now current player's board side
-      for (cavity of this.board) {
-        if (cavity.getSide() !== this.currentPlayer) cavity.block();
-      }
-    }
-
-    // check if the player that has just played emptied his whole side
-    let canContinue = false;
-    for (cavity of this.board) {
-      if (cavity instanceof Hole && cavity.getSide() === prevPlayer && !cavity.isEmpty()) 
-        canContinue = true;
-    }
-
-    return canContinue;
-  }
-}
-
-/*
- 0 1 2 3 4
- w h h h h
- h h h h w
- 9 8 7 6 5
-*/
-// Seed
-// - id
-// - positionInHole { offsetX, offsetY }
-// - positionInBoard { offsetX, offsetY }
-
-// Warehouse
-// - id
-// - adjacent
-// - seeds = 0
-// - positionInBoard { offsetX, offsetY }
-
-// Hole extends Warehouse
-// - opposite
-// - seeds = nr seeds
-
-// Board
-// - 2x nr holes + 2
-
-// Mancala
-// - 2 players
-// - board
-
-// perform play (move)
-
-// let playedHole = getCavityByID (move)
-// if (playedHole.isBlocked())  return false
-
-// let seeds = playedHole.empty()
-// let prevCavity = playedHole
-// let wasEmpty = false
-// for seed of seeds
-//    let nextCavity = prevCavity.getAdjacent()
-//    wasEmpty = nextCavity.getNrSeeds() == 0
-//    transferSeedTo(nextCavity)
-//    prevCavity = nextCavity
-
-// // move ended up in his own warehouse -> play again
-// if (prevCavity instanceof Warehouse && prevCavity.getRow() == currentPlayer)
-//    ;
-
-// // move ended up in one of his empty holes -> capture & play again
-// else if (wasEmpty && prevCavity.getRow() == currentPlayer)
-//     let ownSeeds = prevCavity.empty()
-//     let opponentSeeds = prevCavity.getOpposite().empty()
-//     let capturedSeeds = [..ownSeeds..opponentSeeds]
-//     transferSeedsTo(prevCavity.getWarehouse())
-
-// // swap players
-// else
-//     if (currentPlayer == 0) currentPlayer = 1
-//     else currentPlayer = 0
-//     swapBlockedHoles() // board method

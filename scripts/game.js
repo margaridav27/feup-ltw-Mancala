@@ -33,7 +33,7 @@ function setupBoard() {
 }
 
 function setupBoardMoveHandlers(board) {
-  for (cavity of board) {
+  for (let cavity of board) {
     if (cavity instanceof Hole) {
       let cavityID = cavity.getID();
       let cavityElement = document.getElementById(`col-${cavityID}`);
@@ -67,7 +67,6 @@ function startGame() {
   let level = setupPlayers().level;
 
   mancala = new Mancala(board, players, level);
-  console.log(board.getBoard());
   setupBoardMoveHandlers(board.getBoard());
 
   let infoPanel = document.getElementsByClassName('info-panel');

@@ -34,15 +34,31 @@ class Board {
     return this.board;
   }
 
-  getHoleByID(id) {
+  getCavityByID(id) {
     for (let cavity of this.board) {
       if (cavity.getID() === id) return cavity;
     }
   }
 
-  transferSeedTo(seed, to) {}
+  transferSeedTo(seed, toCavity) {
+    toCavity.addSeed(seed);
+  }
 
-  transferSeedsTo(seeds, to) {}
+  transferSeedsTo(seeds, toCavity) {
+    toCavity.addSeeds(seeds);
+  }
+
+  isSideEmpty(side) {
+    for (let cavity of this.board) {
+      if (
+        cavity instanceof Hole &&
+        cavity.getSide() === side &&
+        !cavity.isEmpty()
+      )
+        return false;
+    }
+    return true;
+  }
 }
 
 // class Board {
