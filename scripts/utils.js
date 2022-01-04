@@ -1,22 +1,8 @@
-function hidePanel(selector) {
-  let panel = document.querySelector(selector);
-  panel.className = '';
-
-  let classes = selector.split('.');
-  for (const c of classes) panel.className += c + ' ';
-
-  panel.className += 'hide-panel';
-  panel.className = panel.className.trim();
-}
-
-function showPanel(selector) {
-  let panel = document.querySelector(selector);
-  panel.className = '';
-
-  let classes = selector.split('.');
-  for (const c of classes) panel.className += c + ' ';
-
-  panel.className = panel.className.trim();
+function changeVisibility(panels) {
+  panels.forEach((panel) => {
+    console.log(panel)
+    document.querySelector(panel).classList.toggle('hide-panel');
+  });
 }
 
 function disable(element) {
