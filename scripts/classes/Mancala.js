@@ -32,6 +32,11 @@ class Mancala {
     return empty && cavity.getSide() === this.currentPlayer;
   }
 
+  /**
+   * performs a move, which may include one to three phases - sow, capture & cleaning
+   * on each phase, is made the register, following a specific format, of all the moves
+   * the said register format allows the effective communication between the board and his displayer
+   */
   performMove(move) {
     // arrays to retrieve to the board after the move performance so he can pass to the displayer
     let sow = [];
@@ -115,7 +120,7 @@ class Mancala {
       else this.currentPlayer = 0;
 
       // block the cavities that don't belong to the now current player's board side
-      for (let cavity of this.board.getBoard()) {
+      for (let cavity of this.board.getCavities()) {
         if (cavity.getSide() === this.currentPlayer) cavity.unblock();
         else cavity.block();
       }
@@ -125,7 +130,7 @@ class Mancala {
     let canContinue = !this.board.isSideEmpty(prevPlayer);
     if (!canContinue) {
       // cleaning phase
-      this.board.getBoard().forEach((cavity) => {
+      this.board.getCavities().forEach((cavity) => {
         if (cavity instanceof Hole) {
           let destWarehouse = this.board.getCavityByID(cavity.getWarehouse());
 

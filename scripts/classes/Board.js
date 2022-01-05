@@ -1,6 +1,6 @@
 class Board {
   constructor(seeds, holes) {
-    this.board = [];
+    this.cavities = [];
 
     this.initBoardSide(0, holes, seeds);
     this.initBoardSide(1, holes, seeds);
@@ -8,11 +8,16 @@ class Board {
     this.boardDisplayer = this.setupDisplayer();
   }
 
+  /**
+   * setups a board displayer to display, visually, all the moves that occur during the game
+   * the communication between the board and its displayer relies on the send of data following a specific format
+   * this method starts this communication by sending the necessary data to render the board for the first time
+   */
   setupDisplayer() {
     let holes = [];
     let seeds = [];
 
-    this.board.forEach((cavity) => {
+    this.cavities.forEach((cavity) => {
       if (cavity instanceof Hole) {
         // hole data
         holes.push({
@@ -45,51 +50,43 @@ class Board {
 
       let hole = new Hole(i, adjacentID, oppositeID, warehouseID, side, seeds);
       if (side === 1) hole.block();
-      this.board.push(hole);
+      this.cavities.push(hole);
     }
 
     const adjacentID = (warehouseID + 1) % (holes * 2 + 2);
 
     let warehouse = new Warehouse(warehouseID, adjacentID, side);
-    if (side === 1) warehouse.block();
-    this.board.push(warehouse);
+    this.cavities.push(warehouse);
   }
 
-  getBoard() {
-    return this.board;
-  }
-
-  getNrHolesEachSide() {
-    return (this.board.length - 2) / 2;
+  getCavities() {
+    return this.cavities;
   }
 
   getCavityByID(id) {
-    for (let cavity of this.board) {
-      if (cavity.getID() === id) return cavity;
+    return this.cavities.find((cavity) => cavity.getID() === id);
+  }
+
+  getNrHolesEachSide() {
+    return (this.cavities.length - 2) / 2;
+  }
+
+  isSideEmpty(side) {
+    for (let cavity of this.cavities) {
+      if (cavity instanceof Hole && cavity.getSide() === side && !cavity.isEmpty()) return false;
     }
+    return true;
   }
 
   transferSeedTo(seed, toCavity) {
     toCavity.addSeed(seed);
   }
 
-  isSideEmpty(side) {
-    for (let cavity of this.board) {
-      if (
-        cavity instanceof Hole &&
-        cavity.getSide() === side &&
-        !cavity.isEmpty()
-      )
-        return false;
-    }
-    return true;
-  }
-
   performMoveResponse(sow, capture, cleaning) {
     let warehouses = [];
     let holes = [];
 
-    this.board.forEach((cavity) => {
+    this.cavities.forEach((cavity) => {
       if (cavity instanceof Warehouse) {
         warehouses.push({
           wid: cavity.getID() === this.getNrHolesEachSide() ? 0 : 1,

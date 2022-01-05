@@ -67,7 +67,7 @@ function startGame() {
   let level = setupPlayers().level;
 
   mancala = new Mancala(board, players, level);
-  setupBoardMoveHandlers(board.getBoard());
+  setupBoardMoveHandlers(board.getCavities());
 
   let infoPanel = document.getElementsByClassName('info-panel');
   infoPanel.innerHTML = 'Let the game begin!';

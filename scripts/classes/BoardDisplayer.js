@@ -10,7 +10,7 @@ class BoardDisplayer {
     this.constructSeeds(data.seeds);
   }
 
-  /* ---------- DIMENSIONS & POSITIONS ---------- */
+  /* -------------------- DIMENSIONS & POSITIONS -------------------- */
   getBoardDimensions() {
     const totalWidth = window.innerWidth;
     const totalHeight = window.innerHeight;
@@ -55,7 +55,7 @@ class BoardDisplayer {
     return pos1[0] == pos2[0] && pos1[1] == pos2[1];
   }
 
-  /* ---------- CONSTRUCTORS ---------- */
+  /* -------------------- CONSTRUCTORS -------------------- */
   constructWarehouseAndRows() {
     let board = document.querySelector('.board-panel');
     document.getElementById('board-panel').innerHTML = '';
@@ -162,7 +162,7 @@ class BoardDisplayer {
     });
   }
 
-  /* ---------- VISUAL UPDATES ---------- */
+  /* -------------------- VISUAL UPDATES -------------------- */
   updateStatus(warehouses, holes) {
     warehouses.forEach((warehouse) => {
       document.querySelector(`#wh-${warehouse.wid} span`).innerText = warehouse.value;
@@ -178,11 +178,9 @@ class BoardDisplayer {
   executePhases(sow, capture, cleaning) {
     this.animation(sow).then(() => {
       console.log('finished sow animation');
-
       if (capture.length === 0) return;
       this.animation(capture).then(() => {
         console.log('finished capture animation');
-
         if (cleaning.length === 0) return;
         this.animation(cleaning).then(console.log('finished capture animation'));
       });

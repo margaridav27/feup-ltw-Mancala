@@ -6,8 +6,6 @@ class Cavity {
     this.initialNrSeeds = 0;
     this.seeds = [];
 
-    this.blocked = false;
-
     this.side = side;
   }
 
@@ -35,23 +33,7 @@ class Cavity {
     return this.adjacent;
   }
 
-  isBlocked() {
-    return this.blocked;
-  }
-
-  block() {
-    this.blocked = true;
-  }
-
-  unblock() {
-    this.blocked = false;
-  }
-
   addSeed(seed) {
     this.seeds.push(seed);
-  }
-
-  addSeeds(seeds) {
-    for (let seed of seeds) this.seeds.push(seed);
   }
 }
