@@ -9,6 +9,19 @@ class Mancala {
     this.score = [0, 0];
   }
 
+  getPlayers() {
+    return this.players;
+  }
+
+  getScore() {
+    return this.score;
+  }
+
+  updateScore() {
+    this.score[0] += this.board.getWarehouseBySide(0).getCurrentNrSeeds();
+    this.score[1] += this.board.getWarehouseBySide(1).getCurrentNrSeeds();
+  }
+
   /**
    * determines if the player is about to sow on his opponent's warehouse, what is forbidden
    */
@@ -126,8 +139,8 @@ class Mancala {
       }
     }
 
-    // check if the player that has just played emptied his whole side
-    let canContinue = !this.board.isSideEmpty(prevPlayer);
+    // check if the game has conditions to continue
+    let canContinue = !(this.board.isSideEmpty(prevPlayer) && this.board.isSideEmpty(this.currentPlayer));
     if (!canContinue) {
       // cleaning phase
       this.board.getCavities().forEach((cavity) => {
@@ -148,8 +161,59 @@ class Mancala {
       });
     }
 
-    this.board.performMoveResponse(sow, capture, cleaning);
+    this.updateScore();
+    this.board.performMoveResponse(sow, capture, cleaning, this.score, this.currentPlayer);
 
     return canContinue;
+  }
+
+  /**
+   * check if the bot is the current player
+   * meaning a move (at least) will occur automatically, without human intervention
+   */
+  isBotCurrentPlayer() {
+    return this.level > 0 && this.players[this.currentPlayer] === 'BOT';
+  }
+
+  /**
+   * assemble data following a specific format to send to the bot so he can proceed to make his calculations
+   */
+  assembleDataForBot() {
+    let botSide = [];
+    let opponentSide = [];
+
+    this.board.getCavities().forEach((cavity) => {
+      if (cavity instanceof Hole) {
+        let hole = {
+          hid: cavity.getID(),
+          value: cavity.getCurrentNrSeeds(),
+        };
+        if (cavity.getSide() === this.currentPlayer) botSide.push(hole);
+        else opponentSide.push(hole);
+      }
+    });
+
+    return {
+      turn: this.currentPlayer,
+      level: this.level,
+      nrHoles: this.board.getNrHolesEachSide(),
+      botSide: botSide.reverse(),
+      opponentSide: opponentSide.reverse(),
+    };
+  }
+
+  performBotMove() {
+    let succeeded = false;
+
+    let data = this.assembleDataForBot();
+    console.log(data);
+    let response = Bot.calculateBestMove(data);
+    console.log(response);
+    for (let i = response.bestMoves.length - 1; i >= 0; i--) {
+      const move = response.bestMoves[i];
+      succeeded = this.performMove(move);
+    }
+
+    return succeeded;
   }
 }

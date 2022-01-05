@@ -29,7 +29,7 @@ class Server {
     const req = {
       method: 'POST',
       body: JSON.stringify({
-        group: 77, // a alterar
+        group: 78, // a alterar
         nick: this.user,
         password: this.pass,
         size: parseInt(size),

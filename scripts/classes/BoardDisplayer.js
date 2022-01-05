@@ -5,6 +5,9 @@ class BoardDisplayer {
     this.warehouseDimensions = this.getWarehouseDimensions();
     this.holeDimensions = this.getHoleDimensions();
 
+    this.nameP1 = data.players[0];
+    this.nameP2 = data.players[1];
+
     this.constructWarehouseAndRows();
     this.constructHoles(data.holes);
     this.constructSeeds(data.seeds);
@@ -163,7 +166,7 @@ class BoardDisplayer {
   }
 
   /* -------------------- VISUAL UPDATES -------------------- */
-  updateStatus(warehouses, holes) {
+  updateStatus(warehouses, holes, score, turn) {
     warehouses.forEach((warehouse) => {
       document.querySelector(`#wh-${warehouse.wid} span`).innerText = warehouse.value;
     });
@@ -173,6 +176,14 @@ class BoardDisplayer {
       if (hole.blocked) document.getElementById(`col-${hole.hid}`).classList.remove('curr-player');
       else document.getElementById(`col-${hole.hid}`).classList.add('curr-player');
     });
+
+    document.getElementById('score-1').innerText = score[0];
+    document.getElementById('score-2').innerText = score[1];
+
+    const info = document.getElementById('info');
+    info.innerText = turn === 0 ? 
+      `It's ${this.nameP1}'s turn. Make your move.` : 
+      `It's ${this.nameP2}'s turn. Make your move.`;
   }
 
   executePhases(sow, capture, cleaning) {
@@ -263,11 +274,13 @@ class BoardDisplayer {
   }
 
   update(data) {
-    console.log('SOW', data.sow);
-    console.log('CAPTURE', data.capture);
-    console.log('CLEANING', data.cleaning);
+    this.updateStatus(data.status.warehouses, 
+                      data.status.holes, 
+                      data.status.score, 
+                      data.status.turn);
 
-    this.updateStatus(data.status.warehouses, data.status.holes);
-    this.executePhases(data.sow, data.capture, data.cleaning);
+    this.executePhases(data.sow, 
+                       data.capture, 
+                       data.cleaning);
   }
 }

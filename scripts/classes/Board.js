@@ -1,19 +1,20 @@
 class Board {
-  constructor(seeds, holes) {
+  constructor(seeds, holes, players) {
     this.cavities = [];
 
     this.initBoardSide(0, holes, seeds);
     this.initBoardSide(1, holes, seeds);
 
-    this.boardDisplayer = this.setupDisplayer();
+    this.boardDisplayer = this.setupDisplayer(players);
   }
 
   /**
    * setups a board displayer to display, visually, all the moves that occur during the game
    * the communication between the board and its displayer relies on the send of data following a specific format
    * this method starts this communication by sending the necessary data to render the board for the first time
+   * note: the players' names are passed to the displayer so he can show the messages with the customized names
    */
-  setupDisplayer() {
+  setupDisplayer(players) {
     let holes = [];
     let seeds = [];
 
@@ -37,7 +38,7 @@ class Board {
       }
     });
 
-    return new BoardDisplayer({ holes, seeds });
+    return new BoardDisplayer({ holes, seeds, players });
   }
 
   initBoardSide(side, holes, seeds) {
@@ -67,6 +68,10 @@ class Board {
     return this.cavities.find((cavity) => cavity.getID() === id);
   }
 
+  getWarehouseBySide(side) {
+    return this.cavities.find((cavity) => cavity instanceof Warehouse && cavity.getSide() === side);
+  }
+
   getNrHolesEachSide() {
     return (this.cavities.length - 2) / 2;
   }
@@ -82,7 +87,7 @@ class Board {
     toCavity.addSeed(seed);
   }
 
-  performMoveResponse(sow, capture, cleaning) {
+  performMoveResponse(sow, capture, cleaning, score, turn) {
     let warehouses = [];
     let holes = [];
 
@@ -108,6 +113,8 @@ class Board {
       status: {
         warehouses,
         holes,
+        score,
+        turn,
       },
     });
   }
