@@ -49,14 +49,16 @@ function setupBoardMoveHandlers(board) {
 function moveHandler(move) {
   if (gameState === 'PLAYING') {
     let succeeded = mancala.performMove(move);
-    if (mancala.isBotCurrentPlayer()) {
+    console.log("out", mancala.isBotCurrentPlayer(), succeeded)
+    while (mancala.isBotCurrentPlayer() && succeeded) {
       console.log('bot turn');
       console.log(mancala.assembleDataForBot());
-      mancala.performBotMove();
+      //maggy se for preciso qd o bot joga outra vez mando um de cada fez e faço os calculos again, vai é ser menos eficiente
+      succeeded = mancala.performBotMove();
+      console.log(mancala.isBotCurrentPlayer(), succeeded)
     }
 
     if (!succeeded) {
-      //mancala.endGame();
       endGame();
       gameState = 'DEFAULT';
     }
@@ -80,7 +82,7 @@ function startGame() {
 
   gameState = 'PLAYING';
 
-  if (mancala.isBotCurrentPlayer()) {
+  while (mancala.isBotCurrentPlayer()) {
     mancala.performBotMove();
     console.log('bot turn');
     console.log(mancala.assembleDataForBot());
@@ -115,9 +117,14 @@ function quitGame() {
 }
 
 // TODO: ecrã de fim de jogo
-function endGame() {
+async function endGame() {
   const players = mancala.getPlayers();
   const score = mancala.getScore();
+  const info = document.getElementById('info');
+    info.innerText = (score[0] > score[1]) ? 
+      `Game over! Congratulations ${players[0]}, you won!.` : 
+      `Game over! Congratulations ${players[1]}, you won!.`;
+  await sleep(5000);
   GameHistory.addGameToHistory({ players, score });
   resetGame();
 }

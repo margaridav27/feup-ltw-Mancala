@@ -18,8 +18,8 @@ class Mancala {
   }
 
   updateScore() {
-    this.score[0] += this.board.getWarehouseBySide(0).getCurrentNrSeeds();
-    this.score[1] += this.board.getWarehouseBySide(1).getCurrentNrSeeds();
+    this.score[0] = this.board.getWarehouseBySide(0).getCurrentNrSeeds();
+    this.score[1] = this.board.getWarehouseBySide(1).getCurrentNrSeeds();
   }
 
   /**
@@ -202,7 +202,7 @@ class Mancala {
     };
   }
 
-  performBotMove() {
+   performBotMove() {
     let succeeded = false;
 
     let data = this.assembleDataForBot();
