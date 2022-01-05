@@ -59,6 +59,10 @@ class Board {
     return this.board;
   }
 
+  getNrHolesEachSide() {
+    return (this.board.length - 2) / 2;
+  }
+
   getCavityByID(id) {
     for (let cavity of this.board) {
       if (cavity.getID() === id) return cavity;
@@ -67,10 +71,6 @@ class Board {
 
   transferSeedTo(seed, toCavity) {
     toCavity.addSeed(seed);
-  }
-
-  transferSeedsTo(seeds, toCavity) {
-    toCavity.addSeeds(seeds);
   }
 
   isSideEmpty(side) {
@@ -83,5 +83,35 @@ class Board {
         return false;
     }
     return true;
+  }
+
+  performMoveResponse(sow, capture, cleaning) {
+    let warehouses = [];
+    let holes = [];
+
+    this.board.forEach((cavity) => {
+      if (cavity instanceof Warehouse) {
+        warehouses.push({
+          wid: cavity.getID() === this.getNrHolesEachSide() ? 0 : 1,
+          value: cavity.getCurrentNrSeeds(),
+        });
+      } else {
+        holes.push({
+          hid: cavity.getID(),
+          value: cavity.getCurrentNrSeeds(),
+          blocked: cavity.isBlocked() || cavity.isEmpty(),
+        });
+      }
+    });
+
+    this.boardDisplayer.update({
+      sow,
+      capture,
+      cleaning,
+      status: {
+        warehouses,
+        holes,
+      },
+    });
   }
 }

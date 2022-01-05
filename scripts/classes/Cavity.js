@@ -23,6 +23,10 @@ class Cavity {
     return this.initialNrSeeds;
   }
 
+  getCurrentNrSeeds() {
+    return this.seeds.length;
+  }
+
   getSeeds() {
     return this.seeds;
   }
