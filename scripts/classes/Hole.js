@@ -5,8 +5,6 @@ class Hole extends Cavity {
     this.opposite = opposite;
     this.warehouse = warehouse;
 
-    this.blocked = false;
-
     this.initialNrSeeds = seeds;
     this.seeds = [];
     for (let i = 0; i < seeds; i++) this.seeds.push(new Seed(id * seeds + i));
@@ -32,17 +30,5 @@ class Hole extends Cavity {
     let copySeeds = [...this.seeds];
     this.seeds = [];
     return copySeeds;
-  }
-
-  isBlocked() {
-    return this.blocked;
-  }
-
-  block() {
-    this.blocked = true;
-  }
-
-  unblock() {
-    this.blocked = false;
   }
 }
