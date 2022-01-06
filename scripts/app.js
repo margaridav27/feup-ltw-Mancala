@@ -62,12 +62,20 @@ function loginClickHandler() {
   if (!loggedIn) {
     loginBtn.innerText = 'Logout';
     loginArea.forEach((field) => disable(field));
+
+    const nick = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    const data = { nick, pass };
+    Server.register(data);
+
     loggedIn = true;
   } else {
     loginBtn.innerText = 'Login';
     loginArea.forEach((field) => enable(field));
-    document.getElementById('username').innerText = '';
-    document.getElementById('password').innerText = '';
+
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+
     loggedIn = false;
   }
 }
@@ -149,8 +157,10 @@ function gameClickHandler() {
 
     changeVisibility(panels);
     appState = BOARD.state;
-    startGame();
-  }
+
+    if (Server.user) startGame(true);
+    else startGame(false);
+  } 
 }
 
 function instructionsClickHandler() {

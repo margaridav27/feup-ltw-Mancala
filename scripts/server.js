@@ -1,12 +1,10 @@
 class Server {
-  constructor() {
-    this.url = 'http://twserver.alunos.dcc.fc.up.pt:8008';
-    this.game = undefined;
-    this.user = undefined;
-    this.pass = undefined;
-  }
+  static url = 'http://twserver.alunos.dcc.fc.up.pt:8008';
+  static game = undefined;
+  static user = undefined;
+  static pass = undefined;
 
-  register(data) {
+  static async register(data) {
     this.user = data.nick;
     this.pass = data.pass;
 
@@ -18,18 +16,19 @@ class Server {
       }),
     };
 
-    fetch(`${this.url}/register`, req)
-      .then((res) => console.log(res.json()))
+    await fetch(`${this.url}/register`, req)
+      .then((res) => res.json())
+      .then((data) => console.log(data))
       .catch((err) => console.log(err));
   }
 
-  join(data) {
+  static async join(data) {
     const { size, seeds } = data;
 
     const req = {
       method: 'POST',
       body: JSON.stringify({
-        group: 78, // a alterar
+        group: 78,
         nick: this.user,
         password: this.pass,
         size: parseInt(size),
@@ -37,15 +36,19 @@ class Server {
       }),
     };
 
-    fetch(`${this.url}/join`, req)
-      .then((res) => res.json())
-      .then((parsedRes) => (this.game = parsedRes.game))
-      .catch((err) => console.log('join', err));
-
-    console.log('join: game', this.game);
+    await fetch(`${this.url}/join`, req)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.game = data.game;
+      })
+      .catch((err) => {
+        console.log('join', err);
+      });
   }
 
-  notify(move) {
+  static notify(move) {
     const req = {
       method: 'POST',
       body: JSON.stringify({
@@ -61,29 +64,30 @@ class Server {
       .catch((err) => console.log(err));
   }
 
-  update() {
-    const req = {
-      method: 'GET',
-    };
-
-    fetch(
+  static async update() {
+    const eventSource = new EventSource(
       `${this.url}/update?` +
         new URLSearchParams({
           nick: this.user,
           game: this.game,
-        }),
-      req
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.board = data.board;
-        return 1;
-      })
-      .catch((err) => console.log(err));
-    return 0;
+        })
+    );
+    eventSource.onopen = (event) => {
+      console.log('event source open', event);
+    };
+    eventSource.onmessage = (event) => {
+      console.log('event source message', event);
+      const data = JSON.parse(event.data);
+      this.board = data.board;
+      eventSource.close();
+    };
+    eventSource.onerror = (event) => {
+      console.log('event source error', event);
+      eventSource.close();
+    };
   }
 
-  ranking() {
+  static ranking() {
     const req = {
       method: 'POST',
       body: JSON.stringify({}),
@@ -94,7 +98,7 @@ class Server {
       .catch((err) => console.log(err));
   }
 
-  leave() {
+  static leave() {
     const req = {
       method: 'POST',
       body: JSON.stringify({

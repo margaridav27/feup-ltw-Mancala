@@ -50,8 +50,7 @@ async function moveHandler(move) {
   let succeeded = true;
   if (gameState === 'PLAYING') {
     succeeded = mancala.performMove(move);
-    if (succeeded && mancala.isBotCurrentPlayer()) 
-      succeeded = await mancala.performBotMove();
+    if (succeeded && mancala.isBotCurrentPlayer()) succeeded = await mancala.performBotMove();
 
     if (!succeeded) {
       endGame();
@@ -60,7 +59,7 @@ async function moveHandler(move) {
   }
 }
 
-function startGame() {
+function startGame(multiplayer) {
   let gameData = setupGame();
   let board = gameData.board;
   let players = gameData.players;
@@ -69,18 +68,30 @@ function startGame() {
   mancala = new Mancala(board, players, level);
   setupBoardMoveHandlers(board.getCavities());
 
-  let infoPanel = document.getElementsByClassName('info-panel');
-  infoPanel.innerHTML = 'Let the game begin!';
-
+  let infoPanel = document.getElementById('info');
   let playButton = document.getElementById('game-btn');
-  playButton.innerHTML = 'QUIT';
 
-  gameState = 'PLAYING';
+  if (multiplayer) {
+    const data = {
+      size: (board.getCavities().length - 2) / 2,
+      seeds: board.getCavities()[0].getInitialNrSeeds(),
+    };
 
-  while (mancala.isBotCurrentPlayer()) {
-    mancala.performBotMove();
-    console.log('bot turn');
-    console.log(mancala.assembleDataForBot());
+    Server.join(data)
+      .then(() => {
+        infoPanel.innerText = `Hi there ${Server.user}! Please wait for someone to join the game.`;
+        playButton.innerText = 'QUIT';
+        gameState = 'PLAYING';
+      })
+      .then(() => {
+        Server.update();
+      });
+  } else {
+    infoPanel.innerText = 'Let the game begin!';
+    playButton.innerText = 'QUIT';
+    gameState = 'PLAYING';
+
+    if (mancala.isBotCurrentPlayer()) mancala.performBotMove();
   }
 }
 

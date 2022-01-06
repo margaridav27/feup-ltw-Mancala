@@ -36,11 +36,20 @@ class BoardDisplayer {
   positionSeedRandomlyInHole(seed) {
     const marginOfError = 30;
     const seedRadius = this.holeDimensions.w / 14;
-    const holeCentered = Math.floor(this.holeDimensions.w / 2 - seedRadius);
-    const maxDelta = holeCentered - marginOfError;
-    const offset = { l: random(-maxDelta, maxDelta), t: random(-maxDelta, maxDelta) };
-    seed.style.left = `${holeCentered + offset.l}px`;
-    seed.style.top = `${holeCentered + offset.t}px`;
+    const holeCentered = {
+      l: Math.floor(this.holeDimensions.w / 2 - seedRadius),
+      t: Math.floor(this.holeDimensions.h / 2 - seedRadius),
+    };
+    const maxDelta = {
+      l: holeCentered.l - marginOfError,
+      t: holeCentered.t - marginOfError,
+    };
+    const offset = { 
+      l: random(-maxDelta.l, maxDelta.l), 
+      t: random(-maxDelta.t, maxDelta.t) 
+    };
+    seed.style.left = `${holeCentered.l + offset.l}px`;
+    seed.style.top = `${holeCentered.t + offset.t}px`;
   }
 
   positionSeedRandomlyInWarehouse(seed) {
@@ -54,7 +63,10 @@ class BoardDisplayer {
       l: warehouseCentered.l - marginOfError,
       t: warehouseCentered.t - marginOfError,
     };
-    const offset = { l: random(-maxDelta.l, maxDelta.l), t: random(-maxDelta.t, maxDelta.t) };
+    const offset = { 
+      l: random(-maxDelta.l, maxDelta.l), 
+      t: random(-maxDelta.t, maxDelta.t) 
+    };
     seed.style.left = `${warehouseCentered.l + offset.l}px`;
     seed.style.top = `${warehouseCentered.t + offset.t}px`;
   }
@@ -214,9 +226,6 @@ class BoardDisplayer {
       data.status.score,
       data.status.turn
     );
-    this.executePhases(
-      data.sow, 
-      data.capture, 
-      data.cleaning);
+    this.executePhases(data.sow, data.capture, data.cleaning);
   }
 }
