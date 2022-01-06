@@ -18,8 +18,8 @@ class Mancala {
   }
 
   updateScore() {
-    this.score[0] += this.board.getWarehouseBySide(0).getCurrentNrSeeds();
-    this.score[1] += this.board.getWarehouseBySide(1).getCurrentNrSeeds();
+    this.score[0] = this.board.getWarehouseBySide(0).getCurrentNrSeeds();
+    this.score[1] = this.board.getWarehouseBySide(1).getCurrentNrSeeds();
   }
 
   /**
@@ -140,7 +140,9 @@ class Mancala {
     }
 
     // check if the game has conditions to continue
-    let canContinue = !(this.board.isSideEmpty(prevPlayer) && this.board.isSideEmpty(this.currentPlayer));
+    let canContinue = !(
+      this.board.isSideEmpty(prevPlayer) && this.board.isSideEmpty(this.currentPlayer)
+    );
     if (!canContinue) {
       // cleaning phase
       this.board.getCavities().forEach((cavity) => {
@@ -203,14 +205,13 @@ class Mancala {
   }
 
   async performBotMove() {
-    let succeeded = false;
-
     let data = this.assembleDataForBot();
-    console.log(data);
     let response = Bot.calculateBestMove(data);
-    console.log(response);
+
+    let succeeded = false;
     for (let i = response.bestMoves.length - 1; i >= 0; i--) {
       await sleep(2000);
+
       const move = response.bestMoves[i];
       succeeded = this.performMove(move);
     }

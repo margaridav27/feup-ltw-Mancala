@@ -46,17 +46,14 @@ function setupBoardMoveHandlers(board) {
   }
 }
 
-function moveHandler(move) {
+async function moveHandler(move) {
+  let succeeded = true;
   if (gameState === 'PLAYING') {
-    let succeeded = mancala.performMove(move);
-    if (mancala.isBotCurrentPlayer()) {
-      console.log('bot turn');
-      console.log(mancala.assembleDataForBot());
-      mancala.performBotMove();
-    }
+    succeeded = mancala.performMove(move);
+    if (succeeded && mancala.isBotCurrentPlayer()) 
+      succeeded = await mancala.performBotMove();
 
     if (!succeeded) {
-      //mancala.endGame();
       endGame();
       gameState = 'DEFAULT';
     }
@@ -80,7 +77,7 @@ function startGame() {
 
   gameState = 'PLAYING';
 
-  if (mancala.isBotCurrentPlayer()) {
+  while (mancala.isBotCurrentPlayer()) {
     mancala.performBotMove();
     console.log('bot turn');
     console.log(mancala.assembleDataForBot());
@@ -115,9 +112,15 @@ function quitGame() {
 }
 
 // TODO: ecrã de fim de jogo
-function endGame() {
+async function endGame() {
   const players = mancala.getPlayers();
   const score = mancala.getScore();
+  const info = document.getElementById('info');
+  info.innerText =
+    score[0] > score[1]
+      ? `Game over! Congratulations ${players[0]}, you won!.`
+      : `Game over! Congratulations ${players[1]}, you won!.`;
+  await sleep(5000);
   GameHistory.addGameToHistory({ players, score });
   resetGame();
 }

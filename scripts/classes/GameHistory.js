@@ -60,6 +60,9 @@ class GameHistory {
     document.getElementById('scores').innerHTML = '';
   }
 
+  static updateLocalGames(game) {
+    this.localGames.push({players: game.players, score: game.score});
+  }
   static updateLocalScores(game) {
     for (let i = 0; i < 2; i++) {
       let scoreHistoryCell = this.localScores.find((player) => player == game.players[i]);
@@ -95,7 +98,7 @@ class GameHistory {
   }
 
   static addGameToHistory(game) {
-    this.games.push(game);
     this.updateLocalScores(game);
+    this.updateLocalGames(game);
   }
 }

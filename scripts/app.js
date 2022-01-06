@@ -107,6 +107,7 @@ function logoClickHandler() {
 function gameClickHandler() {
   let panels = [];
   const prevAppState = appState;
+  let recordsButton = document.getElementById('records-btn');
 
   switch (appState) {
     case BOARD.state:
@@ -174,6 +175,9 @@ function instructionsClickHandler() {
       panels.push(SETTINGS.panel);
       break;
     case BOARD.state:
+      panels.push(DEFAULT.panel);
+      break;
+    case INSTRUCTIONS.state:
       return;
     default:
       break;
@@ -198,7 +202,8 @@ function recordsClickHandler() {
       panels.push(SETTINGS.panel);
       break;
     case BOARD.state:
-      return;
+      panels.push(DEFAULT.panel);
+      break;
     default:
       break;
   }
@@ -206,10 +211,10 @@ function recordsClickHandler() {
   let recordsButton = document.getElementById('records-btn');
   if (appState === GAMES.state || appState === SCORES.state) {
     if (appState === GAMES.state) {
-      recordsButton.innerText === 'SCORE RECORDS';
+      recordsButton.innerText = 'SCORE RECORDS';
       appState = SCORES.state;
     } else {
-      recordsButton.innerText === 'GAME RECORDS';
+      recordsButton.innerText = 'GAME RECORDS';
       appState = GAMES.state;
     }
 
@@ -220,9 +225,10 @@ function recordsClickHandler() {
     GameHistory.renderLocalScores();
   } else {
     panels.push(GAMES.panel);
+    recordsButton.innerText = 'GAME RECORDS';
     appState = GAMES.state;
 
-    GameHistory.renderLocalScores();
+    GameHistory.renderLocalGames();
   }
 
   changeVisibility(panels);
@@ -248,6 +254,9 @@ function settingsClickHandler() {
       recordsButton.innerText = 'RECORDS';
       break;
     case BOARD.state:
+      panels.push(DEFAULT.panel);
+      break;
+    case SETTINGS.state:
       return;
     default:
       break;

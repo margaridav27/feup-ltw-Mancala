@@ -147,7 +147,7 @@ class BoardDisplayer {
       seedElement.className = 'seed';
 
       // seed dimensions
-      seedElement.style.width = `${holeWidth / 10}px`;
+      seedElement.style.width = `${holeWidth / 6}px`;
       seedElement.style.height = seedElement.style.width;
 
       // position relatively to the hole
@@ -181,17 +181,16 @@ class BoardDisplayer {
     document.getElementById('score-2').innerText = score[1];
 
     const info = document.getElementById('info');
-    info.innerText = turn === 0 ? `It's ${this.nameP1}'s turn. Make your move.` : `It's ${this.nameP2}'s turn. Make your move.`;
+    info.innerText =
+      turn === 0
+        ? `It's ${this.nameP1}'s turn. Make your move.`
+        : `It's ${this.nameP2}'s turn. Make your move.`;
   }
 
   executePhases(sow, capture, cleaning) {
-    return new Promise(() => {
-      this.animation(sow).then(() => {
-        this.animation(capture).then(() => {
-          this.animation(cleaning);
-        });
-      });
-    });
+    this.animation(sow)
+      .then(() => this.animation(capture))
+      .then(() => this.animation(cleaning));
   }
 
   async animation(moves) {
@@ -246,12 +245,18 @@ class BoardDisplayer {
         seed.style.left = `${
           (2 * Math.pow(t, 3) - 3 * Math.pow(t, 2) + 1) * P1[0] +
           (-2 * Math.pow(t, 3) + 3 * Math.pow(t, 2)) * P4[0] +
-          (Math.pow(t, 3) - 2 * Math.pow(t, 2) + t) * R1[0] * (Math.pow(t, 3) - Math.pow(t, 2)) * R4[0]
+          (Math.pow(t, 3) - 2 * Math.pow(t, 2) + t) *
+            R1[0] *
+            (Math.pow(t, 3) - Math.pow(t, 2)) *
+            R4[0]
         }px`;
         seed.style.top = `${
           (2 * Math.pow(t, 3) - 3 * Math.pow(t, 2) + 1) * P1[1] +
           (-2 * Math.pow(t, 3) + 3 * Math.pow(t, 2)) * P4[1] +
-          (Math.pow(t, 3) - 2 * Math.pow(t, 2) + t) * R1[1] * (Math.pow(t, 3) - Math.pow(t, 2)) * R4[1]
+          (Math.pow(t, 3) - 2 * Math.pow(t, 2) + t) *
+            R1[1] *
+            (Math.pow(t, 3) - Math.pow(t, 2)) *
+            R4[1]
         }px`;
 
         currSeedPos = this.getSeedTopLeftOffsets(seed);
@@ -270,8 +275,12 @@ class BoardDisplayer {
   }
 
   update(data) {
-    this.updateStatus(data.status.warehouses, data.status.holes, data.status.score, data.status.turn);
-
+    this.updateStatus(
+      data.status.warehouses,
+      data.status.holes,
+      data.status.score,
+      data.status.turn
+    );
     this.executePhases(data.sow, data.capture, data.cleaning);
   }
 }

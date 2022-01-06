@@ -1,13 +1,4 @@
 class Bot {
-  static copyBoard(board) {
-    let newBoard = new Board(board.getNrHoles(), board.getNrSeeds());
-
-    newBoard.setHoles(Array.from(board.getHoles()));
-    newBoard.setWarehouses(Array.from(board.getWarehouses()));
-
-    return newBoard;
-  }
-
   static updateBoardUponSowing(board, hid, pid, nrHoles) {
     // response to retrieve upon the sow completion
     let res = {
@@ -84,18 +75,18 @@ class Bot {
   }
 
   static parseHoles(data) {
-    let holes = [];
     if (data.turn == 0) {
-      holes = [...data.botSide, ...data.opponentSide];
-    } else holes = [...data.opponentSide, ...data.botSide];
-    return holes;
+      return [...data.botSide, ...data.opponentSide];
+    } else return [...data.opponentSide, ...data.botSide];
   }
+
   static calculateBestMove(data) {
     //turn, level, nrHoles, botSide, opponentSide,
     let holes = this.parseHoles(data);
     if (data.level == 1) {
       let validMoves = this.checkValidHoles(data.turn, holes, data.nrHoles);
-      return Math.floor(Math.random() * validMoves.length);
+      let i = Math.floor(Math.random() * validMoves.length);
+      return { bestMoves: [holes[validMoves[i]].hid] };
     } else if (data.level == 2) {
       const botPlay = this.simulateHolePlay({ holes, warehouses: [0, 0] }, data.turn, data.nrHoles, 1);
       return botPlay;
@@ -107,7 +98,7 @@ class Bot {
 
   static checkValidHoles(turn, holes, nrHoles) {
     let validMovesOp = [];
-    const playersHoles = turn == 0 ? Array.from({ length: nrHoles }, (x, i) => i) : Array.from({ length: nrHoles }, (x, i) => i + 4);
+    const playersHoles = turn == 0 ? Array.from({ length: nrHoles }, (x, i) => i) : Array.from({ length: nrHoles }, (x, i) => i + nrHoles);
     for (let i = 0; i < playersHoles.length; i++) {
       if (holes[playersHoles[i]].value != 0) {
         validMovesOp.push(playersHoles[i]);
@@ -115,16 +106,6 @@ class Bot {
     }
     return validMovesOp;
   }
-
-  // static checkValidHoles(playersHoles) {
-  //   let validMoves = [];
-  //   playersHoles.forEach((hole) => {
-  //     if (hole.value != 0) {
-  //       validMoves.push(hole);
-  //     }
-  //   });
-  //   return validMoves;
-  // }
 
   static simulateHolePlay(board, turn, nrHoles, depth) {
     if (depth == 0) {
