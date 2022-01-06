@@ -181,19 +181,15 @@ class BoardDisplayer {
     document.getElementById('score-2').innerText = score[1];
 
     const info = document.getElementById('info');
-    info.innerText = turn === 0 ? 
-      `It's ${this.nameP1}'s turn. Make your move.` : 
-      `It's ${this.nameP2}'s turn. Make your move.`;
+    info.innerText = turn === 0 ? `It's ${this.nameP1}'s turn. Make your move.` : `It's ${this.nameP2}'s turn. Make your move.`;
   }
 
   executePhases(sow, capture, cleaning) {
-    this.animation(sow).then(() => {
-      console.log('finished sow animation');
-      if (capture.length === 0) return;
-      this.animation(capture).then(() => {
-        console.log('finished capture animation');
-        if (cleaning.length === 0) return;
-        this.animation(cleaning).then(console.log('finished capture animation'));
+    return new Promise(() => {
+      this.animation(sow).then(() => {
+        this.animation(capture).then(() => {
+          this.animation(cleaning);
+        });
       });
     });
   }
@@ -274,13 +270,8 @@ class BoardDisplayer {
   }
 
   update(data) {
-    this.updateStatus(data.status.warehouses, 
-                      data.status.holes, 
-                      data.status.score, 
-                      data.status.turn);
+    this.updateStatus(data.status.warehouses, data.status.holes, data.status.score, data.status.turn);
 
-    this.executePhases(data.sow, 
-                       data.capture, 
-                       data.cleaning);
+    this.executePhases(data.sow, data.capture, data.cleaning);
   }
 }

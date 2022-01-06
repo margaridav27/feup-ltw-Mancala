@@ -202,7 +202,7 @@ class Mancala {
     };
   }
 
-  performBotMove() {
+  async performBotMove() {
     let succeeded = false;
 
     let data = this.assembleDataForBot();
@@ -210,6 +210,7 @@ class Mancala {
     let response = Bot.calculateBestMove(data);
     console.log(response);
     for (let i = response.bestMoves.length - 1; i >= 0; i--) {
+      await sleep(2000);
       const move = response.bestMoves[i];
       succeeded = this.performMove(move);
     }
