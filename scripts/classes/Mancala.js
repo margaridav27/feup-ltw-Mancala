@@ -59,7 +59,7 @@ class Mancala {
     let playedHole = this.board.getCavityByID(move);
 
     // move not allowed, nothing bad happens, just return
-    if (playedHole.isBlocked()) return true;
+    if (playedHole.isBlocked()) { console.log('estava bloqueado'); return true; }
 
     let seeds = playedHole.empty();
     let prevCavity = playedHole;
@@ -134,8 +134,8 @@ class Mancala {
 
       // block the cavities that don't belong to the now current player's board side
       for (let cavity of this.board.getCavities()) {
-        if (cavity.getSide() === this.currentPlayer) cavity.unblock();
-        else cavity.block();
+        if (cavity.getSide() !== this.currentPlayer || cavity.isEmpty()) cavity.block();
+        else cavity.unblock();
       }
     }
 

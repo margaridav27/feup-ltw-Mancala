@@ -455,4 +455,9 @@ async function endGame() {
  * - on click num hole
  * - mandar notify e receber resposta
  * - se não for erro, pedir update e perform move com jogada que foi efetuada
+ * 
+ * 
+ * 
+ * 
+ * - desativar holes if bot
  */
