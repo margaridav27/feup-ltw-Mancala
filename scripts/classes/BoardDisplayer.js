@@ -5,9 +5,6 @@ class BoardDisplayer {
     this.warehouseDimensions = this.getWarehouseDimensions();
     this.holeDimensions = this.getHoleDimensions();
 
-    this.nameP1 = data.players[0];
-    this.nameP2 = data.players[1];
-
     this.constructWarehouseAndRows();
     this.constructHoles(data.holes);
     this.constructSeeds(data.seeds);
@@ -223,8 +220,7 @@ class BoardDisplayer {
     this.updateStatus(
       data.status.warehouses,
       data.status.holes,
-      data.status.score,
-      data.status.turn
+      data.status.score
     );
     this.executePhases(data.sow, data.capture, data.cleaning);
   }

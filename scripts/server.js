@@ -85,8 +85,6 @@ class Server {
     eventSource.onmessage = (event) => {
       console.log('event source message', event);
       const data = JSON.parse(event.data);
-      this.board = data.board;
-      console.log('BOARD',this.board);
       eventSource.close();
       return data;
     };

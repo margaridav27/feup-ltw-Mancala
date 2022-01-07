@@ -1,20 +1,19 @@
 class Board {
-  constructor(seeds, holes, players) {
+  constructor(seeds, holes) {
     this.cavities = [];
 
     this.initBoardSide(0, holes, seeds);
     this.initBoardSide(1, holes, seeds);
 
-    this.boardDisplayer = this.setupDisplayer(players);
+    this.boardDisplayer = this.setupDisplayer();
   }
 
   /**
    * setups a board displayer to display, visually, all the moves that occur during the game
    * the communication between the board and its displayer relies on the send of data following a specific format
    * this method starts this communication by sending the necessary data to render the board for the first time
-   * note: the players' names are passed to the displayer so he can show the messages with the customized names
    */
-  setupDisplayer(players) {
+  setupDisplayer() {
     let holes = [];
     let seeds = [];
 
@@ -38,7 +37,7 @@ class Board {
       }
     });
 
-    return new BoardDisplayer({ holes, seeds, players });
+    return new BoardDisplayer({ holes, seeds });
   }
 
   initBoardSide(side, holes, seeds) {
