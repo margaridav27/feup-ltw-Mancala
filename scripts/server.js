@@ -48,7 +48,7 @@ class Server {
       });
   }
 
-  static notify(move) {
+  static async notify(move) {
     const req = {
       method: 'POST',
       body: JSON.stringify({
@@ -59,9 +59,16 @@ class Server {
       }),
     };
 
-    fetch(`${this.url}/notify`, req)
-      .then((res) => console.log(res.json()))
-      .catch((err) => console.log(err));
+    await fetch(`${this.url}/notify`, req)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log('notify', err);
+      });
   }
 
   static async update() {
@@ -79,7 +86,9 @@ class Server {
       console.log('event source message', event);
       const data = JSON.parse(event.data);
       this.board = data.board;
+      console.log('BOARD',this.board);
       eventSource.close();
+      return data;
     };
     eventSource.onerror = (event) => {
       console.log('event source error', event);
