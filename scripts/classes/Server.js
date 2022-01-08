@@ -1,10 +1,18 @@
 class Server {
-  static url = 'http://twserver.alunos.dcc.fc.up.pt:8008';
-  static game = undefined;
-  static user = undefined;
-  static pass = undefined;
+  constructor() {
+    this.url = 'http://twserver.alunos.dcc.fc.up.pt:8008';
+    this.game = undefined;
+    this.user = undefined;
+    this.pass = undefined;
+    this.eventSource = undefined;
+    this.eventSourceHandler = undefined;
+  }
 
-  static async register(data) {
+  setEventSourceHandler(handler) {
+    this.eventSourceHandler = handler;
+  }
+
+  async register(data) {
     this.user = data.nick;
     this.pass = data.pass;
 
@@ -22,7 +30,7 @@ class Server {
       .catch((err) => console.log(err));
   }
 
-  static async join(data) {
+  async join(data) {
     const { size, seeds } = data;
 
     const req = {
@@ -48,7 +56,7 @@ class Server {
       });
   }
 
-  static async notify(move) {
+  async notify(move) {
     const req = {
       method: 'POST',
       body: JSON.stringify({
@@ -64,48 +72,42 @@ class Server {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
+        return data;
       })
       .catch((err) => {
         console.log('notify', err);
       });
   }
 
-  static async update() {
-    const eventSource = new EventSource(
-      `${this.url}/update?` +
-        new URLSearchParams({
-          nick: this.user,
-          game: this.game,
-        })
-    );
-    eventSource.onopen = (event) => {
-      console.log('event source open', event);
-    };
-    eventSource.onmessage = (event) => {
-      console.log('event source message', event);
-      const data = JSON.parse(event.data);
-      eventSource.close();
-      return data;
-    };
-    eventSource.onerror = (event) => {
-      console.log('event source error', event);
-      eventSource.close();
-    };
+  async update() {
+    if (!this.eventSource) {
+      this.eventSource = new EventSource(
+        `${this.url}/update?` +
+          new URLSearchParams({
+            nick: this.user,
+            game: this.game,
+          })
+      );
+
+      this.eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        return this.eventSourceHandler(data);
+      };
+    }
   }
 
-  static ranking() {
+  async ranking() {
     const req = {
       method: 'POST',
       body: JSON.stringify({}),
     };
 
-    fetch(`${this.url}/ranking`, req)
+    await fetch(`${this.url}/ranking`, req)
       .then((res) => console.log(res.json()))
       .catch((err) => console.log(err));
   }
 
-  static leave() {
+  async leave() {
     const req = {
       method: 'POST',
       body: JSON.stringify({
@@ -115,24 +117,8 @@ class Server {
       }),
     };
 
-    fetch(`${this.url}/leave`, req)
+    await fetch(`${this.url}/leave`, req)
       .then((res) => console.log(res.json()))
       .catch((err) => console.log('leave', err));
   }
 }
-
-/*
-{
-  "sides" : {
-  "zp"     : {
-      "store": 0,
-      "pits": [ 4, 4, 4, 4, 4, 4 ]
-      }
-  "jpleal" : {
-      "store": 0,
-      "pits": [ 4, 4, 4, 4, 4, 4 ]
-      }
-  },
-  "turn": "zp"
-}
-*/

@@ -39,7 +39,7 @@ class Mancala {
 
   /*
    * determines if the last sowing occured in current player's own board side
-   * what will determine if he's playing again or not
+   * what will trigger the occurence of the capture phase
    */
   sowedLastOwnSide(empty, cavity) {
     return empty && cavity.getSide() === this.currentPlayer;
@@ -51,7 +51,6 @@ class Mancala {
    * the said register format allows the effective communication between the board and his displayer
    */
   performMove(move) {
-    // arrays to retrieve to the board after the move performance so he can pass to the displayer
     let sow = [];
     let capture = [];
     let cleaning = [];
@@ -59,7 +58,7 @@ class Mancala {
     let playedHole = this.board.getCavityByID(move);
 
     // move not allowed, nothing bad happens, just return
-    if (playedHole.isBlocked()) { console.log('estava bloqueado'); return true; }
+    if (playedHole.isBlocked()) return true;
 
     let seeds = playedHole.empty();
     let prevCavity = playedHole;
@@ -93,12 +92,8 @@ class Mancala {
       prevCavity = nextCavity;
     }
 
-    let prevPlayer = this.currentPlayer;
-
-    if (this.sowedLastOwnWarehouse(prevCavity)) {
-      // nothing happens
-    } else if (this.sowedLastOwnSide(wasEmpty, prevCavity)) {
-      // capture phase
+    // capture phase
+    if (this.sowedLastOwnSide(wasEmpty, prevCavity)) {
       let destWarehouse = this.board.getCavityByID(prevCavity.getWarehouse());
       let oppositeHole = this.board.getCavityByID(prevCavity.getOpposite());
 
@@ -127,23 +122,24 @@ class Mancala {
           to: destWarehouse.getID() === this.board.getNrHolesEachSide() ? -1 : -2,
         });
       });
-    } else {
-      // swap players normally
+    }
+
+    // swap players normally
+    if (!this.sowedLastOwnWarehouse(prevCavity)) {
       if (this.currentPlayer === 0) this.currentPlayer = 1;
       else this.currentPlayer = 0;
+    }
 
-      // block the cavities that don't belong to the now current player's board side
-      for (let cavity of this.board.getCavities()) {
-        if (cavity.getSide() !== this.currentPlayer || cavity.isEmpty()) cavity.block();
-        else cavity.unblock();
-      }
+    // block the cavities that don't belong to the now current player's board side
+    for (let cavity of this.board.getCavities()) {
+      if (cavity.getSide() !== this.currentPlayer || (cavity instanceof Hole && cavity.isEmpty()))
+        cavity.block();
+      else cavity.unblock();
     }
 
     // check if the game has conditions to continue
-    let canContinue = !(
-      this.board.isSideEmpty(prevPlayer) && this.board.isSideEmpty(this.currentPlayer)
-    );
-    if (!canContinue) {
+    const hasFinished = this.board.isThereAnySideTotallyEmpty();
+    if (hasFinished) {
       // cleaning phase
       this.board.getCavities().forEach((cavity) => {
         if (cavity instanceof Hole) {
@@ -166,7 +162,7 @@ class Mancala {
     this.updateScore();
     this.board.performMoveResponse(sow, capture, cleaning, this.score, this.currentPlayer);
 
-    return canContinue;
+    return hasFinished;
   }
 
   /**

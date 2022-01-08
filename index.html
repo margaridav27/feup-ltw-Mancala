@@ -4,7 +4,10 @@
     <title>Mancala</title>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" crossorigin rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;600&display=swap"
+      rel="stylesheet"
+    />
     <link href="styles/general.css" rel="stylesheet" />
     <link href="styles/header.css" rel="stylesheet" />
     <link href="styles/menu.css" rel="stylesheet" />
@@ -112,27 +115,38 @@
 
     <div class="instructions-panel hide-panel">
       <div class="instructions">
-        Each player has a certain number of holes, by deafult 4, which can be defined at the beginning of the game, and a warehouse, the big hole on the side.
+        Each player has a certain number of holes, by deafult 4, which can be defined at the
+        beginning of the game, and a warehouse, the big hole on the side.
         <p>You can only control the holes on your side.</p>
         <p></p>
         <p>
-          The holes have an initial default value of 4 seeds, except for the warehouse that is empty and is where you store the earned seeds. However, this
-          value is also configurable in the settings area.
+          The holes have an initial default value of 4 seeds, except for the warehouse that is empty
+          and is where you store the earned seeds. However, this value is also configurable in the
+          settings area.
         </p>
         <p></p>
-        <p>In your turn, you take all of the seeds from a small hole of your side and plant them in the following holes, counterclockwise.</p>
+        <p>
+          In your turn, you take all of the seeds from a small hole of your side and plant them in
+          the following holes, counterclockwise.
+        </p>
         <p></p>
-        <p>If the hole your planting is your warehouse, drop it. If it is the opponent's warehouse, skip it and put it on the holes of your side.</p>
+        <p>
+          If the hole your planting is your warehouse, drop it. If it is the opponent's warehouse,
+          skip it and put it on the holes of your side.
+        </p>
         <p>You will play again if the last seed:</p>
         <p></p>
         <ul>
           <li>is planted in your warehouse;</li>
           <li>
-            is dropped into an empty hole on your side. If so, you store the last seed in the warehouse, as well as the seeds from the opposite hole, the
-            opponent's one.
+            is dropped into an empty hole on your side. If so, you store the last seed in the
+            warehouse, as well as the seeds from the opposite hole, the opponent's one.
           </li>
         </ul>
-        <p>The game ends when one of the players cannot make another move. The other player stores the leftover seeds in the warehouse.</p>
+        <p>
+          The game ends when one of the players cannot make another move. The other player stores
+          the leftover seeds in the warehouse.
+        </p>
         <p></p>
         <p>Wins whoever has more seeds.</p>
         <p></p>
@@ -164,17 +178,27 @@
 
     <script src="scripts/utils.js"></script>
     <script src="scripts/settings.js"></script>
-    <script src="scripts/classes/Seed.js"></script>
-    <script src="scripts/classes/Cavity.js"></script>
-    <script src="scripts/classes/Warehouse.js"></script>
-    <script src="scripts/classes/Hole.js"></script>
-    <script src="scripts/classes/Board.js"></script>
-    <script src="scripts/classes/BoardDisplayer.js"></script>
+
+    <script src="scripts/classes/board/Seed.js"></script>
+    <script src="scripts/classes/board/Cavity.js"></script>
+    <script src="scripts/classes/board/Warehouse.js"></script>
+    <script src="scripts/classes/board/Hole.js"></script>
+    <script src="scripts/classes/board/Board.js"></script>
+    <script src="scripts/classes/board/BoardDisplayer.js"></script>
+
     <script src="scripts/classes/Bot.js"></script>
+
     <script src="scripts/classes/Mancala.js"></script>
+
+    <script src="scripts/classes/games/Game.js"></script>
+    <script src="scripts/classes/games/LocalGame.js"></script>
+    <script src="scripts/classes/games/ServerGame.js"></script>
+    <script src="scripts/classes/games/BotGame.js"></script>
+
     <script src="scripts/classes/GameHistory.js"></script>
-    <script src="scripts/game.js"></script>
+    
+    <script src="scripts/classes/Server.js"></script>
+
     <script src="scripts/app.js"></script>
-    <script src="scripts/server.js"></script>
   </body>
 </html>

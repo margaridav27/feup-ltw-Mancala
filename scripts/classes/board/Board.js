@@ -75,11 +75,15 @@ class Board {
     return (this.cavities.length - 2) / 2;
   }
 
-  isSideEmpty(side) {
+  isSideTotallyEmpty(side) {
     for (let cavity of this.cavities) {
       if (cavity instanceof Hole && cavity.getSide() === side && !cavity.isEmpty()) return false;
     }
     return true;
+  }
+
+  isThereAnySideTotallyEmpty() {
+    return this.isSideTotallyEmpty(0) || this.isSideTotallyEmpty(1);
   }
 
   transferSeedTo(seed, toCavity) {

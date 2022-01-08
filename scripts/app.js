@@ -1,5 +1,3 @@
-/* --------------------------------------------- APP --------------------------------------------- */
-
 const DEFAULT = { state: 0, panel: '.default-panel' };
 const BOARD = { state: 1, panel: '.board-panel' };
 const INFO = { state: 2, panel: '.info-panel' };
@@ -10,10 +8,18 @@ const SETTINGS = { state: 6, panel: '.settings-panel' };
 
 var appState = DEFAULT.state;
 var loggedIn = false;
+var game = undefined;
+var server = undefined;
 
 window.onload = () => {
   setupEventHandlers();
 };
+
+function checkAgainstBot() {
+  if (document.getElementById('name-1').value === 'BOT') return 0;
+  else if (document.getElementById('name-2').value === 'BOT') return 1;
+  return -1;
+}
 
 function setupEventHandlers() {
   let logo = document.getElementById('logo');
@@ -68,7 +74,8 @@ function loginClickHandler() {
     const nick = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
     const data = { nick, pass };
-    Server.register(data);
+    server = new Server();
+    server.register(data);
 
     loggedIn = true;
   } else {
@@ -152,13 +159,22 @@ function gameClickHandler() {
     panels.push(BOARD.panel);
     changeVisibility(panels);
 
+    toggleGameButton();
+
     let menuButtons = document.querySelectorAll('.menu-btn');
     menuButtons.forEach((button) => disable(button));
     enable(menuButtons[0]); // now quit button
 
     appState = BOARD.state;
 
-    startGame();
+    if (loggedIn) game = new ServerGame(server);
+    else {
+      const botTurn = checkAgainstBot();
+      if (botTurn === -1) game = new LocalGame();
+      else game = new BotGame(botTurn);
+    }
+
+    game.startGame();
   }
 }
 
@@ -276,5 +292,44 @@ function settingsClickHandler() {
   appState = SETTINGS.state;
 }
 
-/* --------------------------------------------- GAME --------------------------------------------- */
+function toggleGameButton() {
+  let playButton = document.getElementById('game-btn');
+  if (playButton.innerText === 'QUIT') playButton.innerText = 'PLAY';
+  else playButton.innerText = 'QUIT';
+}
 
+function resetGame() {
+  game = undefined;
+
+  toggleGameButton();
+
+  let panels = ['.info-panel', '.board-panel', '.default-panel'];
+  changeVisibility(panels);
+
+  let menuButtons = document.querySelectorAll('.menu-btn');
+  menuButtons.forEach((button) => {
+    enable(button);
+  });
+}
+
+// TODO: ecrã de quit
+function quitGame() {
+  resetGame();
+}
+
+// TODO: ecrã de fim de jogo
+async function endGame() {
+  const mancala = game.getMancala();
+  const players = mancala.getPlayers();
+  const score = mancala.getScore();
+  const info = document.getElementById('info');
+  info.innerText =
+    score[0] > score[1]
+      ? `Game over! Congratulations ${players[0]}, you won!.`
+      : `Game over! Congratulations ${players[1]}, you won!.`;
+  await sleep(5000);
+
+  GameHistory.addGameToHistory({ players, score });
+
+  resetGame();
+}
