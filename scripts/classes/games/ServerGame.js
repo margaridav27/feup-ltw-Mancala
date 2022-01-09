@@ -26,21 +26,27 @@ class ServerGame extends Game {
     this.server.notify(converted).then(() => this.server.update());
   }
 
+  // TODO: verify event dispatch and handle winner update in different way
   serverUpdateHandler(data) {
     if (!this.mancala) {
-      this.showMessage(joined(game.players[0], game.players[1]));
-
+      // was waiting to be joined
       this.players = Object.keys(data.board.sides);
+      this.turn = data.board.turn;
       this.mancala = new Mancala(this.board, this.players);
-
-      this.turn = data.board.turn;
-      this.showMessage(yourTurn(this.turn));
+      this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
     } else {
-      const converted = this.convertFromUpdate(data.pit);
-      this.mancala.performMove(converted);
-
-      this.turn = data.board.turn;
-      this.showMessage(yourTurn(this.turn));
+      // the game was already occuring
+      if (data.winner) {
+        // server sent a winner update
+        this.showMessage(winner(data.winner));
+        document.dispatchEvent(new Event('endGame'));
+      } else {
+        // server sent a move update
+        const converted = this.convertFromUpdate(data.pit);
+        this.mancala.performMove(converted);
+        this.turn = data.board.turn;
+        this.showMessage(yourTurn(this.turn));
+      }
     }
   }
 
@@ -48,5 +54,6 @@ class ServerGame extends Game {
     this.server.setEventSourceHandler((data) => this.serverUpdateHandler(data));
     const data = { size: this.size, seeds: this.seeds };
     this.server.join(data).then(() => this.server.update());
+    this.showMessage(waiting(this.server.getUser()));
   }
 }

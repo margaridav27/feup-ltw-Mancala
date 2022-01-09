@@ -15,12 +15,6 @@ window.onload = () => {
   setupEventHandlers();
 };
 
-function checkAgainstBot() {
-  if (document.getElementById('name-1').value === 'BOT') return 0;
-  else if (document.getElementById('name-2').value === 'BOT') return 1;
-  return -1;
-}
-
 function setupEventHandlers() {
   let logo = document.getElementById('logo');
   logo.addEventListener('click', () => {
@@ -61,6 +55,14 @@ function setupEventHandlers() {
   botCheckbox2.addEventListener('click', () => {
     botCheckHandler('2');
   });
+
+  document.addEventListener('endGame', () => {
+    endGame();
+  });
+
+  // document.addEventListener('quitGame', () => {
+  //   quitGame();
+  // });
 }
 
 function loginClickHandler() {
@@ -296,6 +298,12 @@ function toggleGameButton() {
   let playButton = document.getElementById('game-btn');
   if (playButton.innerText === 'QUIT') playButton.innerText = 'PLAY';
   else playButton.innerText = 'QUIT';
+}
+
+function checkAgainstBot() {
+  if (document.getElementById('name-1').value === 'BOT') return 0;
+  else if (document.getElementById('name-2').value === 'BOT') return 1;
+  return -1;
 }
 
 function resetGame() {

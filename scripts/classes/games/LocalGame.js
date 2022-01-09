@@ -13,13 +13,14 @@ class LocalGame extends Game {
     this.players = [nameP1, nameP2];
   }
 
-  // TODO: handle end game in different way
+  // TODO: handle end game in different way and verify event dispatch
   moveHandler(move) {
     const hasFinished = this.mancala.performMove(move);
-    if (hasFinished) return;
+    if (hasFinished) document.dispatchEvent(new Event('endGame'));
   }
 
   startGame() {
-    this.mancala = new Mancala(this.board);
+    this.mancala = new Mancala(this.board, this.players);
+    this.showMessage(justStarted(this.players[0]));
   }
 }
