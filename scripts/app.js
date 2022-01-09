@@ -300,12 +300,6 @@ function toggleGameButton() {
   else playButton.innerText = 'QUIT';
 }
 
-function checkAgainstBot() {
-  if (document.getElementById('name-1').value === 'BOT') return 0;
-  else if (document.getElementById('name-2').value === 'BOT') return 1;
-  return -1;
-}
-
 function resetGame() {
   game = undefined;
 
