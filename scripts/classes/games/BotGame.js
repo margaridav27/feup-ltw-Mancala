@@ -28,28 +28,29 @@ class BotGame extends Game {
     }
   }
 
-  // TODO: handle end game in different way
   async moveHandler(move) {
     let hasFinished = this.mancala.performMove(move).hasFinished;
     if (hasFinished) {
+      document.querySelector('.winner-text').innerText = winner(this.mancala.getWinner());
       document.dispatchEvent(new Event('endGame'));
-      return;
     }
 
     if (this.mancala.isBotCurrentPlayer()) hasFinished = await this.mancala.performBotMove();
     if (hasFinished) {
+      document.querySelector('.winner-text').innerText = winner(this.mancala.getWinner());
       document.dispatchEvent(new Event('endGame'));
-      return;
     }
   }
 
-  // TODO: handle end game in different way
   async startGame() {
     this.mancala = new Mancala(this.board, this.players, this.level);
     this.showMessage(justStarted(this.players[0]));
     if (this.mancala.isBotCurrentPlayer()) {
       let hasFinished = await this.mancala.performBotMove();
-      if (hasFinished) return;
+      if (hasFinished) {
+        document.querySelector('.winner-text').innerText = winner(this.mancala.getWinner());
+        document.dispatchEvent(new Event('endGame'));
+      };
     }
   }
 }
