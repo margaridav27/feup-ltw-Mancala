@@ -15,8 +15,12 @@ class LocalGame extends Game {
 
   // TODO: handle end game in different way and verify event dispatch
   moveHandler(move) {
-    const hasFinished = this.mancala.performMove(move);
-    if (hasFinished) document.dispatchEvent(new Event('endGame'));
+    const status = this.mancala.performMove(move);
+    this.showMessage(status.message);
+    if (status.hasFinished) {
+      document.querySelector('.winner-text').innerText = winner(this.mancala.getWinner());
+      document.dispatchEvent(new Event('endGame'));
+    }
   }
 
   startGame() {

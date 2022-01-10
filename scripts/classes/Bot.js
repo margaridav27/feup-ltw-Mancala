@@ -65,7 +65,6 @@ class Bot {
 
     if (res.lastSowingOnHole && ownEmptyHole) {
       this.updateBoardUponCapture(copyBoard, res.lastSowing, turn, nrHoles);
-      move.playAgain = true;
     } else if (res.lastSowingOnWarehouse) move.playAgain = true;
 
     move.pointsMove = copyBoard.warehouses[turn] - board.warehouses[turn];
@@ -84,14 +83,13 @@ class Bot {
     //turn, level, nrHoles, botSide, opponentSide,
     let holes = this.parseHoles(data);
     if (data.level == 1) {
-      let validMoves = this.checkValidHoles(data.turn, holes, data.nrHoles);
-      let i = Math.floor(Math.random() * validMoves.length);
-      return { bestMoves: [holes[validMoves[i]].hid] };
-    } else if (data.level == 2) {
       const botPlay = this.simulateHolePlay({ holes, warehouses: [0, 0] }, data.turn, data.nrHoles, 1);
       return botPlay;
-    } else if (data.level == 3) {
+    } else if (data.level == 2) {
       const botPlay = this.simulateHolePlay({ holes, warehouses: [0, 0] }, data.turn, data.nrHoles, 4);
+      return botPlay;
+    } else if (data.level == 3) {
+      const botPlay = this.simulateHolePlay({ holes, warehouses: [0, 0] }, data.turn, data.nrHoles, 7);
       return botPlay;
     }
   }

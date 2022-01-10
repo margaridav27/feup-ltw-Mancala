@@ -90,7 +90,7 @@ class Board {
     toCavity.addSeed(seed);
   }
 
-  performMoveResponse(sow, capture, cleaning, score, turn) {
+  performMoveResponse(sow, capture, cleaning, score, turn, finished) {
     let warehouses = [];
     let holes = [];
 
@@ -118,6 +118,7 @@ class Board {
         holes,
         score,
         turn,
+        finished,
       },
     });
   }

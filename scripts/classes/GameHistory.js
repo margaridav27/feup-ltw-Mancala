@@ -65,7 +65,7 @@ class GameHistory {
   }
   static updateLocalScores(game) {
     for (let i = 0; i < 2; i++) {
-      let scoreHistoryCell = this.localScores.find((player) => player == game.players[i]);
+      let scoreHistoryCell = this.localScores.find((info) => info.player == game.players[i]);
 
       if (scoreHistoryCell) {
         scoreHistoryCell.leaderboard = Math.max(scoreHistoryCell.leaderboard, game.score[i]);

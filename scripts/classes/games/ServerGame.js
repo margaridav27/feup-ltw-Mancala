@@ -11,6 +11,18 @@ class ServerGame extends Game {
     return this.turn === this.mancala.getPlayers()[0] ? 0 : 1;
   }
 
+  checkSide(move, side) {
+    if (side == 0 && move >= game.size) {
+      this.showMessage(invalidSide(this.server.getUser()));
+      return false;
+    }
+    if (side == 1 && (move <= game.size || move > game.size * 2)) {
+      this.showMessage(invalidSide(this.server.getUser()));
+      return false;
+    }
+    return true;
+  }
+
   convertToNotify(move) {
     const side = this.getTurnSide();
     return side === 0 ? move : move - game.size - 1;
@@ -23,7 +35,11 @@ class ServerGame extends Game {
 
   async moveHandler(move) {
     const converted = this.convertToNotify(move);
-    this.server.notify(converted).then(() => this.server.update());
+    const opponentSide = Math.abs(this.getTurnSide() - 1);
+    console.log(this.turn);
+    if (this.turn === this.server.getUser() && this.checkSide(move, this.getTurnSide())) this.server.notify(converted).then(() => this.server.update());
+    else if (this.turn !== this.server.getUser()) this.showMessage(notYourTurn(this.players[opponentSide]));
+   
   }
 
   // TODO: verify event dispatch and handle winner update in different way
@@ -38,14 +54,15 @@ class ServerGame extends Game {
       // the game was already occuring
       if (data.winner) {
         // server sent a winner update
-        this.showMessage(winner(data.winner));
+        this.showMessage(gameOver());
         document.dispatchEvent(new Event('endGame'));
       } else {
         // server sent a move update
         const converted = this.convertFromUpdate(data.pit);
-        this.mancala.performMove(converted);
+        const status = this.mancala.performMove(converted);
         this.turn = data.board.turn;
-        this.showMessage(yourTurn(this.turn));
+        this.showMessage(status.message);
+        if (status.hasFinished) document.dispatchEvent(new Event('endGame'));
       }
     }
   }

@@ -59,10 +59,6 @@ function setupEventHandlers() {
   document.addEventListener('endGame', () => {
     endGame();
   });
-
-  // document.addEventListener('quitGame', () => {
-  //   quitGame();
-  // });
 }
 
 function loginClickHandler() {
@@ -229,27 +225,30 @@ function recordsClickHandler() {
       panels.push(SETTINGS.panel);
       break;
     case BOARD.state:
-      panels.push(DEFAULT.panel);
+      panels.push(INFO.panel);
+      panels.push(BOARD.panel);
       break;
     default:
       break;
   }
-
+  
   let recordsButton = document.getElementById('records-btn');
   if (appState === GAMES.state || appState === SCORES.state) {
+    GameHistory.cleanHistory();
     if (appState === GAMES.state) {
       recordsButton.innerText = 'SCORE RECORDS';
       appState = SCORES.state;
+      GameHistory.renderLocalScores();
+
     } else {
       recordsButton.innerText = 'GAME RECORDS';
       appState = GAMES.state;
+      GameHistory.renderLocalGames();
     }
 
     panels.push(GAMES.panel);
     panels.push(SCORES.panel);
 
-    GameHistory.cleanHistory();
-    GameHistory.renderLocalScores();
   } else {
     panels.push(GAMES.panel);
     recordsButton.innerText = 'GAME RECORDS';
@@ -319,19 +318,15 @@ function quitGame() {
   resetGame();
 }
 
-// TODO: ecrã de fim de jogo
-async function endGame() {
+function endGame() {
   const mancala = game.getMancala();
   const players = mancala.getPlayers();
   const score = mancala.getScore();
-  const info = document.getElementById('info');
-  info.innerText =
-    score[0] > score[1]
-      ? `Game over! Congratulations ${players[0]}, you won!.`
-      : `Game over! Congratulations ${players[1]}, you won!.`;
-  await sleep(5000);
+
+  let menuButtons = document.querySelectorAll('.menu-btn');
+  menuButtons.forEach((button) => {
+    enable(button);
+  });
 
   GameHistory.addGameToHistory({ players, score });
-
-  resetGame();
 }

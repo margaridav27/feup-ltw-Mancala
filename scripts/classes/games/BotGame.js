@@ -30,16 +30,14 @@ class BotGame extends Game {
 
   // TODO: handle end game in different way
   async moveHandler(move) {
-    let hasFinished = this.mancala.performMove(move);
+    let hasFinished = this.mancala.performMove(move).hasFinished;
     if (hasFinished) {
-      //this.showMessage(winner());
       document.dispatchEvent(new Event('endGame'));
       return;
     }
 
     if (this.mancala.isBotCurrentPlayer()) hasFinished = await this.mancala.performBotMove();
     if (hasFinished) {
-      //this.showMessage(winner());
       document.dispatchEvent(new Event('endGame'));
       return;
     }

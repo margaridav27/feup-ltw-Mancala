@@ -8,6 +8,7 @@ class BoardDisplayer {
     this.constructWarehouseAndRows();
     this.constructHoles(data.holes);
     this.constructSeeds(data.seeds);
+    createWinnerPopUp();
   }
 
   getBoardDimensions() {
@@ -167,7 +168,7 @@ class BoardDisplayer {
     });
   }
 
-  updateStatus(warehouses, holes, score, turn) {
+  updateStatus(warehouses, holes, score) {
     warehouses.forEach((warehouse) => {
       document.querySelector(`#wh-${warehouse.wid} span`).innerText = warehouse.value;
     });
@@ -180,18 +181,38 @@ class BoardDisplayer {
 
     document.getElementById('score-1').innerText = score[0];
     document.getElementById('score-2').innerText = score[1];
-
-    const info = document.getElementById('info');
-    info.innerText =
-      turn === 0
-        ? `It's ${this.nameP1}'s turn. Show us what you got!`
-        : `It's ${this.nameP2}'s turn. Show us what you got!`;
   }
 
-  executePhases(sow, capture, cleaning) {
-    this.moveSeeds(sow)
+  updateFinalStatus(warehouses, holes, score) {
+    holes.forEach((hole) => {
+      document.querySelector(`#col-${hole.hid} span`).innerText = 0;
+      document.getElementById(`col-${hole.hid}`).classList.remove('curr-player');
+    });
+
+    warehouses.forEach((warehouse) => {
+      document.querySelector(`#wh-${warehouse.wid} span`).innerText = warehouse.value;
+    });
+
+    document.getElementById('score-1').innerText = score[0];
+    document.getElementById('score-2').innerText = score[1];
+  }
+
+
+  executePhases(sow, capture, cleaning, status) {
+    if (status.finished) {
+      this.moveSeeds(sow)
       .then(() => this.moveSeeds(capture))
-      .then(() => this.moveSeeds(cleaning));
+      .then(() => this.updateFinalStatus(status.warehouses, status.holes, status.score))
+      .then(() => this.moveSeeds(cleaning))
+      .then(() => document.querySelector('.winner').style.display = '')
+      .then(() => dotAnimation());
+    }
+    else {
+      this.moveSeeds(sow)
+        .then(() => this.moveSeeds(capture))
+        .then(() => this.moveSeeds(cleaning))
+        .then(() => this.updateStatus(status.warehouses, status.holes,status.score));
+    }
   }
 
   async moveSeeds(moves) {
@@ -214,14 +235,10 @@ class BoardDisplayer {
 
       await sleep(150);
     }
+    
   }
 
   update(data) {
-    this.updateStatus(
-      data.status.warehouses,
-      data.status.holes,
-      data.status.score
-    );
-    this.executePhases(data.sow, data.capture, data.cleaning);
+    this.executePhases(data.sow, data.capture, data.cleaning, data.status);
   }
 }
