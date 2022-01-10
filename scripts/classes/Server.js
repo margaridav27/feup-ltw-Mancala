@@ -1,6 +1,6 @@
 class Server {
   constructor() {
-    this.url = 'http://twserver.alunos.dcc.fc.up.pt:8008';
+    this.url = 'http://twserver.alunos.dcc.fc.up.pt:8000';
     this.game = undefined;
     this.user = undefined;
     this.pass = undefined;
