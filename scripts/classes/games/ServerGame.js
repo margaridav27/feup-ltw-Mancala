@@ -12,11 +12,10 @@ class ServerGame extends Game {
   }
 
   checkSide(move, side) {
-    if (side == 0 && move >= game.size) {
+    if (side === 0 && move >= this.size) {
       this.showMessage(invalidSide(this.server.getUser()));
       return false;
-    }
-    if (side == 1 && (move <= game.size || move > game.size * 2)) {
+    } else if (side === 1 && (move <= this.size || move > this.size * 2)) {
       this.showMessage(invalidSide(this.server.getUser()));
       return false;
     }
@@ -37,9 +36,10 @@ class ServerGame extends Game {
     const converted = this.convertToNotify(move);
     const opponentSide = Math.abs(this.getTurnSide() - 1);
     console.log(this.turn);
-    if (this.turn === this.server.getUser() && this.checkSide(move, this.getTurnSide())) this.server.notify(converted).then(() => this.server.update());
-    else if (this.turn !== this.server.getUser()) this.showMessage(notYourTurn(this.players[opponentSide]));
-   
+    if (this.turn === this.server.getUser() && this.checkSide(move, this.getTurnSide()))
+      this.server.notify(converted).then(() => this.server.update());
+    else if (this.turn !== this.server.getUser())
+      this.showMessage(notYourTurn(this.players[opponentSide]));
   }
 
   // TODO: verify event dispatch and handle winner update in different way

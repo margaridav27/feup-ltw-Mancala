@@ -231,15 +231,15 @@ function recordsClickHandler() {
     default:
       break;
   }
-  
+
   let recordsButton = document.getElementById('records-btn');
   if (appState === GAMES.state || appState === SCORES.state) {
     GameHistory.cleanHistory();
+    
     if (appState === GAMES.state) {
       recordsButton.innerText = 'SCORE RECORDS';
       appState = SCORES.state;
       GameHistory.renderLocalScores();
-
     } else {
       recordsButton.innerText = 'GAME RECORDS';
       appState = GAMES.state;
@@ -248,7 +248,6 @@ function recordsClickHandler() {
 
     panels.push(GAMES.panel);
     panels.push(SCORES.panel);
-
   } else {
     panels.push(GAMES.panel);
     recordsButton.innerText = 'GAME RECORDS';

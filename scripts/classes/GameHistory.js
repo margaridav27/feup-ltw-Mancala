@@ -61,7 +61,7 @@ class GameHistory {
   }
 
   static updateLocalGames(game) {
-    this.localGames.push({players: game.players, score: game.score});
+    this.localGames.push({ players: game.players, score: game.score });
   }
   static updateLocalScores(game) {
     for (let i = 0; i < 2; i++) {

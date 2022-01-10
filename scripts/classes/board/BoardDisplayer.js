@@ -42,9 +42,9 @@ class BoardDisplayer {
       l: holeCentered.l - marginOfError,
       t: holeCentered.t - marginOfError,
     };
-    const offset = { 
-      l: random(-maxDelta.l, maxDelta.l), 
-      t: random(-maxDelta.t, maxDelta.t) 
+    const offset = {
+      l: random(-maxDelta.l, maxDelta.l),
+      t: random(-maxDelta.t, maxDelta.t),
     };
     seed.style.left = `${holeCentered.l + offset.l}px`;
     seed.style.top = `${holeCentered.t + offset.t}px`;
@@ -61,9 +61,9 @@ class BoardDisplayer {
       l: warehouseCentered.l - marginOfError,
       t: warehouseCentered.t - marginOfError,
     };
-    const offset = { 
-      l: random(-maxDelta.l, maxDelta.l), 
-      t: random(-maxDelta.t, maxDelta.t) 
+    const offset = {
+      l: random(-maxDelta.l, maxDelta.l),
+      t: random(-maxDelta.t, maxDelta.t),
     };
     seed.style.left = `${warehouseCentered.l + offset.l}px`;
     seed.style.top = `${warehouseCentered.t + offset.t}px`;
@@ -197,21 +197,19 @@ class BoardDisplayer {
     document.getElementById('score-2').innerText = score[1];
   }
 
-
   executePhases(sow, capture, cleaning, status) {
     if (status.finished) {
       this.moveSeeds(sow)
-      .then(() => this.moveSeeds(capture))
-      .then(() => this.updateFinalStatus(status.warehouses, status.holes, status.score))
-      .then(() => this.moveSeeds(cleaning))
-      .then(() => document.querySelector('.winner').style.display = '')
-      .then(() => dotAnimation());
-    }
-    else {
+        .then(() => this.moveSeeds(capture))
+        .then(() => this.updateFinalStatus(status.warehouses, status.holes, status.score))
+        .then(() => this.moveSeeds(cleaning))
+        .then(() => (document.querySelector('.winner').style.display = ''))
+        .then(() => dotAnimation());
+    } else {
       this.moveSeeds(sow)
         .then(() => this.moveSeeds(capture))
         .then(() => this.moveSeeds(cleaning))
-        .then(() => this.updateStatus(status.warehouses, status.holes,status.score));
+        .then(() => this.updateStatus(status.warehouses, status.holes, status.score));
     }
   }
 
@@ -235,7 +233,6 @@ class BoardDisplayer {
 
       await sleep(150);
     }
-    
   }
 
   update(data) {

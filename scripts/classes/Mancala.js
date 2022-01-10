@@ -18,19 +18,20 @@ class Mancala {
     return this.score;
   }
 
-  getWinner() {
-    return this.result;
-  }
-
-  updateScore() {
+  setScore() {
     this.score[0] = this.board.getWarehouseBySide(0).getCurrentNrSeeds();
     this.score[1] = this.board.getWarehouseBySide(1).getCurrentNrSeeds();
+  }
+
+  getWinner() {
+    return this.result;
   }
 
   setWinner() {
     if (this.score[0] > this.score[1]) this.result = this.players[0];
     else if (this.score[0] < this.score[1]) this.result = this.players[1];
   }
+
   /**
    * determines if the player is about to sow on his opponent's warehouse, what is forbidden
    */
@@ -67,9 +68,15 @@ class Mancala {
     let playedHole = this.board.getCavityByID(move);
 
     // move not allowed, nothing bad happens, just return
-    if (playedHole.isBlocked() && playedHole.getSide() == this.currentPlayer) return {hasFinished: false, message: zeroSeeds(this.players[this.currentPlayer])};
-    else if (playedHole.isBlocked() && playedHole.getCurrentNrSeeds() == 0) return {hasFinished: false, message: invalidSideZeroSeeds(this.players[this.currentPlayer])};
-    else if (playedHole.isBlocked()) return {hasFinished: false, message: invalidSide(this.players[this.currentPlayer])};
+    if (playedHole.isBlocked() && playedHole.getSide() == this.currentPlayer)
+      return { hasFinished: false, message: zeroSeeds(this.players[this.currentPlayer]) };
+    else if (playedHole.isBlocked() && playedHole.getCurrentNrSeeds() == 0)
+      return {
+        hasFinished: false,
+        message: invalidSideZeroSeeds(this.players[this.currentPlayer]),
+      };
+    else if (playedHole.isBlocked())
+      return { hasFinished: false, message: invalidSide(this.players[this.currentPlayer]) };
 
     let seeds = playedHole.empty();
     let prevCavity = playedHole;
@@ -140,10 +147,9 @@ class Mancala {
     if (!this.sowedLastOwnWarehouse(prevCavity)) {
       if (this.currentPlayer === 0) this.currentPlayer = 1;
       else this.currentPlayer = 0;
-    
+
       message = switchTurn(this.players[this.currentPlayer]);
-    }
-    else {
+    } else {
       message = playAgain(this.players[this.currentPlayer]);
     }
 
@@ -176,10 +182,17 @@ class Mancala {
       });
     }
 
-    this.updateScore();
-    this.board.performMoveResponse(sow, capture, cleaning, this.score, this.currentPlayer, hasFinished);
+    this.setScore();
+    this.board.performMoveResponse(
+      sow,
+      capture,
+      cleaning,
+      this.score,
+      this.currentPlayer,
+      hasFinished
+    );
 
-    let status = hasFinished ? {hasFinished, message: gameOver()} : {hasFinished, message};
+    let status = hasFinished ? { hasFinished, message: gameOver() } : { hasFinished, message };
     if (hasFinished) this.setWinner();
     return status;
   }

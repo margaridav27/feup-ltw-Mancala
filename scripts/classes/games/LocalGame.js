@@ -13,7 +13,6 @@ class LocalGame extends Game {
     this.players = [nameP1, nameP2];
   }
 
-  // TODO: handle end game in different way and verify event dispatch
   moveHandler(move) {
     const status = this.mancala.performMove(move);
     this.showMessage(status.message);

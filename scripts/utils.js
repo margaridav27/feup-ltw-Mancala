@@ -40,19 +40,17 @@ function createWinnerPopUp() {
   winner.className = 'winner';
   winner.style.display = 'none';
 
-
+  //dots
   let loader = document.createElement('div');
   loader.className = 'loader';
 
-  //dots
   let dot1 = document.createElement('span');
   dot1.className = 'loader__element1';
-
   let dot2 = document.createElement('span');
   dot2.className = 'loader__element2';
-
   let dot3 = document.createElement('span');
   dot3.className = 'loader__element3';
+
   loader.appendChild(dot1);
   loader.appendChild(dot2);
   loader.appendChild(dot3);
@@ -71,14 +69,12 @@ function createWinnerPopUp() {
   let close = document.createElement('img');
   close.setAttribute('src', 'assets/close.png');
   close.setAttribute('width', '20px');
-
   closeAnchor.appendChild(close);
 
   let trophy = document.createElement('img');
   trophy.setAttribute('src', 'assets/winning.png');
   trophy.className = 'rotate';
   trophy.setAttribute('width', '100px');
-
 
   let text = document.createElement('span');
   text.className = 'winner-text';
@@ -93,7 +89,6 @@ function createWinnerPopUp() {
     recordsClickHandler();
   });
 
-
   winnerInfo.appendChild(closeAnchor);
   winnerInfo.appendChild(trophy);
   winnerInfo.appendChild(text);
@@ -107,16 +102,15 @@ function createWinnerPopUp() {
 }
 
 async function dotAnimation() {
-
   await sleep(3000);
   document.querySelector('.loader__element1').style.display = 'none';
   document.querySelector('.loader__element2').style.display = 'none';
   document.querySelector('.loader__element3').style.display = 'none';
   document.querySelector('.winner-info').style.display = 'flex';
-
 }
 
-{/* <div class="board-panel hide-panel" id="board-panel">
+{
+  /* <div class="board-panel hide-panel" id="board-panel">
 <div class="winner">
   <div class="loader">
     <span class="loader__element hide-panel"></span>
@@ -131,4 +125,5 @@ async function dotAnimation() {
   </div>
 
 </div>
-</div> */}
+</div> */
+}

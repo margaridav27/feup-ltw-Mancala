@@ -53,7 +53,10 @@ class Bot {
   static simulateMoveExecution(house, turn, board, nrHoles) {
     let move = { pointsMove: -1, boardMove: -1, playAgain: false, bestMoves: [] };
 
-    let copyBoard = { holes: JSON.parse(JSON.stringify(board.holes)), warehouses: Array.from(board.warehouses) };
+    let copyBoard = {
+      holes: JSON.parse(JSON.stringify(board.holes)),
+      warehouses: Array.from(board.warehouses),
+    };
 
     //sow
     let res = this.updateBoardUponSowing(copyBoard, house, turn, nrHoles);
@@ -83,20 +86,38 @@ class Bot {
     //turn, level, nrHoles, botSide, opponentSide,
     let holes = this.parseHoles(data);
     if (data.level == 1) {
-      const botPlay = this.simulateHolePlay({ holes, warehouses: [0, 0] }, data.turn, data.nrHoles, 1);
+      const botPlay = this.simulateHolePlay(
+        { holes, warehouses: [0, 0] },
+        data.turn,
+        data.nrHoles,
+        1
+      );
       return botPlay;
     } else if (data.level == 2) {
-      const botPlay = this.simulateHolePlay({ holes, warehouses: [0, 0] }, data.turn, data.nrHoles, 4);
+      const botPlay = this.simulateHolePlay(
+        { holes, warehouses: [0, 0] },
+        data.turn,
+        data.nrHoles,
+        4
+      );
       return botPlay;
     } else if (data.level == 3) {
-      const botPlay = this.simulateHolePlay({ holes, warehouses: [0, 0] }, data.turn, data.nrHoles, 7);
+      const botPlay = this.simulateHolePlay(
+        { holes, warehouses: [0, 0] },
+        data.turn,
+        data.nrHoles,
+        7
+      );
       return botPlay;
     }
   }
 
   static checkValidHoles(turn, holes, nrHoles) {
     let validMovesOp = [];
-    const playersHoles = turn == 0 ? Array.from({ length: nrHoles }, (x, i) => i) : Array.from({ length: nrHoles }, (x, i) => i + nrHoles);
+    const playersHoles =
+      turn == 0
+        ? Array.from({ length: nrHoles }, (x, i) => i)
+        : Array.from({ length: nrHoles }, (x, i) => i + nrHoles);
     for (let i = 0; i < playersHoles.length; i++) {
       if (holes[playersHoles[i]].value != 0) {
         validMovesOp.push(playersHoles[i]);
@@ -136,9 +157,15 @@ class Bot {
         result = this.simulateHoleOpPlay(result.boardMove, turnOp, nrHoles, depth - 1);
       }
 
-      let loss = result.boardMove.warehouses[turnOp] - board.warehouses[turnOp] - (result.boardMove.warehouses[turn] - board.warehouses[turn]);
+      let loss =
+        result.boardMove.warehouses[turnOp] -
+        board.warehouses[turnOp] -
+        (result.boardMove.warehouses[turn] - board.warehouses[turn]);
 
-      if (loss < lowestLoss || (loss == lowestLoss && result.boardMove.warehouses[turn] > boardMove.warehouses[turn])) {
+      if (
+        loss < lowestLoss ||
+        (loss == lowestLoss && result.boardMove.warehouses[turn] > boardMove.warehouses[turn])
+      ) {
         lowestLoss = loss;
         bestMove = board.holes[validMoves[i]].hid;
         boardMove = result.boardMove;
@@ -180,9 +207,15 @@ class Bot {
         result = this.simulateHolePlay(result.boardMove, turnOp, nrHoles, depth - 1);
       }
 
-      let loss = result.boardMove.warehouses[turn] - board.warehouses[turn] - (result.boardMove.warehouses[turnOp] - board.warehouses[turnOp]);
+      let loss =
+        result.boardMove.warehouses[turn] -
+        board.warehouses[turn] -
+        (result.boardMove.warehouses[turnOp] - board.warehouses[turnOp]);
 
-      if (loss > biggestLoss || (loss == biggestLoss && result.boardMove.warehouses[turn] > boardMove.warehouses[turn])) {
+      if (
+        loss > biggestLoss ||
+        (loss == biggestLoss && result.boardMove.warehouses[turn] > boardMove.warehouses[turn])
+      ) {
         biggestLoss = loss;
         boardMove = result.boardMove;
       }

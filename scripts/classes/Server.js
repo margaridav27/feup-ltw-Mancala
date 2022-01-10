@@ -8,8 +8,10 @@ class Server {
     this.eventSourceHandler = undefined;
   }
 
-  getUser() { return this.user; }
-  
+  getUser() {
+    return this.user;
+  }
+
   setEventSourceHandler(handler) {
     this.eventSourceHandler = handler;
   }
