@@ -2,24 +2,15 @@
   "name": "feup-ltw-mancala",
   "version": "1.0.0",
   "description": "Mancala Game developed in the scope of LTW's curricular unit.",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/margaridav27/feup-ltw-Mancala.git"
   },
-  "author": "Margarida Vieira, Beatriz Lopes dos Santos",
+  "author": "Beatriz Lopes dos Santos & Margarida Vieira",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/margaridav27/feup-ltw-Mancala/issues"
-  },
-  "homepage": "https://github.com/margaridav27/feup-ltw-Mancala#readme",
-  "dependencies": {
-    "express": "^4.17.2",
-    "nodemon": "^2.0.15",
-    "websocket": "^1.0.34"
-  }
+  "homepage": "https://github.com/margaridav27/feup-ltw-Mancala#readme"
 }
