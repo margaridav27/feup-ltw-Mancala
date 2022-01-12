@@ -2,15 +2,15 @@ const database = require('./database.js');
 
 const crypto = require('crypto');
 
-function register(nickname, password) {
+function registerUser(nickname, password) {
   const user = { nick: nickname, pass: password };
   database.write('users', user);
 }
 
-function verify(nickname, password) {
+function verifyCredentials(nickname, password) {
   const user = database.get('users', 'nick', nickname);
   if (user) return password == user.pass;
-  register(nickname, password);
+  registerUser(nickname, password);
   return true;
 }
 
@@ -22,7 +22,7 @@ module.exports.register = function (request, response) {
   let responseBody = {};
 
   const encrypytedPass = crypto.createHash('md5').update(pass).digest('hex');
-  if (!verify(nick, encrypytedPass)) {
+  if (!verifyCredentials(nick, encrypytedPass)) {
     responseStatusCode = 400;
     responseBody = { error: 'User registered with a different password' };
   }
