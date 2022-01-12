@@ -13,18 +13,44 @@ const register = require('./modules/register.js');
 const ranking = require('./modules/ranking.js');
 const game = require('./modules/game.js');
 
+const headers = {
+    plain: {
+        'Content-Type': 'application/javascript',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*'        
+    },
+    sse: {    
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+        'Connection': 'keep-alive'
+    }
+};
+
 const server = http.createServer(function (request, response) {
   const preq = url.parse(request.url, true);
-  console.log(preq);
   const pathname = preq.pathname;
-  
+
   switch (pathname) {
-    case '/register': register.register(response); break;
-    case '/join': game.join(); break;
-    case '/notify': game.notify(); break;
-    case '/update': game.update(); break;
-    case '/leave': game.leave(); break;
-    case '/ranking': ranking.ranking(); break;
+    case '/register': 
+      register.register(preq, response); 
+      break;
+    case '/join': 
+      game.join(); 
+      break;
+    case '/notify': 
+      game.notify(); 
+      break;
+    case '/update': 
+      game.update(); 
+      break;
+    case '/leave': 
+      game.leave(); 
+      break;
+    case '/ranking': 
+      ranking.ranking(response); 
+      break;
+    case '/favicon.ico': break;
     default:
       response.writeHead(400, { 'Content-Type': 'text/plain' });
       response.end({});

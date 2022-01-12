@@ -1,0 +1,11 @@
+{ 
+    "users": [
+      { "nick": "maggysonkas", "pass": "2705" },
+      { "nick": "bibsboobs", "pass": "russo" }
+    ],
+    
+    "ranking": [
+      {"nick": "maggysonkas", "victories": 2, "games": 2},
+      {"nick": "bibsboobs", "victories": 0, "games": 2}
+    ]
+}
