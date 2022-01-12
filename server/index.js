@@ -1,6 +1,6 @@
 'use strict';
 
-const PORT = 8000;
+const PORT = 9080;
 
 const http = require('http');
 const url = require('url');
@@ -14,8 +14,12 @@ const ranking = require('./modules/ranking.js');
 const game = require('./modules/game.js');
 
 const server = http.createServer(function (request, response) {
-  switch (request.url) {
-    case '/register': register.register(); break;
+  const preq = url.parse(request.url, true);
+  console.log(preq);
+  const pathname = preq.pathname;
+  
+  switch (pathname) {
+    case '/register': register.register(response); break;
     case '/join': game.join(); break;
     case '/notify': game.notify(); break;
     case '/update': game.update(); break;
@@ -24,6 +28,7 @@ const server = http.createServer(function (request, response) {
     default:
       response.writeHead(400, { 'Content-Type': 'text/plain' });
       response.end({});
+      break;
   }
 });
 
