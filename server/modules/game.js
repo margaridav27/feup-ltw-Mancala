@@ -2,6 +2,9 @@ const updater = require('./updater.js');
 
 const crypto = require('crypto');
 
+let queue = [];
+let games = [];
+
 function verifyProps(body, props) {
   for (let prop of props) {
     if (!body[prop]) return false;
@@ -9,7 +12,30 @@ function verifyProps(body, props) {
   return true;
 }
 
-module.exports.join = function (data) {
+function findMatch(group, size, initial) {
+  let match = { match: undefined, index: -1 };
+  let index = 0;
+  for (const entry of queue) {
+    if (entry.group == group && entry.size == size && entry.initial == initial)
+      return { match: entry, position: index };
+    index++;
+  }
+  return match;
+}
+
+function addToQueue(player) {
+  queue.push(player);
+}
+
+function removeFromQueue(position) {
+  queue.splice(position, 1);
+}
+
+function addToGames(game) {
+  games.push(game);
+}
+
+module.exports.join = function (data, response) {
   let answer = {};
 
   const props = ['group', 'nick', 'password', 'size', 'initial'];
@@ -20,17 +46,28 @@ module.exports.join = function (data) {
   } else {
     const { group, nick, password, size, initial } = data;
 
-    // TODO: eventualmente verificar nick e password
+    const hash = crypto.createHash('md5').update(group).update(size).update(initial).digest('hex');
 
-    const gameHash = crypto
-      .createHash('md5')
-      .update(group)
-      .update(size)
-      .update(initial)
-      .digest('hex');
+    const { match, position } = findMatch(group, size, initial);
+    if (match) {
+      removeFromQueue(position);
+      addToGames({
+        p1: { nick: match.nick, response: match.response },
+        p2: { nick, response },
+        hash,
+        size,
+        initial,
+      });
 
-    answer.status = 200;
-    answer.body = JSON.stringify({ game: gameHash });
+      answer.status = 200;
+      answer.body = JSON.stringify({ game: match.hash });
+    } else {
+      addToQueue({ group, nick, size, initial, hash, response });
+
+      answer.status = 200;
+      answer.body = JSON.stringify({ game: hash });
+    }
+
     return answer;
   }
 };

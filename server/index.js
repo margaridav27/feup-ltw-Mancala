@@ -39,7 +39,7 @@ const server = http.createServer((request, response) => {
         answer = register.register(data);
         break;
       case '/join':
-        answer = game.join(data);
+        answer = game.join(data, response);
         break;
       case '/notify':
         game.notify();
