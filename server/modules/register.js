@@ -1,34 +1,33 @@
-const fs = require('fs');
+const database = require('./database.js');
+
+const crypto = require('crypto');
 
 function register(nickname, password) {
   const user = { nick: nickname, pass: password };
-  fs.writeFile('database/database.json', user); 
+  database.write('users', user);
 }
 
-function verify(nickname, pass) {
-  const data = fs.readFileSync('database/database.json');
-  const info = JSON.parse(data);
-
-  //if nick exists, check pass
-  const user = info.users.find(({nick}) => nick === nickname);
-  if (user) return pass == user.pass;
-  register(nickname);
+function verify(nickname, password) {
+  const user = database.get('users', 'nick', nickname);
+  if (user) return password == user.pass;
+  register(nickname, password);
   return true;
 }
 
-module.exports.register = function(request, response) {
+module.exports.register = function (request, response) {
   const body = request.query;
   const { nick, pass } = body;
 
   let responseStatusCode = 200;
   let responseBody = {};
 
-  if (!verify(nick, pass)) {
+  const encrypytedPass = crypto.createHash('md5').update(pass).digest('hex');
+  if (!verify(nick, encrypytedPass)) {
     responseStatusCode = 400;
-    responseBody = { error: "User registered with a different password" };
-  } 
+    responseBody = { error: 'User registered with a different password' };
+  }
 
   response.writeHead(responseStatusCode);
   response.write(JSON.stringify(responseBody));
   response.end();
-}
+};
