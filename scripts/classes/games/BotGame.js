@@ -29,14 +29,19 @@ class BotGame extends Game {
   }
 
   async moveHandler(move) {
-    let hasFinished = this.mancala.performMove(move).hasFinished;
-    if (hasFinished) {
+    if (this.mancala.isBotCurrentPlayer()) return;
+    let status = this.mancala.performMove(move);
+    this.showMessage(status.message);
+    if (status.hasFinished) {
       document.querySelector('.winner-text').innerText = winner(this.mancala.getWinner());
       document.dispatchEvent(new Event('endGame'));
     }
 
-    if (this.mancala.isBotCurrentPlayer()) hasFinished = await this.mancala.performBotMove();
-    if (hasFinished) {
+    if (this.mancala.isBotCurrentPlayer()) {
+      status = await this.mancala.performBotMove();
+      this.showMessage(status.message);
+    }
+    if (status.hasFinished) {
       document.querySelector('.winner-text').innerText = winner(this.mancala.getWinner());
       document.dispatchEvent(new Event('endGame'));
     }
@@ -46,8 +51,9 @@ class BotGame extends Game {
     this.mancala = new Mancala(this.board, this.players, this.level);
     this.showMessage(justStarted(this.players[0]));
     if (this.mancala.isBotCurrentPlayer()) {
-      let hasFinished = await this.mancala.performBotMove();
-      if (hasFinished) {
+      const status = await this.mancala.performBotMove();
+      this.showMessage(status.message);
+      if (status.hasFinished) {
         document.querySelector('.winner-text').innerText = winner(this.mancala.getWinner());
         document.dispatchEvent(new Event('endGame'));
       };

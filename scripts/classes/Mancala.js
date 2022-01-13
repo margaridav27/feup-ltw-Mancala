@@ -84,6 +84,7 @@ class Mancala {
 
     // sow phase
     for (let seed of seeds) {
+      wasEmpty = false;
       let nextCavity = this.board.getCavityByID(prevCavity.getAdjacent());
 
       if (this.sowIsForbidden(nextCavity)) {
@@ -241,7 +242,7 @@ class Mancala {
       await sleep(2000);
 
       const move = response.bestMoves[i];
-      succeeded = this.performMove(move).hasFinished;
+      succeeded = this.performMove(move);
     }
 
     return succeeded;

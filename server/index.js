@@ -50,7 +50,7 @@ const server = http.createServer(function (request, response) {
     case '/ranking': 
       ranking.ranking(response); 
       break;
-    case '/favicon.ico': break;
+    // case '/favicon.ico': break;
     default:
       response.writeHead(400, { 'Content-Type': 'text/plain' });
       response.end({});
