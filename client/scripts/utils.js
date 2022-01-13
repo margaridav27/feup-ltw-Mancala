@@ -42,14 +42,14 @@ function createWinnerPopUp() {
 
   //dots
   let loader = document.createElement('div');
-  loader.className = 'loader';
+  loader.className = 'load-container';
 
   let dot1 = document.createElement('span');
-  dot1.className = 'loader__element1';
+  dot1.className = 'dot-element1';
   let dot2 = document.createElement('span');
-  dot2.className = 'loader__element2';
+  dot2.className = 'dot-element2';
   let dot3 = document.createElement('span');
-  dot3.className = 'loader__element3';
+  dot3.className = 'dot-element3';
 
   loader.appendChild(dot1);
   loader.appendChild(dot2);
@@ -103,10 +103,36 @@ function createWinnerPopUp() {
 
 async function dotAnimation() {
   await sleep(3000);
-  document.querySelector('.loader__element1').style.display = 'none';
-  document.querySelector('.loader__element2').style.display = 'none';
-  document.querySelector('.loader__element3').style.display = 'none';
+  document.querySelector('.dot-element1').style.display = 'none';
+  document.querySelector('.dot-element2').style.display = 'none';
+  document.querySelector('.dot-element3').style.display = 'none';
   document.querySelector('.winner-info').style.display = 'flex';
+}
+
+function createWaitingPopUp() {
+  let board = document.querySelector('.board-panel');
+
+  let waiting = document.createElement('div');
+  waiting.className = 'waiting';
+  waiting.style.display = 'none';
+
+  let container = document.createElement('div');
+  container.className = 'load-container';
+
+  let loader = document.createElement('div');
+  loader.className = 'loader';
+
+  container.appendChild(loader);
+  waiting.appendChild(container);
+  board.appendChild(waiting);
+}
+
+function hideWaitingPopUp() {
+  document.querySelector('.waiting').style.display = 'none';
+}
+
+function showWaitingPopUp() {
+  document.querySelector('.waiting').style.display = '';
 }
 
 {
@@ -125,5 +151,14 @@ async function dotAnimation() {
   </div>
 
 </div>
+</div> */
+}
+
+{
+  /*
+<div class="waiting">
+  <div class="load-container">
+    <div class="loader"></div>
+  </div>
 </div> */
 }

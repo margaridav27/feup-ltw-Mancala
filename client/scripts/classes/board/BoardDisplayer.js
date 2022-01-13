@@ -9,6 +9,8 @@ class BoardDisplayer {
     this.constructHoles(data.holes);
     this.constructSeeds(data.seeds);
     createWinnerPopUp();
+    createWaitingPopUp();
+    //showWaitingPopUp();
   }
 
   getBoardDimensions() {
@@ -145,7 +147,7 @@ class BoardDisplayer {
   }
 
   constructSeeds(seeds) {
-    const seedsColorPalette = ['#ffca3a', '#8ac926', '#1982c4', '#ff9f1c', '#ffffff'];
+    const seedsColorPalette = ['#ffcb3d', '#9cff00', '#1aa7ff', '#ff980c', '#ffffff'];
 
     seeds.forEach((seed) => {
       let holeElement = document.getElementById(`col-${seed.hid}`);
@@ -153,16 +155,18 @@ class BoardDisplayer {
       seedElement.id = `seed-${seed.sid}`;
       seedElement.className = 'seed';
 
+      const seedColor = seedsColorPalette[random(0, seedsColorPalette.length - 1)];
+
       // seed dimensions
       seedElement.style.width = `${this.holeDimensions.w / 7}px`;
       seedElement.style.height = seedElement.style.width;
+      seedElement.style.background = `radial-gradient(circle at 60% 20%, ${seedColor}, rgb(36 36 36) 100%, #000000 100%)`;
 
       // position relatively to the hole
       this.positionSeedRandomlyInHole(seedElement);
 
       // color
-      const seedColor = seedsColorPalette[random(0, seedsColorPalette.length - 1)];
-      seedElement.style.backgroundColor = seedColor;
+      //seedElement.style.backgroundColor = seedColor;
 
       holeElement.appendChild(seedElement);
     });
