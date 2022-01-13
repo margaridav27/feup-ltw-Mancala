@@ -35,6 +35,10 @@ function addToGames(game) {
   games.push(game);
 }
 
+function removeFromGames(gamePosition) {
+  games.splice(gamePosition, 1);
+}
+
 module.exports.join = function (data, response) {
   let answer = {};
 
@@ -72,8 +76,49 @@ module.exports.join = function (data, response) {
   }
 };
 
-module.exports.leave = function () {};
+module.exports.leave = function (data) {
+  let answer = {};
 
-module.exports.notify = function () {};
+  const props = ['nick', 'password', 'game'];
+
+  if (!verifyProps(data, props)) {
+    answer.status = 400;
+    answer.body = JSON.stringify({ error: 'Invalid request body.' });
+  } else {
+    // procurar na queue e fazes match com nick
+    // se hash inválida => responder com error invalid game reference
+    // se hash válida   => procurar nos games para ver se estava a decorrer
+    // game estava a decorrer => fazer match com p1 ou p2 e propagar update com winner
+    // game não estava a decorrer => { } 
+    // remove da queue e dos games (if applies) 
+
+    answer.status = 200;
+    answer.body = JSON.stringify({});
+  }
+
+  return answer;
+};
+
+module.exports.notify = function () {
+  let answer = {};
+
+  const props = ['nick', 'password', 'game', 'move'];
+
+  if (!verifyProps(data, props)) {
+    answer.status = 400;
+    answer.body = JSON.stringify({ error: 'Invalid request body.' });
+  } else {
+    // procurar nos games
+    // se game não existir responder com error invalid game reference
+    // verificar turn
+    // se turn não corresponde responder com error not your turn to play
+    // se ok, executar jogada e propagar update (c/ winner if applies) e remover de games
+
+    answer.status = 200;
+    answer.body = JSON.stringify({});
+  }
+
+  return answer;
+};
 
 module.exports.update = function (request, response) {};
