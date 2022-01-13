@@ -24,36 +24,48 @@ const headers = {
   },
 };
 
-const server = http.createServer(function (request, response) {
-  const preq = url.parse(request.url, true);
-  const pathname = preq.pathname;
+const server = http.createServer((request, response) => {
+  let data = '';
+  request.on('data', (chunk) => (data += chunk));
 
-  switch (pathname) {
-    case '/register':
-      register.register(preq, response);
-      break;
-    case '/join':
-      game.join();
-      break;
-    case '/notify':
-      game.notify();
-      break;
-    case '/update':
-      game.update();
-      break;
-    case '/leave':
-      game.leave();
-      break;
-    case '/ranking':
-      ranking.ranking(response);
-      break;
-    case '/favicon.ico':
-      break;
-    default:
-      response.writeHead(400, { 'Content-Type': 'text/plain' });
-      response.end({});
-      break;
-  }
+  request.on('end', () => {
+    if (data !== '') data = JSON.parse(data);
+    const preq = url.parse(request.url, true);
+    const pathname = preq.pathname;
+    let answer = {};
+
+    switch (pathname) {
+      case '/register':
+        answer = register.register(data);
+        break;
+      case '/join':
+        answer = game.join(data);
+        break;
+      case '/notify':
+        game.notify();
+        break;
+      case '/update':
+        game.update();
+        break;
+      case '/leave':
+        game.leave();
+        break;
+      case '/ranking':
+        answer = ranking.ranking();
+        break;
+      case '/favicon.ico':
+        break;
+      default:
+        response.writeHead(404, { 'Content-Type': 'text/plain' });
+        response.end({});
+        break;
+    }
+    if (!answer.status) answer.status = 200;
+    if (!answer.style) answer.style = 'plain';
+    response.writeHead(answer.status, headers[answer.style]);
+    if (answer.body) response.write(answer.body);
+    if (answer.style === 'plain') response.end();
+  });
 });
 
 server.listen(PORT, () => {

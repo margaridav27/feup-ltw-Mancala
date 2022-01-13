@@ -1,9 +1,10 @@
 const database = require('./database.js');
 
-module.exports.ranking = function (response) {
+module.exports.ranking = function () {
   const ranking = database.read('ranking');
 
-  response.writeHead(200);
-  response.write(JSON.stringify({ ranking: ranking }));
-  response.end();
+  let answer = {};
+  answer.status = 200;
+  answer.body = JSON.stringify({ ranking: ranking });
+  return answer;
 };

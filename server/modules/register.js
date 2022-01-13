@@ -2,6 +2,13 @@ const database = require('./database.js');
 
 const crypto = require('crypto');
 
+function verifyProps(body, props) {
+  for (let prop of props) {
+    if (!body[prop]) return false;
+  }
+  return true;
+}
+
 function registerUser(nickname, password) {
   const user = { nick: nickname, pass: password };
   database.write('users', user);
@@ -14,20 +21,25 @@ function verifyCredentials(nickname, password) {
   return true;
 }
 
-module.exports.register = function (request, response) {
-  const body = request.query;
-  const { nick, pass } = body;
+module.exports.register = function (data) {
+  let answer = {};
 
-  let responseStatusCode = 200;
-  let responseBody = {};
+  const props = ['nick', 'password'];
 
-  const encrypytedPass = crypto.createHash('md5').update(pass).digest('hex');
-  if (!verifyCredentials(nick, encrypytedPass)) {
-    responseStatusCode = 400;
-    responseBody = { error: 'User registered with a different password' };
+  if (!verifyProps(data, props)) {
+    answer.status = 400;
+    answer.body = JSON.stringify({ error: 'Invalid request body.' });
+  } else {
+    const { nick, password } = data;
+
+    answer.status = 200;
+    answer.body = JSON.stringify({});
+
+    const encrypytedPass = crypto.createHash('md5').update(password).digest('hex');
+    if (!verifyCredentials(nick, encrypytedPass)) {
+      answer.status = 401;
+      answer.body = JSON.stringify({ error: 'User registered with a different password' });
+    }
   }
-
-  response.writeHead(responseStatusCode);
-  response.write(JSON.stringify(responseBody));
-  response.end();
+  return answer;
 };
