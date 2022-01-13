@@ -16,7 +16,7 @@ function registerUser(nickname, password) {
 
 function verifyCredentials(nickname, password) {
   const user = database.get('users', 'nick', nickname);
-  if (user) return password == user.pass;
+  if (user) return password == user.password;
   registerUser(nickname, password);
   return true;
 }
