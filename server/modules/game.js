@@ -13,7 +13,7 @@ function verifyProps(body, props) {
 }
 
 function findMatch(group, size, initial) {
-  let match = { match: undefined, index: -1 };
+  let match = { match: undefined, position: -1 };
   let index = 0;
   for (const entry of queue) {
     if (entry.group == group && entry.size == size && entry.initial == initial)
