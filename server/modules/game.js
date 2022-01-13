@@ -27,8 +27,8 @@ function addToQueue(player) {
   queue.push(player);
 }
 
-function removeFromQueue(position) {
-  queue.splice(position, 1);
+function removeFromQueue(playerPosition) {
+  queue.splice(playerPosition, 1);
 }
 
 function addToGames(game) {
