@@ -18,18 +18,18 @@ function findMatch(group, size, initial) {
 function findInGames(hash) {
   let index = 0;
   for (const game of games) {
-    if (game.hash === hash) return { game, gameIndex: index };
+    if (game.hash === hash) return { activeGame: game, gameIndex: index };
     index++;
   }
-  return { game: undefined, gameIndex: -1 };
+  return { activeGame: undefined, gameIndex: -1 };
 }
 function findInQueue(hash) {
   let index = 0;
   for (const entry of queue) {
-    if (entry.hash === hash) return { entry, entryIndex: index };
+    if (entry.hash === hash) return { playerInQueue: entry, playerIndex: index };
     index++;
   }
-  return { game: undefined, entryIndex: -1 };
+  return { playerInQueue: undefined, playerIndex: -1 };
 }
 
 function addToQueue(player) {
