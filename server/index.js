@@ -23,6 +23,14 @@ const headers = {
   },
 };
 
+function respond(answer, response) {
+  if (!answer.status) answer.status = 200;
+  if (!answer.style) answer.style = 'plain';
+  response.writeHead(answer.status, headers[answer.style]);
+  if (answer.body) response.write(answer.body);
+  if (answer.style === 'plain') response.end();
+}
+
 const server = http.createServer((request, response) => {
   const preq = url.parse(request.url, true);
   const pathname = preq.pathname;
@@ -57,17 +65,13 @@ const server = http.createServer((request, response) => {
             response.end({});
             break;
         }
-
-        if (!answer.status) answer.status = 200;
-        if (!answer.style) answer.style = 'plain';
-        response.writeHead(answer.status, headers[answer.style]);
-        if (answer.body) response.write(answer.body);
-        if (answer.style === 'plain') response.end();
+        respond(answer, response);
       });
       break;
     case 'GET':
       if (pathname === '/update') {
-        answer = game.update(data, response);
+        answer = game.update(preq.query, response);
+        respond(answer, response);
       } else {
         response.writeHead(404, { 'Content-Type': 'text/plain' });
         response.end({});
