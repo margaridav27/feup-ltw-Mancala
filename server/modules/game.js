@@ -68,12 +68,16 @@ module.exports.join = function (data) {
       const { match, matchIndex } = findMatch(group, size, initial);
       if (match) {
         removeFromQueue(matchIndex);
+
+        // TODO: to be moved to update
+        const gameObj = mancala.initGame(size, initial, match.nick, nick);
         addToGames({
           p1: { nick: match.nick, response: undefined },
           p2: { nick, response: undefined },
           hash,
           size,
           initial,
+          gameObj,
         });
 
         answer.status = 200;
@@ -90,8 +94,6 @@ module.exports.join = function (data) {
     }
   }
 
-  console.log();
-  console.log('join | queue', queue);
   console.log('join | games', games);
   console.log();
   return answer;
@@ -138,10 +140,6 @@ module.exports.leave = function (data) {
     }
   }
 
-  console.log();
-  console.log('leave | queue', queue);
-  console.log('leave | games', games);
-  console.log();
   return answer;
 };
 
@@ -157,12 +155,16 @@ module.exports.notify = function (data) {
     const { nick, password, game, move } = data;
 
     if (verifier.verifyCredentials(nick, password)) {
-      const activeGame = findInGames(game).game;
+      const activeGame = findInGames(game).activeGame;
       if (activeGame) {
         if (nick === activeGame.p1.nick || nick === activeGame.p2.nick) {
-          const response = mancala.performMove(move, nick);
+          const response = mancala.performMove(move, nick, activeGame.gameObj);
+          console.log('-------- RESPONSE TO MOVE --------');
+          console.log('TURN',response.board.turn);
+          console.log('BOARD',response.board.sides);
+
           answer.status = response.error ? 401 : 200;
-          answer.body = JSON.stringify({ board: response });
+          answer.body = JSON.stringify(response);
 
           // propagar update
           // if response.winner => remover de games

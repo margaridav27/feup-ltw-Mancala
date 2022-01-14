@@ -12,7 +12,7 @@ const nextPit = (id) => {
 };
 
 const oppositePit = (id) => {
-  return (boardSize * 2 - i) % (boardSize * 2 + 1);
+  return (boardSize * 2 - id) % (boardSize * 2 + 1);
 };
 
 const destinationWarehouse = (id) => {
@@ -45,6 +45,9 @@ const seedsInWarehouse = (side) => {
 };
 
 function parseGameObject(gameObj) {
+  players = Object.keys(gameObj.board.sides);
+  turn = gameObj.board.turn === players[0] ? 0 : 1;
+
   let side0 = [...gameObj.board.sides[`${players[0]}`].pits];
   side0.push(gameObj.board.sides[`${players[0]}`].store);
 
@@ -52,31 +55,26 @@ function parseGameObject(gameObj) {
   side1.push(gameObj.board.sides[`${players[1]}`].store);
 
   board = [...side0, ...side1];
-  boardSize = side0.length;
-
-  players = Object.keys(gameObj.board.sides);
-  turn = gameObj.board.turn === players[0] ? 0 : 1;
+  boardSize = (board.length - 2) / 2;
 }
 
 module.exports.initGame = (size, initial, p1, p2) => {
-  let side0 = array.fill(initial, 0, size - 1);
+  let side0 = Array(parseInt(size)).fill(parseInt(initial));
   side0.push(0); // left (side 0) warehouse
 
-  let side1 = array.fill(initial, 0, size - 1);
+  let side1 = Array(parseInt(size)).fill(parseInt(initial));
   side1.push(0); // right (side 1) warehouse
 
-  boardSize = size;
+  boardSize = parseInt(size);
   board = [...side0, ...side1];
 
   players = [p1, p2];
   turn = 0;
 
   let response = {};
-  if (winner) response.winner = winner;
-  else if (match) response.winner = '';
-  else response.board.turn = players[turn];
-  response.board.sides[`${players[0]}`] = { store: 0, pits: side(0) };
-  response.board.sides[`${players[1]}`] = { store: 0, pits: side(1) };
+  response['board'] = { turn: players[turn], sides: {} };
+  response['board'].sides[`${players[0]}`] = { store: 0, pits: side(0) };
+  response['board'].sides[`${players[1]}`] = { store: 0, pits: side(1) };
   return response;
 };
 
@@ -86,6 +84,11 @@ module.exports.isPlayerTurn = (playerName) => {
 
 module.exports.performMove = (move, player, game) => {
   parseGameObject(game);
+  console.log('-------- AFTER PARSE --------');
+  console.log('TURN', game.board.turn);
+  console.log('BOARD', game.board.sides);
+
+  move = parseInt(move);
 
   if (players[turn] !== player) return { error: 'Not your turn to play.' };
   if (sideById(move) !== turn || board[move] === 0) return { error: 'Invalid move.' };
@@ -93,11 +96,14 @@ module.exports.performMove = (move, player, game) => {
   const seeds = board[move];
   board[move] = 0;
 
+  console.log('played on', move);
+  console.log('nr seeds on played pit', seeds);
+
   let wasEmpty = false;
   let prev = move;
 
   // sow
-  for (const seed of seeds) {
+  for (let i = 0; i < seeds; i++) {
     wasEmpty = false;
     let next = nextPit(prev);
     if (isWarehouse(next) && sideById(move) !== turn) {
@@ -107,10 +113,11 @@ module.exports.performMove = (move, player, game) => {
     if (!isWarehouse(next)) wasEmpty = board[next] === 0;
     board[next] += 1;
     prev = next;
+    console.log('sow', next);
   }
 
   // capture
-  if (wasEmpty && !isWarehouse(prev) && sideById(prev) === trun) {
+  if (wasEmpty && !isWarehouse(prev) && sideById(prev) === turn) {
     let capture = board[prev];
     board[prev] = 0;
     capture += board[oppositePit(prev)];
@@ -122,6 +129,7 @@ module.exports.performMove = (move, player, game) => {
   if (!(isWarehouse(prev) && sideById(prev) === turn)) {
     const turnDup = turn === 0 ? 1 : 0;
     turn = turnDup;
+    console.log('changed turn to', turn);
   }
 
   // cleaning
@@ -140,11 +148,15 @@ module.exports.performMove = (move, player, game) => {
   }
 
   let response = {};
-  if (winner) response.winner = winner;
-  else if (match) response.winner = '';
-  else response.board.turn = players[turn];
-  response.board.sides[`${players[0]}`] = { store: seedsInWarehouse(0), pits: side(0) };
-  response.board.sides[`${players[1]}`] = { store: seedsInWarehouse(1), pits: side(1) };
-  response.board.turn = turn;
+  if (winner) {
+    response['winner'] = winner;
+    response['board'] = { sides: {} };
+  } else if (match) {
+    response['winner'] = '';
+    response['board'] = { sides: {} };
+  } else response['board'] = { turn: players[turn], sides: {} };
+  response['board'].sides[`${players[0]}`] = { store: seedsInWarehouse(0), pits: side(0) };
+  response['board'].sides[`${players[1]}`] = { store: seedsInWarehouse(1), pits: side(1) };
+
   return response;
 };
