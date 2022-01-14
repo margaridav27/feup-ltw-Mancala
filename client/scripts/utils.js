@@ -135,30 +135,47 @@ function showWaitingPopUp() {
   document.querySelector('.waiting').style.display = '';
 }
 
-{
-  /* <div class="board-panel hide-panel" id="board-panel">
-<div class="winner">
-  <div class="loader">
-    <span class="loader__element hide-panel"></span>
-    <span class="loader__element hide-panel"></span>
-    <span class="loader__element hide-panel"></span>
-    <div class="winner-info">
-      <a class="close-btn"><img src="assets/close.png" width="20px"></a>
-      <img src="assets/winning.png" class="rotate" width="100px"/>
-      <span>Congratulations cenas!! You are the winner</span>
-      <button id="winner-records">Records</button>
-    </div>
-  </div>
 
-</div>
-</div> */
+
+var c = document.getElementById('progressBar');
+var cx = c.getContext('2d');
+var counter = 0, loop;
+
+//1 minuto -> 36
+function timeBar() {
+  counter = 0;
+  timer(28, document.querySelector('#download-text'));
+  incrementTimeBar();
 }
 
-{
-  /*
-<div class="waiting">
-  <div class="load-container">
-    <div class="loader"></div>
-  </div>
-</div> */
+function incrementTimeBar() {
+  counter++;
+  var percentage = (counter / 18); //variavel que muda o tempo, não consigo passa-la por argumento que somehow muda-se
+
+  cx.fillStyle = '#9B7957';
+  cx.fillRect(0, 0, c.width * percentage / 100, c.height);
+
+  if (percentage  > 100) {
+    cancelAnimationFrame(loop);
+  } 
+  else {
+    loop = requestAnimationFrame(incrementTimeBar);
+  }
+}
+
+function timer(duration, display) {
+  var timer = duration, minutes, seconds;
+  var interval = setInterval(function () {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      display.textContent = minutes + ":" + seconds;
+
+      if (--timer < 0) {
+        clearInterval(interval);
+      }
+  }, 1000);
 }
