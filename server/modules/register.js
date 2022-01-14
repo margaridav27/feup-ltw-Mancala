@@ -24,6 +24,8 @@ function verifyCredentials(nickname, password) {
 module.exports.register = function (data) {
   let answer = {};
 
+  console.log(data);
+  
   const props = ['nick', 'password'];
 
   if (!verifyProps(data, props)) {

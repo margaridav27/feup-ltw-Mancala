@@ -172,7 +172,7 @@ module.exports.update = function (data) {
   } else {
     const { nick, game } = data;
 
-    const { game, gameIndex } = findInGames(game);
+    const { activeGame, gameIndex } = findInGames(game);
     if (activeGame) {
       // verificar response de ambos
       // se ambas as responses estão set => começar o jogo e propagar update para ambos

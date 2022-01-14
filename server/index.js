@@ -29,45 +29,51 @@ const server = http.createServer((request, response) => {
 
   let answer = {};
 
-  let data = '';
-  request.on('data', (chunk) => (data += chunk));
+  switch (request.method) {
+    case 'POST':
+      let data = '';
+      request.on('data', (chunk) => (data += chunk));
+      request.on('end', () => {
+        if (data !== '') data = JSON.parse(data);
 
-  request.on('end', () => {
-    if (data !== '') data = JSON.parse(data);
+        switch (pathname) {
+          case '/register':
+            answer = register.register(data);
+            break;
+          case '/join':
+            answer = game.join(data);
+            break;
+          case '/notify':
+            answer = game.notify(data);
+            break;
+          case '/leave':
+            answer = game.leave(data);
+            break;
+          case '/ranking':
+            answer = ranking.ranking();
+            break;
+          default:
+            response.writeHead(404, { 'Content-Type': 'text/plain' });
+            response.end({});
+            break;
+        }
 
-    switch (pathname) {
-      case '/register':
-        answer = register.register(data);
-        break;
-      case '/join':
-        answer = game.join(data);
-        break;
-      case '/notify':
-        answer = game.notify(data);
-        break;
-      case '/update':
+        if (!answer.status) answer.status = 200;
+        if (!answer.style) answer.style = 'plain';
+        response.writeHead(answer.status, headers[answer.style]);
+        if (answer.body) response.write(answer.body);
+        if (answer.style === 'plain') response.end();
+      });
+      break;
+    case 'GET':
+      if (pathname === '/update') {
         answer = game.update(data, response);
-        break;
-      case '/leave':
-        answer = game.leave(data);
-        break;
-      case '/ranking':
-        answer = ranking.ranking();
-        break;
-      case '/favicon.ico':
-        break;
-      default:
+      } else {
         response.writeHead(404, { 'Content-Type': 'text/plain' });
         response.end({});
-        break;
-    }
-  });
-
-  if (!answer.status) answer.status = 200;
-  if (!answer.style) answer.style = 'plain';
-  response.writeHead(answer.status, headers[answer.style]);
-  if (answer.body) response.write(answer.body);
-  if (answer.style === 'plain') response.end();
+      }
+      break;
+  }
 });
 
 server.listen(PORT, () => {
