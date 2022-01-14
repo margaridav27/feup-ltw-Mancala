@@ -1,5 +1,4 @@
 let boardSize = 0;
-let initialSeeds = 0;
 let board = [];
 let players = [];
 let turn = 0;
@@ -37,28 +36,41 @@ const totallyEmptySide = (side) => {
   return true;
 };
 
-const response = (winner, match) => {
-  // construct response based on current board state
+const side = (side) => {
+  return side === 0 ? board.slice(0, boardSize) : board.slice(boardSize + 1, board.length - 1);
 };
 
-module.exports.currentTurn = () => {
-  return players[turn];
+const seedsInWarehouse = (side) => {
+  return side === 0 ? board[0] : board[board.length - 1];
 };
 
 module.exports.initGame = (size, initial, p1, p2) => {
-  side0 = array.fill(initial, 0, size - 1);
+  let side0 = array.fill(initial, 0, size - 1);
   side0.push(0); // left (side 0) warehouse
-  side1 = array.fill(initial, 0, size - 1);
+  let side1 = array.fill(initial, 0, size - 1);
   side1.push(0); // right (side 1) warehouse
 
   boardSize = size;
   initialSeeds = initial;
   board = [...side0, ...side1];
   players = [p1, p2];
+
+  let response = {};
+  if (winner) response.winner = winner;
+  else if (match) response.winner = '';
+  else response.board.turn = players[turn];
+  response.board.sides[`${players[0]}`] = { store: 0, pits: side(0) };
+  response.board.sides[`${players[1]}`] = { store: 0, pits: side(1) };
+  return response;
 };
 
-module.exports.performMove = (move) => {
-  // verificar move válido
+module.exports.isPlayerTurn = (playerName) => {
+  return players[turn] === playerName;
+};
+
+module.exports.performMove = (move, player) => {
+  if (players[turn] !== player) return { error: 'Not your turn to play.' };
+  if (sideById(move) !== turn || board[move] === 0) return { error: 'Invalid move.' };
 
   const seeds = board[move];
   board[move] = 0;
@@ -109,5 +121,12 @@ module.exports.performMove = (move) => {
     else match = true;
   }
 
-  return response(winner, match);
+  let response = {};
+  if (winner) response.winner = winner;
+  else if (match) response.winner = '';
+  else response.board.turn = players[turn];
+  response.board.sides[`${players[0]}`] = { store: seedsInWarehouse(0), pits: side(0) };
+  response.board.sides[`${players[1]}`] = { store: seedsInWarehouse(1), pits: side(1) };
+  response.board.turn = turn;
+  return response;
 };

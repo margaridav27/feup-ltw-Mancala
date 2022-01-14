@@ -5,7 +5,6 @@ const PORT = 9080;
 const http = require('http');
 const url = require('url');
 
-const updater = require('./modules/updater.js');
 const register = require('./modules/register.js');
 const ranking = require('./modules/ranking.js');
 const game = require('./modules/game.js');
@@ -25,30 +24,32 @@ const headers = {
 };
 
 const server = http.createServer((request, response) => {
+  const preq = url.parse(request.url, true);
+  const pathname = preq.pathname;
+
+  let answer = {};
+
   let data = '';
   request.on('data', (chunk) => (data += chunk));
 
   request.on('end', () => {
     if (data !== '') data = JSON.parse(data);
-    const preq = url.parse(request.url, true);
-    const pathname = preq.pathname;
-    let answer = {};
 
     switch (pathname) {
       case '/register':
         answer = register.register(data);
         break;
       case '/join':
-        answer = game.join(data, response);
+        answer = game.join(data);
         break;
       case '/notify':
-        game.notify();
+        answer = game.notify(data);
         break;
       case '/update':
-        game.update();
+        answer = game.update(data, response);
         break;
       case '/leave':
-        game.leave();
+        answer = game.leave(data);
         break;
       case '/ranking':
         answer = ranking.ranking();
@@ -60,12 +61,13 @@ const server = http.createServer((request, response) => {
         response.end({});
         break;
     }
-    if (!answer.status) answer.status = 200;
-    if (!answer.style) answer.style = 'plain';
-    response.writeHead(answer.status, headers[answer.style]);
-    if (answer.body) response.write(answer.body);
-    if (answer.style === 'plain') response.end();
   });
+
+  if (!answer.status) answer.status = 200;
+  if (!answer.style) answer.style = 'plain';
+  response.writeHead(answer.status, headers[answer.style]);
+  if (answer.body) response.write(answer.body);
+  if (answer.style === 'plain') response.end();
 });
 
 server.listen(PORT, () => {
