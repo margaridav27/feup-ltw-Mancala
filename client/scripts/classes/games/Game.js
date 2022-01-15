@@ -32,6 +32,7 @@ const zeroSeeds = (player) =>
 //end game
 const gameOver = () => `Game over!\n And the winner is ${String.fromCodePoint(129345)}`;
 const winner = (player) => `Congratulations, ${player}! You are the best!`;
+const tie = `Oh well, it's a tie, but nice job!`;
 const waiver = (player) => `Oh no... ${player} gave up!`;
 
 class Game {
