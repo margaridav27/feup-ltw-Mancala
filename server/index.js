@@ -24,11 +24,26 @@ const headers = {
 };
 
 function respond(answer, response) {
-  if (!answer.status) answer.status = 200;
-  if (!answer.style) answer.style = 'plain';
-  response.writeHead(answer.status, headers[answer.style]);
-  if (answer.body) response.write(answer.body);
-  if (answer.style === 'plain') response.end();
+  if (answer.status === undefined) answer.status = 200;
+  if (answer.style === undefined) answer.style = 'plain';
+
+  switch (answer.style) {
+    case 'plain':
+      response.writeHead(answer.status, headers[answer.style]);
+      if (answer.body) response.write(answer.body);
+      response.end();
+      break;
+    case 'sse':
+      if (answer.es1 && answer.es2) {
+        answer.es1.writeHead(answer.status, headers[answer.style]);
+        answer.es2.writeHead(answer.status, headers[answer.style]);
+        if (answer.body) {
+          answer.es1.write('data:' + answer.body + '\n\n');
+          answer.es2.write('data:' + answer.body + '\n\n');
+        }
+      }
+      break;
+  }
 }
 
 const server = http.createServer((request, response) => {
@@ -71,7 +86,7 @@ const server = http.createServer((request, response) => {
     case 'GET':
       if (pathname === '/update') {
         answer = game.update(preq.query, response);
-        respond(answer, response);
+        respond(answer);
       } else {
         response.writeHead(404, { 'Content-Type': 'text/plain' });
         response.end({});
