@@ -17,6 +17,7 @@
     <link href="styles/settings.css" rel="stylesheet" />
     <link href="styles/default.css" rel="stylesheet" />
     <link href="styles/winner.css" rel="stylesheet" />
+    <link href="assets/mancala.png" rel="icon">
   </head>
 
   <body>
@@ -44,7 +45,13 @@
       <button class="menu-btn" id="settings-btn">SETTINGS</button>
     </div>
 
-    <div class="default-panel"></div>
+    <div class="default-panel">
+      <div class="deafult-panel-logo">
+        <!-- <canvas style="background-color:GREEN;" id='logoCanvas'></canvas> -->
+        <img class="rotate" src="assets/mancala.png">
+        <span>MANCALA</span>
+      </div>
+    </div>
 
     <div class="settings-panel hide-panel" id="settings-panel">
       <form class="card player-card levels-hide" id="player-card-1">
@@ -104,8 +111,8 @@
         <section id="score-1">0</section>
       </div>
       <div class="info" id="info">
-        <canvas id="progressBar hide-panel"></canvas>
         <div id="download-text hide-panel"></div>
+        <canvas id="progressBar hide-panel"></canvas>
       </div>
       <div class="score">
         <section id="score-2">0</section>

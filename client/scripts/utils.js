@@ -78,7 +78,6 @@ function createWinnerPopUp() {
 
   let text = document.createElement('span');
   text.className = 'winner-text';
-  text.innerText = 'Congratulations cenas!! You are the winner';
 
   let recordsBtn = document.createElement('button');
   recordsBtn.id = 'winner-records';
@@ -135,36 +134,40 @@ function showWaitingPopUp() {
   document.querySelector('.waiting').style.display = '';
 }
 
-
-
-var c = document.getElementById('progressBar');
-var cx = c.getContext('2d');
-var counter = 0, loop;
-
-//1 minuto -> 36
-function timeBar() {
-  counter = 0;
-  timer(28, document.querySelector('#download-text'));
-  incrementTimeBar();
+function timeBar(seconds) {
+  var c = document.querySelector('#progressBar');
+  var cx = c.getContext('2d');
+  var counter = 0;
+  var add = c.width/(seconds*(2**4));
+  timer(seconds - 1, document.querySelector('#download-text'));
+  incrementTimeBar(add, counter, c, cx);
 }
 
-function incrementTimeBar() {
-  counter++;
-  var percentage = (counter / 18); //variavel que muda o tempo, não consigo passa-la por argumento que somehow muda-se
+function incrementTimeBar(add, counter, c, cx) {
 
-  cx.fillStyle = '#9B7957';
-  cx.fillRect(0, 0, c.width * percentage / 100, c.height);
+  var interval = setInterval(function () {
+    counter += add;
 
-  if (percentage  > 100) {
-    cancelAnimationFrame(loop);
-  } 
-  else {
-    loop = requestAnimationFrame(incrementTimeBar);
-  }
+    cx.fillStyle = '#9B7957';
+    cx.fillRect(0, 0, counter, c.height);
+
+    if (counter == c.width) clearInterval(interval);
+  }, 1000/(2**4));
 }
+
 
 function timer(duration, display) {
   var timer = duration, minutes, seconds;
+
+  minutes = parseInt(timer / 60, 10);
+  seconds = parseInt(timer % 60, 10);
+
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  display.innerText = minutes + ":" + seconds;
+
+  timer = duration - 1;
   var interval = setInterval(function () {
       minutes = parseInt(timer / 60, 10);
       seconds = parseInt(timer % 60, 10);
@@ -172,10 +175,53 @@ function timer(duration, display) {
       minutes = minutes < 10 ? "0" + minutes : minutes;
       seconds = seconds < 10 ? "0" + seconds : seconds;
 
-      display.textContent = minutes + ":" + seconds;
+      display.innerText = minutes + ":" + seconds;
 
-      if (--timer < 0) {
-        clearInterval(interval);
-      }
+      if (--timer < 0) clearInterval(interval);
   }, 1000);
 }
+
+
+
+
+//deixar estar aqui para uns testes
+
+// function drawImage(img,x,y,r,sx,sy, cx){
+//   sx=sx||0;
+//   sy=sy||0;
+//   r=(r*Math.PI/180)||0;
+//   var cr = Math.cos(r);
+//   var sr = Math.sin(r);
+//   cx.setTransform(cr,sr,-sr,cr,x-(cr*sx-sr*sy),y-(sr*sx+cr*sy)); 
+//   cx.drawImage(img,0,0);
+// }
+
+
+// function render(cx, r, img){
+//   window.requestAnimationFrame(function() {
+//     render(cx, r, img);
+//   });
+//   // requestAnimationFrame(render);
+  
+//   cx.setTransform(1, 0, 0, 1, 0, 0); 
+//   cx.clearRect(0,0,400,400);
+  
+//   drawImage(img,100,100,r++,img.width/2,img.height/2,cx);
+// }
+
+// function canvasSpin() {
+//   var r = 1;
+//   var c = document.getElementById('logoCanvas');
+//   var cx = c.getContext('2d');
+
+//   var img = document.createElement('img');
+//   img.onload = function(){
+//     render(cx, r, img);
+//   }
+//   img.src = "assets/mancala.png";
+//   console.log(img.style.width)
+//   img.style.width = "1px";
+//   i.disable;
+// }
+
+// canvasSpin();
