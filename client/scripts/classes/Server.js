@@ -1,7 +1,9 @@
 class Server {
   constructor() {
-    this.url = 'http://twserver.alunos.dcc.fc.up.pt:8000';
+    //this.url = 'http://twserver.alunos.dcc.fc.up.pt:8000';
+    this.url = 'http://localhost:9080';
     this.game = undefined;
+    this.group = '78';
     this.user = undefined;
     this.pass = undefined;
     this.eventSource = undefined;
@@ -40,11 +42,11 @@ class Server {
     const req = {
       method: 'POST',
       body: JSON.stringify({
-        group: 78,
+        group: this.group,
         nick: this.user,
         password: this.pass,
-        size: parseInt(size),
-        initial: parseInt(seeds),
+        size: size.toString(),
+        initial: seeds.toString(),
       }),
     };
 
@@ -84,6 +86,7 @@ class Server {
   }
 
   async update() {
+    console.log('update');
     if (!this.eventSource) {
       this.eventSource = new EventSource(
         `${this.url}/update?` +
@@ -93,7 +96,12 @@ class Server {
           })
       );
 
+      this.eventSource.onopen = (event) => {
+        console.log('opened event source handler', event);
+      };
+
       this.eventSource.onmessage = (event) => {
+        console.log('event source on message');
         const data = JSON.parse(event.data);
         return this.eventSourceHandler(data);
       };

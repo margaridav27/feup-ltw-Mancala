@@ -16,11 +16,11 @@ const oppositePit = (id) => {
 };
 
 const destinationWarehouse = (id) => {
-  return sideById(id) === 0 ? 0 : boardSize * 2 + 1;
+  return sideById(id) === 0 ? boardSize : boardSize * 2 + 1;
 };
 
 const isWarehouse = (id) => {
-  return id === 0 || id === boardSize * 2 + 1;
+  return id === boardSize || id === boardSize * 2 + 1;
 };
 
 const totallyEmptySide = (side) => {
@@ -41,7 +41,7 @@ const side = (side) => {
 };
 
 const seedsInWarehouse = (side) => {
-  return side === 0 ? board[0] : board[board.length - 1];
+  return side === 0 ? board[boardSize] : board[boardSize * 2 + 1];
 };
 
 function parseGameObject(gameObj) {
@@ -94,7 +94,9 @@ module.exports.performMove = (move, player, game) => {
   if (sideById(move) !== turn || board[move] === 0) return { error: 'Invalid move.' };
 
   const seeds = board[move];
+  console.log('before', board);
   board[move] = 0;
+  console.log('after', board);
 
   console.log('played on', move);
   console.log('nr seeds on played pit', seeds);
@@ -107,11 +109,14 @@ module.exports.performMove = (move, player, game) => {
     wasEmpty = false;
     let next = nextPit(prev);
     if (isWarehouse(next) && sideById(move) !== turn) {
+      console.log('opponent warehouse');
       const nextDup = nextPit(next);
       next = nextDup;
     }
     if (!isWarehouse(next)) wasEmpty = board[next] === 0;
+    console.log('sow on pit', next, 'which had', board[next], 'seeds');
     board[next] += 1;
+    console.log('sowed on pit', next, 'which now has', board[next], 'seeds');
     prev = next;
     console.log('sow', next);
   }
@@ -125,6 +130,14 @@ module.exports.performMove = (move, player, game) => {
     board[destinationWarehouse(prev)] += capture;
   }
 
+  console.log(
+    'played last on pit',
+    prev,
+    'is it a warehouse?',
+    isWarehouse(prev),
+    'from side',
+    sideById(prev)
+  );
   // if did not play last on his own warehouse
   if (!(isWarehouse(prev) && sideById(prev) === turn)) {
     const turnDup = turn === 0 ? 1 : 0;

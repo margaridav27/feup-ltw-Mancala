@@ -68,22 +68,18 @@ module.exports.join = function (data) {
       const { match, matchIndex } = findMatch(group, size, initial);
       if (match) {
         removeFromQueue(matchIndex);
-
-        // TODO: to be moved to update
-        const gameObj = mancala.initGame(size, initial, match.nick, nick);
         addToGames({
-          p1: { nick: match.nick, response: undefined },
+          p1: { nick: match.nick, response: match.response },
           p2: { nick, response: undefined },
           hash,
           size,
           initial,
-          gameObj,
         });
 
         answer.status = 200;
         answer.body = JSON.stringify({ game: match.hash });
       } else {
-        addToQueue({ group, nick, size, initial, hash });
+        addToQueue({ group, nick, size, initial, hash, response: undefined });
 
         answer.status = 200;
         answer.body = JSON.stringify({ game: hash });
@@ -94,8 +90,6 @@ module.exports.join = function (data) {
     }
   }
 
-  console.log('join | games', games);
-  console.log();
   return answer;
 };
 
@@ -159,14 +153,15 @@ module.exports.notify = function (data) {
       if (activeGame) {
         if (nick === activeGame.p1.nick || nick === activeGame.p2.nick) {
           const response = mancala.performMove(move, nick, activeGame.gameObj);
-          console.log('-------- RESPONSE TO MOVE --------');
-          console.log('TURN',response.board.turn);
-          console.log('BOARD',response.board.sides);
+
+          if (activeGame.p1.response && activeGame.p2.response) {
+            activeGame.gameObj = response;
+            //propagateUpdate(activeGame.p1.response, activeGame.p2.response, response);
+          }
 
           answer.status = response.error ? 401 : 200;
           answer.body = JSON.stringify(response);
 
-          // propagar update
           // if response.winner => remover de games
         }
       } else {
@@ -184,7 +179,7 @@ module.exports.notify = function (data) {
   return answer;
 };
 
-module.exports.update = function (data) {
+module.exports.update = function (data, response) {
   let answer = {};
 
   const props = ['game', 'nick'];
@@ -195,11 +190,39 @@ module.exports.update = function (data) {
   } else {
     const { nick, game } = data;
 
-    const { activeGame, gameIndex } = findInGames(game);
+    let { activeGame, _ } = findInGames(game);
     if (activeGame) {
-      // verificar response de ambos
-      // se ambas as responses estão set => começar o jogo e propagar update para ambos
-      // se apenas uma response está set, pending
+      if (nick === activeGame.p1.nick && activeGame.p1.response === undefined)
+        activeGame.p1.response = response;
+      if (nick === activeGame.p2.nick && activeGame.p2.response === undefined)
+        activeGame.p2.response = response;
+
+      if (activeGame.p1.response && activeGame.p2.response) {
+        activeGame.gameObj = mancala.initGame(
+          activeGame.size,
+          activeGame.initial,
+          activeGame.p1.nick,
+          activeGame.p2.nick
+        );
+
+        answer.status = 200;
+        answer.style = 'sse';
+        answer.es1 = activeGame.p1.response;
+        answer.es2 = activeGame.p2.response;
+        answer.body = JSON.stringify(activeGame.gameObj);
+      }
+    } else {
+      let { playerInQueue, _ } = findInQueue(game);
+      if (playerInQueue) {
+        playerInQueue.response = response;
+        answer.status = 200;
+        answer.style = 'sse';
+      } else {
+        answer.status = 400;
+        answer.body = JSON.stringify({ error: 'Invalid game reference.' });
+      }
     }
   }
+
+  return answer;
 };

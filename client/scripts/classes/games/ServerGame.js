@@ -49,7 +49,10 @@ class ServerGame extends Game {
       this.players = Object.keys(data.board.sides);
       this.turn = data.board.turn;
       this.mancala = new Mancala(this.board, this.players);
-      this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
+      super.showMessage(joined(this.players[0], this.players[1], this.players[0]));
+      console.log(
+        'BIBS WE JOINED WE UPDATED TODAY IS A GREAT DAY UHUH TOMORROW LIDAREMOS COM ERROS NO NOTIFY EHEH'
+      );
     } else {
       // the game was already occuring
       if (data.winner) {
@@ -68,7 +71,7 @@ class ServerGame extends Game {
   }
 
   startGame() {
-    this.server.setEventSourceHandler((data) => this.serverUpdateHandler(data));
+    this.server.setEventSourceHandler(this.serverUpdateHandler);
     const data = { size: this.size, seeds: this.seeds };
     this.server.join(data).then(() => this.server.update());
     this.showMessage(waiting(this.server.getUser()));
