@@ -11,6 +11,31 @@
   background-size: 100% 100%;
 }
 
+.logoCanvas .logo {
+  width: 100%;
+  height: inherit;
+}
+
+.deafult-panel-logo .rotate{
+  width: 17vh;
+  height: inherit;
+  position: unset;
+}
+
+
+.deafult-panel-logo {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.deafult-panel-logo span {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: larger;
+}
+
 .hide-panel {
   display: none;
 }
@@ -25,4 +50,9 @@
   .default-panel {
     width: 95vw;
   }
+}
+
+canvas {
+  justify-content: center;
+  align-items: center;
 }

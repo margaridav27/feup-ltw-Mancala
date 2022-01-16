@@ -321,11 +321,12 @@ function endGame() {
   const mancala = game.getMancala();
   const players = mancala.getPlayers();
   const score = mancala.getScore();
+  const winner = (score[0]>score[1]) ? players[0] : players[1]
 
   let menuButtons = document.querySelectorAll('.menu-btn');
   menuButtons.forEach((button) => {
     enable(button);
   });
 
-  GameHistory.addGameToHistory({ players, score });
+  GameHistory.addGameToHistory({ players, score, winner });
 }

@@ -1,6 +1,6 @@
 class GameHistory {
-  static localGames = [];
-  static localScores = [];
+  static localGames = (localStorage.games) ? JSON.parse(localStorage.games) : [];
+  static localScores = (localStorage.scores) ? JSON.parse(localStorage.scores) : [];
 
   // static localGames = [
   //     { players: ["Bibs","Maggy"], score: [7,25] },
@@ -45,11 +45,11 @@ class GameHistory {
     tr.appendChild(p);
 
     let l = document.createElement('td');
-    l.innerText = cell.leaderboard;
+    l.innerText = cell.victories;
     tr.appendChild(l);
 
     let t = document.createElement('td');
-    t.innerText = cell.totalScore;
+    t.innerText = cell.totalGames;
     tr.appendChild(t);
 
     return tr;
@@ -62,25 +62,29 @@ class GameHistory {
 
   static updateLocalGames(game) {
     this.localGames.push({ players: game.players, score: game.score });
+    localStorage.setItem("games", JSON.stringify(this.localGames));
   }
+
   static updateLocalScores(game) {
+
     for (let i = 0; i < 2; i++) {
       let scoreHistoryCell = this.localScores.find((info) => info.player == game.players[i]);
 
       if (scoreHistoryCell) {
-        scoreHistoryCell.leaderboard = Math.max(scoreHistoryCell.leaderboard, game.score[i]);
-        scoreHistoryCell.totalScore += game.score[i];
+        scoreHistoryCell.victories = (game.winner == game.players[i]) ? scoreHistoryCell.victories + 1 : scoreHistoryCell.victories;
+        scoreHistoryCell.totalScore++;
       } else {
         scoreHistoryCell = {
           player: game.players[i],
-          leaderboard: game.score[i],
-          totalScore: game.score[i],
+          victories: (game.winner == game.players[i]) ? 1 : 0,
+          totalGames: 1,
         };
         this.localScores.push(scoreHistoryCell);
       }
     }
 
-    this.localScores.sort((p1, p2) => (p1.totalScore < p2.totalScore ? 1 : -1));
+    this.localScores.sort((p1, p2) => (p1.victories < p2.victories ? 1 : -1));
+    localStorage.setItem("scores", JSON.stringify(this.localScores));
   }
 
   static renderLocalGames() {
