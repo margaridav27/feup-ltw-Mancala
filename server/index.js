@@ -25,7 +25,6 @@ const headers = {
 
 function update(update, first) {
   if (update.es1 !== undefined && update.es2 !== undefined) {
-    console.log('firts');
     if (first) {
       update.es1.writeHead(update.status, headers[update.style]);
       update.es2.writeHead(update.status, headers[update.style]);

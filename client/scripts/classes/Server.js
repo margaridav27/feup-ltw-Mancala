@@ -81,7 +81,6 @@ class Server {
   }
 
   async update(callback) {
-    console.log(this.game);
     if (!this.eventSource) {
       this.eventSource = new EventSource(
         `${this.url}/update?` +

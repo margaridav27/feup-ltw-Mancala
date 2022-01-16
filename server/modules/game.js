@@ -19,6 +19,7 @@ function findMatch(group, size, initial) {
 function findInGames(hash) {
   let index = 0;
   for (const game of games) {
+    console.log(game.hash, hash);
     if (game.hash === hash) return { activeGame: game, gameIndex: index };
     index++;
   }
@@ -59,18 +60,13 @@ module.exports.join = function (data) {
     const { group, nick, password, size, initial } = data;
 
     if (verifier.verifyCredentials(nick, password)) {
-      const hash = crypto
-        .createHash('md5')
-        .update(JSON.stringify({ time: Date.now().toString(), group, size, initial }))
-        .digest('hex');
-
       const { match, matchIndex } = findMatch(group, size, initial);
       if (match) {
         removeFromQueue(matchIndex);
         addToGames({
           p1: { nick: match.nick, response: match.response },
           p2: { nick, response: undefined },
-          hash,
+          hash: match.hash,
           size,
           initial,
         });
@@ -78,6 +74,11 @@ module.exports.join = function (data) {
         answer.status = 200;
         answer.body = JSON.stringify({ game: match.hash });
       } else {
+        const hash = crypto
+          .createHash('md5')
+          .update(JSON.stringify({ time: Date.now().toString(), group, size, initial }))
+          .digest('hex');
+
         addToQueue({ group, nick, size, initial, hash, response: undefined });
 
         answer.status = 200;
@@ -203,7 +204,9 @@ module.exports.notify = function (data) {
 module.exports.update = function (data, response) {
   let answer = {};
 
-  const props = ['game', 'nick'];
+  console.log(data);
+
+  const props = ['nick', 'game'];
 
   if (!verifier.verifyProps(data, props)) {
     answer.status = 400;
@@ -212,7 +215,6 @@ module.exports.update = function (data, response) {
     const { nick, game } = data;
 
     let { activeGame, _ } = findInGames(game);
-    console.log(activeGame);
     if (activeGame) {
       if (nick === activeGame.p1.nick && activeGame.p1.response === undefined)
         activeGame.p1.response = response;
