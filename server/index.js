@@ -25,11 +25,11 @@ const headers = {
 
 function update(update, first) {
   if (update.es1 !== undefined && update.es2 !== undefined) {
+    console.log('firts');
     if (first) {
       update.es1.writeHead(update.status, headers[update.style]);
       update.es2.writeHead(update.status, headers[update.style]);
     }
-    console.log('update has a body??', update.body !== undefined)
     if (update.body !== undefined) {
       update.es1.write('data:' + update.body + '\n\n');
       update.es2.write('data:' + update.body + '\n\n');
@@ -89,6 +89,7 @@ const server = http.createServer((request, response) => {
             response.end({});
             break;
         }
+
         respond(answer, response);
       });
       break;
@@ -100,6 +101,10 @@ const server = http.createServer((request, response) => {
         response.writeHead(404, { 'Content-Type': 'text/plain' });
         response.end({});
       }
+      break;
+    default:
+      response.writeHead(500, { 'Content-Type': 'text/plain' });
+      response.end({});
       break;
   }
 });

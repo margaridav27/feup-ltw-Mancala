@@ -17,48 +17,30 @@ window.onload = () => {
 
 function setupEventHandlers() {
   let logo = document.getElementById('logo');
-  logo.addEventListener('click', () => {
-    logoClickHandler();
-  });
+  logo.addEventListener('click', () => logoClickHandler());
 
   let loginBtn = document.getElementById('login');
-  loginBtn.addEventListener('click', () => {
-    loginClickHandler();
-  });
+  loginBtn.addEventListener('click', () => loginClickHandler());
 
   let gameBtn = document.getElementById('game-btn');
-  gameBtn.addEventListener('click', () => {
-    gameClickHandler();
-  });
+  gameBtn.addEventListener('click', () => gameClickHandler());
 
   let instructionsBtn = document.getElementById('instructions-btn');
-  instructionsBtn.addEventListener('click', () => {
-    instructionsClickHandler();
-  });
+  instructionsBtn.addEventListener('click', () => instructionsClickHandler());
 
   let recordsBtn = document.getElementById('records-btn');
-  recordsBtn.addEventListener('click', () => {
-    recordsClickHandler();
-  });
+  recordsBtn.addEventListener('click', () => recordsClickHandler());
 
   let settingsBtn = document.getElementById('settings-btn');
-  settingsBtn.addEventListener('click', () => {
-    settingsClickHandler();
-  });
+  settingsBtn.addEventListener('click', () => settingsClickHandler());
 
   let botCheckbox1 = document.getElementById('bot-1');
-  botCheckbox1.addEventListener('click', () => {
-    botCheckHandler('1');
-  });
+  botCheckbox1.addEventListener('click', () => botCheckHandler('1'));
 
   let botCheckbox2 = document.getElementById('bot-2');
-  botCheckbox2.addEventListener('click', () => {
-    botCheckHandler('2');
-  });
+  botCheckbox2.addEventListener('click', () => botCheckHandler('2'));
 
-  document.addEventListener('endGame', () => {
-    endGame();
-  });
+  document.addEventListener('endGame', () => endGame());
 }
 
 function loginClickHandler() {
@@ -235,7 +217,7 @@ function recordsClickHandler() {
   let recordsButton = document.getElementById('records-btn');
   if (appState === GAMES.state || appState === SCORES.state) {
     GameHistory.cleanHistory();
-    
+
     if (appState === GAMES.state) {
       recordsButton.innerText = 'SCORE RECORDS';
       appState = SCORES.state;
@@ -312,8 +294,9 @@ function resetGame() {
   });
 }
 
-// TODO: ecrã de quit
 function quitGame() {
+  document.dispatchEvent(new Event('quitGame', { nick: server.getUser() }));
+
   resetGame();
 }
 
@@ -321,7 +304,7 @@ function endGame() {
   const mancala = game.getMancala();
   const players = mancala.getPlayers();
   const score = mancala.getScore();
-  const winner = (score[0]>score[1]) ? players[0] : players[1]
+  const winner = score[0] > score[1] ? players[0] : players[1];
 
   let menuButtons = document.querySelectorAll('.menu-btn');
   menuButtons.forEach((button) => {
@@ -329,4 +312,6 @@ function endGame() {
   });
 
   GameHistory.addGameToHistory({ players, score, winner });
+
+  resetGame();
 }

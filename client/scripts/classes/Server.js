@@ -81,6 +81,7 @@ class Server {
   }
 
   async update(callback) {
+    console.log(this.game);
     if (!this.eventSource) {
       this.eventSource = new EventSource(
         `${this.url}/update?` +
@@ -119,7 +120,14 @@ class Server {
     };
 
     await fetch(`${this.url}/leave`, req)
-      .then((res) => console.log(res.json()))
-      .catch((err) => console.log('leave', err));
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log('leave', err);
+      });
   }
 }

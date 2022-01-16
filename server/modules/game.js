@@ -147,8 +147,6 @@ module.exports.leave = function (data) {
 module.exports.notify = function (data) {
   let answer = {};
 
-  console.log(data);
-
   const props = ['game', 'nick', 'password', 'move'];
 
   if (!verifier.verifyProps(data, props)) {
@@ -214,6 +212,7 @@ module.exports.update = function (data, response) {
     const { nick, game } = data;
 
     let { activeGame, _ } = findInGames(game);
+    console.log(activeGame);
     if (activeGame) {
       if (nick === activeGame.p1.nick && activeGame.p1.response === undefined)
         activeGame.p1.response = response;
@@ -247,5 +246,6 @@ module.exports.update = function (data, response) {
     }
   }
 
+  console.log(answer);
   return answer;
 };
