@@ -1,4 +1,5 @@
 const mancala = require('./mancala.js');
+const ranking = require('./ranking.js');
 const verifier = require('./verifier.js');
 
 const crypto = require('crypto');
@@ -60,9 +61,7 @@ module.exports.join = function (data) {
     if (verifier.verifyCredentials(nick, password)) {
       const hash = crypto
         .createHash('md5')
-        .update(group)
-        .update(size)
-        .update(initial)
+        .update(JSON.stringify({ time: Date.now().toString(), group, size, initial }))
         .digest('hex');
 
       const { match, matchIndex } = findMatch(group, size, initial);
@@ -111,8 +110,17 @@ module.exports.leave = function (data) {
       const { activeGame, gameIndex } = findInGames(game);
       if (activeGame) {
         if (activeGame.p1.nick === nick || activeGame.p2.nick === nick) {
-          // mandar update com winner
           removeFromGames(gameIndex);
+
+          answer.update = {
+            status: 200,
+            style: 'sse',
+            es1: activeGame.p1.response,
+            es2: activeGame.p2.response,
+            body: JSON.stringify({
+              winner: activeGame.p1.nick === nick ? activeGame.p1.nick : activeGame.p2.nick,
+            }),
+          };
         } else {
           answer.status = 400;
           answer.body = JSON.stringify({
@@ -121,9 +129,8 @@ module.exports.leave = function (data) {
         }
       } else {
         const { playerInQueue, playerIndex } = findInQueue(game);
-        if (playerInQueue) {
-          removeFromQueue(playerIndex);
-        } else {
+        if (playerInQueue) removeFromQueue(playerIndex);
+        else {
           answer.status = 400;
           answer.body = JSON.stringify({ error: 'Invalid game reference.' });
         }
@@ -140,7 +147,9 @@ module.exports.leave = function (data) {
 module.exports.notify = function (data) {
   let answer = {};
 
-  const props = ['nick', 'password', 'game', 'move'];
+  console.log(data);
+
+  const props = ['game', 'nick', 'password', 'move'];
 
   if (!verifier.verifyProps(data, props)) {
     answer.status = 400;
@@ -155,14 +164,28 @@ module.exports.notify = function (data) {
           const response = mancala.performMove(move, nick, activeGame.gameObj);
 
           if (activeGame.p1.response && activeGame.p2.response) {
-            activeGame.gameObj = response;
-            //propagateUpdate(activeGame.p1.response, activeGame.p2.response, response);
+            if (response.error) {
+              answer.status = 401;
+              answer.body = JSON.stringify(response);
+            } else {
+              activeGame.gameObj = response;
+
+              answer.status = 200;
+              answer.body = JSON.stringify({});
+              answer.update = {
+                status: 200,
+                style: 'sse',
+                es1: activeGame.p1.response,
+                es2: activeGame.p2.response,
+                body: JSON.stringify(activeGame.gameObj),
+              };
+            }
           }
 
-          answer.status = response.error ? 401 : 200;
-          answer.body = JSON.stringify(response);
-
-          // if response.winner => remover de games
+          if (response.winner) {
+            removeFromGames(activeGame);
+            ranking.addGame(activeGame);
+          }
         }
       } else {
         answer.status = 401;

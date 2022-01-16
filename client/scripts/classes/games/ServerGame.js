@@ -22,38 +22,23 @@ class ServerGame extends Game {
     return true;
   }
 
-  convertToNotify(move) {
-    const side = this.getTurnSide();
-    return side === 0 ? move : move - game.size - 1;
-  }
-
-  convertFromUpdate(move) {
-    const side = this.getTurnSide();
-    return side === 0 ? move : move + game.size + 1;
-  }
-
   async moveHandler(move) {
-    const converted = this.convertToNotify(move);
-    const opponentSide = Math.abs(this.getTurnSide() - 1);
-    console.log(this.turn);
+    console.log('move', move);
     if (this.turn === this.server.getUser() && this.checkSide(move, this.getTurnSide()))
-      this.server.notify(converted).then(() => this.server.update());
+      this.server.notify(move);
     else if (this.turn !== this.server.getUser())
       this.showMessage(notYourTurn(this.players[opponentSide]));
   }
 
-  // TODO: verify event dispatch and handle winner update in different way
   serverUpdateHandler(data) {
     if (!this.mancala) {
       // was waiting to be joined
       this.players = Object.keys(data.board.sides);
       this.turn = data.board.turn;
       this.mancala = new Mancala(this.board, this.players);
-      super.showMessage(joined(this.players[0], this.players[1], this.players[0]));
-      console.log(
-        'BIBS WE JOINED WE UPDATED TODAY IS A GREAT DAY UHUH TOMORROW LIDAREMOS COM ERROS NO NOTIFY EHEH'
-      );
+      this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
     } else {
+      console.log(data);
       // the game was already occuring
       if (data.winner) {
         // server sent a winner update
@@ -61,8 +46,8 @@ class ServerGame extends Game {
         document.dispatchEvent(new Event('endGame'));
       } else {
         // server sent a move update
-        const converted = this.convertFromUpdate(data.pit);
-        const status = this.mancala.performMove(converted);
+        console.log(data.pit)
+        const status = this.mancala.performMove(data.pit);
         this.turn = data.board.turn;
         this.showMessage(status.message);
         if (status.hasFinished) document.dispatchEvent(new Event('endGame'));
@@ -71,9 +56,8 @@ class ServerGame extends Game {
   }
 
   startGame() {
-    this.server.setEventSourceHandler(this.serverUpdateHandler);
     const data = { size: this.size, seeds: this.seeds };
-    this.server.join(data).then(() => this.server.update());
+    this.server.join(data).then(() => this.server.update(this.serverUpdateHandler.bind(this)));
     this.showMessage(waiting(this.server.getUser()));
   }
 }

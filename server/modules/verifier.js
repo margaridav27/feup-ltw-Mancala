@@ -3,8 +3,8 @@ const database = require('./database.js');
 const crypto = require('crypto');
 
 module.exports.verifyProps = function (body, props) {
-  for (let prop of props) {
-    if (!body[prop]) return false;
+  for (const prop of props) {
+    if (body[prop] === undefined) return false;
   }
   return true;
 };

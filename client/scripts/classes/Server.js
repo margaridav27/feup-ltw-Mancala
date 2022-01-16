@@ -7,15 +7,10 @@ class Server {
     this.user = undefined;
     this.pass = undefined;
     this.eventSource = undefined;
-    this.eventSourceHandler = undefined;
   }
 
   getUser() {
     return this.user;
-  }
-
-  setEventSourceHandler(handler) {
-    this.eventSourceHandler = handler;
   }
 
   async register(data) {
@@ -85,8 +80,7 @@ class Server {
       });
   }
 
-  async update() {
-    console.log('update');
+  async update(callback) {
     if (!this.eventSource) {
       this.eventSource = new EventSource(
         `${this.url}/update?` +
@@ -96,14 +90,9 @@ class Server {
           })
       );
 
-      this.eventSource.onopen = (event) => {
-        console.log('opened event source handler', event);
-      };
-
       this.eventSource.onmessage = (event) => {
-        console.log('event source on message');
         const data = JSON.parse(event.data);
-        return this.eventSourceHandler(data);
+        callback(data);
       };
     }
   }

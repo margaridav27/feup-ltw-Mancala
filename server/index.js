@@ -23,6 +23,20 @@ const headers = {
   },
 };
 
+function update(update, first) {
+  if (update.es1 !== undefined && update.es2 !== undefined) {
+    if (first) {
+      update.es1.writeHead(update.status, headers[update.style]);
+      update.es2.writeHead(update.status, headers[update.style]);
+    }
+    console.log('update has a body??', update.body !== undefined)
+    if (update.body !== undefined) {
+      update.es1.write('data:' + update.body + '\n\n');
+      update.es2.write('data:' + update.body + '\n\n');
+    }
+  }
+}
+
 function respond(answer, response) {
   if (answer.status === undefined) answer.status = 200;
   if (answer.style === undefined) answer.style = 'plain';
@@ -34,16 +48,11 @@ function respond(answer, response) {
       response.end();
       break;
     case 'sse':
-      if (answer.es1 && answer.es2) {
-        answer.es1.writeHead(answer.status, headers[answer.style]);
-        answer.es2.writeHead(answer.status, headers[answer.style]);
-        if (answer.body) {
-          answer.es1.write('data:' + answer.body + '\n\n');
-          answer.es2.write('data:' + answer.body + '\n\n');
-        }
-      }
+      update(answer, true);
       break;
   }
+
+  if (answer.update !== undefined) update(answer.update, false);
 }
 
 const server = http.createServer((request, response) => {

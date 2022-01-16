@@ -49,6 +49,10 @@ class Game {
     return this.mancala;
   }
 
+  getBoard() {
+    return this.board;
+  }
+
   setMoveHandlers() {
     let cavities = this.board.getCavities();
     for (let cavity of cavities) {

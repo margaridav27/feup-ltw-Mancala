@@ -94,9 +94,7 @@ module.exports.performMove = (move, player, game) => {
   if (sideById(move) !== turn || board[move] === 0) return { error: 'Invalid move.' };
 
   const seeds = board[move];
-  console.log('before', board);
   board[move] = 0;
-  console.log('after', board);
 
   console.log('played on', move);
   console.log('nr seeds on played pit', seeds);
@@ -118,7 +116,6 @@ module.exports.performMove = (move, player, game) => {
     board[next] += 1;
     console.log('sowed on pit', next, 'which now has', board[next], 'seeds');
     prev = next;
-    console.log('sow', next);
   }
 
   // capture
@@ -167,7 +164,10 @@ module.exports.performMove = (move, player, game) => {
   } else if (match) {
     response['winner'] = '';
     response['board'] = { sides: {} };
-  } else response['board'] = { turn: players[turn], sides: {} };
+  } else {
+    response['pit'] = move;
+    response['board'] = { turn: players[turn], sides: {} };
+  }
   response['board'].sides[`${players[0]}`] = { store: seedsInWarehouse(0), pits: side(0) };
   response['board'].sides[`${players[1]}`] = { store: seedsInWarehouse(1), pits: side(1) };
 

@@ -8,3 +8,7 @@ module.exports.ranking = function () {
   answer.body = JSON.stringify({ ranking: ranking });
   return answer;
 };
+
+module.exports.addGame = function(game) {
+  
+}
