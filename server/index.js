@@ -54,6 +54,28 @@ function respond(answer, response) {
   if (answer.update !== undefined) update(answer.update, false);
 }
 
+function timeoutCallback(player, game) {
+  // timeout was reached and the player was still in queue
+  if (player !== undefined) {
+    const message = JSON.stringify({ winner: player.nick });
+    player.response.write('data:' + message + '\n\n');
+
+    console.log(player);
+    console.log('timeout reached');
+  }
+
+  // timeout was reached and the game was already occuring
+  if (game !== undefined) {
+    const winner = game.gameObj.board.turn === game.p1.nick ? game.p2.nick : game.p1.nick;
+    const message = JSON.stringify({ winner });
+    game.p1.response.write('data:' + message + '\n\n');
+    game.p2.response.write('data:' + message + '\n\n');
+
+    console.log(game);
+    console.log('timeout reached');
+  }
+}
+
 const server = http.createServer((request, response) => {
   const preq = url.parse(request.url, true);
   const pathname = preq.pathname;
@@ -75,7 +97,7 @@ const server = http.createServer((request, response) => {
             answer = game.join(data);
             break;
           case '/notify':
-            answer = game.notify(data);
+            answer = game.notify(data, timeoutCallback);
             break;
           case '/leave':
             answer = game.leave(data);
@@ -94,7 +116,7 @@ const server = http.createServer((request, response) => {
       break;
     case 'GET':
       if (pathname === '/update') {
-        answer = game.update(preq.query, response);
+        answer = game.update(preq.query, response, timeoutCallback);
         respond(answer);
       } else {
         response.writeHead(404, { 'Content-Type': 'text/plain' });

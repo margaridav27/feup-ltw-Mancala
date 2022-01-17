@@ -8,6 +8,7 @@ class Mancala {
     this.currentPlayer = 0;
     this.score = [0, 0];
     this.result = undefined;
+    this.hasFinished = false;
   }
 
   getPlayers() {
@@ -30,6 +31,10 @@ class Mancala {
   setWinner() {
     if (this.score[0] > this.score[1]) this.result = this.players[0];
     else if (this.score[0] < this.score[1]) this.result = this.players[1];
+  }
+
+  hasFinished() {
+    return this.hasFinished;
   }
 
   /**
@@ -67,16 +72,22 @@ class Mancala {
 
     let playedHole = this.board.getCavityByID(move);
 
-    // move not allowed, nothing bad happens, just return
+    // move not allowed
     if (playedHole.isBlocked() && playedHole.getSide() == this.currentPlayer)
-      return { hasFinished: false, message: zeroSeeds(this.players[this.currentPlayer]) };
+      return {
+        hasFinished: false,
+        message: zeroSeeds(this.players[this.currentPlayer]),
+      };
     else if (playedHole.isBlocked() && playedHole.getCurrentNrSeeds() == 0)
       return {
         hasFinished: false,
         message: invalidSideZeroSeeds(this.players[this.currentPlayer]),
       };
     else if (playedHole.isBlocked())
-      return { hasFinished: false, message: invalidSide(this.players[this.currentPlayer]) };
+      return {
+        hasFinished: false,
+        message: invalidSide(this.players[this.currentPlayer]),
+      };
 
     let seeds = playedHole.empty();
     let prevCavity = playedHole;
@@ -148,11 +159,8 @@ class Mancala {
     if (!this.sowedLastOwnWarehouse(prevCavity)) {
       if (this.currentPlayer === 0) this.currentPlayer = 1;
       else this.currentPlayer = 0;
-
       message = switchTurn(this.players[this.currentPlayer]);
-    } else {
-      message = playAgain(this.players[this.currentPlayer]);
-    }
+    } else message = playAgain(this.players[this.currentPlayer]);
 
     // block the cavities that don't belong to the now current player's board side
     for (let cavity of this.board.getCavities()) {
@@ -195,6 +203,7 @@ class Mancala {
 
     let status = hasFinished ? { hasFinished, message: gameOver() } : { hasFinished, message };
     if (hasFinished) this.setWinner();
+    this.hasFinished = hasFinished;
     return status;
   }
 

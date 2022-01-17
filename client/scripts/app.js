@@ -41,6 +41,8 @@ function setupEventHandlers() {
   botCheckbox2.addEventListener('click', () => botCheckHandler('2'));
 
   document.addEventListener('endGame', () => endGame());
+
+  document.addEventListener('quitGame', () => quitGame());
 }
 
 function loginClickHandler() {
@@ -108,7 +110,8 @@ function gameClickHandler() {
 
   switch (appState) {
     case BOARD.state:
-      quitGame();
+      //quitGame();
+      game.quitHandler();
       appState = DEFAULT.state;
       break;
     case DEFAULT.state:
@@ -294,9 +297,8 @@ function resetGame() {
   });
 }
 
-function quitGame() {
-  document.dispatchEvent(new Event('quitGame', { nick: server.getUser() }));
-
+async function quitGame() {
+  await sleep(8000);
   resetGame();
 }
 

@@ -19,7 +19,6 @@ function findMatch(group, size, initial) {
 function findInGames(hash) {
   let index = 0;
   for (const game of games) {
-    console.log(game.hash, hash);
     if (game.hash === hash) return { activeGame: game, gameIndex: index };
     index++;
   }
@@ -62,6 +61,9 @@ module.exports.join = function (data) {
     if (verifier.verifyCredentials(nick, password)) {
       const { match, matchIndex } = findMatch(group, size, initial);
       if (match) {
+        console.log('clear waiting timeout');
+        if (match.timeoutId !== undefined) clearTimeout(match.timeoutId);
+
         removeFromQueue(matchIndex);
         addToGames({
           p1: { nick: match.nick, response: match.response },
@@ -119,7 +121,7 @@ module.exports.leave = function (data) {
             es1: activeGame.p1.response,
             es2: activeGame.p2.response,
             body: JSON.stringify({
-              winner: activeGame.p1.nick === nick ? activeGame.p1.nick : activeGame.p2.nick,
+              winner: activeGame.p1.nick === nick ? activeGame.p2.nick : activeGame.p1.nick,
             }),
           };
         } else {
@@ -145,7 +147,7 @@ module.exports.leave = function (data) {
   return answer;
 };
 
-module.exports.notify = function (data) {
+module.exports.notify = function (data, callback) {
   let answer = {};
 
   const props = ['game', 'nick', 'password', 'move'];
@@ -157,7 +159,7 @@ module.exports.notify = function (data) {
     const { nick, password, game, move } = data;
 
     if (verifier.verifyCredentials(nick, password)) {
-      const activeGame = findInGames(game).activeGame;
+      const { activeGame, gameIndex } = findInGames(game);
       if (activeGame) {
         if (nick === activeGame.p1.nick || nick === activeGame.p2.nick) {
           const response = mancala.performMove(move, nick, activeGame.gameObj);
@@ -178,6 +180,14 @@ module.exports.notify = function (data) {
                 es2: activeGame.p2.response,
                 body: JSON.stringify(activeGame.gameObj),
               };
+
+              // reset timeout
+              console.log('set timeout to next move');
+              if (activeGame.timeoutId !== undefined) clearTimeout(activeGame.timeoutId);
+              activeGame.timeoutId = setTimeout(() => {
+                removeFromGames(gameIndex);
+                callback(undefined, activeGame);
+              }, 30000);
             }
           }
 
@@ -201,10 +211,8 @@ module.exports.notify = function (data) {
   return answer;
 };
 
-module.exports.update = function (data, response) {
+module.exports.update = function (data, response, callback) {
   let answer = {};
-
-  console.log(data);
 
   const props = ['nick', 'game'];
 
@@ -214,7 +222,7 @@ module.exports.update = function (data, response) {
   } else {
     const { nick, game } = data;
 
-    let { activeGame, _ } = findInGames(game);
+    let { activeGame, gameIndex } = findInGames(game);
     if (activeGame) {
       if (nick === activeGame.p1.nick && activeGame.p1.response === undefined)
         activeGame.p1.response = response;
@@ -229,6 +237,12 @@ module.exports.update = function (data, response) {
           activeGame.p2.nick
         );
 
+        console.log('set initial timeout');
+        activeGame.timeoutId = setTimeout(() => {
+          removeFromGames(gameIndex);
+          callback(undefined, activeGame);
+        }, 30000);
+
         answer.status = 200;
         answer.style = 'sse';
         answer.es1 = activeGame.p1.response;
@@ -236,11 +250,19 @@ module.exports.update = function (data, response) {
         answer.body = JSON.stringify(activeGame.gameObj);
       }
     } else {
-      let { playerInQueue, _ } = findInQueue(game);
+      let { playerInQueue, playerIndex } = findInQueue(game);
+
       if (playerInQueue) {
         playerInQueue.response = response;
+
         answer.status = 200;
         answer.style = 'sse';
+
+        console.log('set queue timeout');
+        playerInQueue.timeoutId = setTimeout(() => {
+          removeFromQueue(playerIndex);
+          callback(playerInQueue, undefined);
+        }, 30000);
       } else {
         answer.status = 400;
         answer.body = JSON.stringify({ error: 'Invalid game reference.' });
@@ -248,6 +270,5 @@ module.exports.update = function (data, response) {
     }
   }
 
-  console.log(answer);
   return answer;
 };

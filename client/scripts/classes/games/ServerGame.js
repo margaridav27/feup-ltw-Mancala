@@ -29,6 +29,7 @@ class ServerGame extends Game {
 
   quitHandler() {
     this.server.leave();
+    this.showMessage(waiver(this.server.getUser()));
   }
 
   serverUpdateHandler(data) {
@@ -41,16 +42,22 @@ class ServerGame extends Game {
     } else {
       // the game was already occuring
       if (data.winner) {
-        // server sent a winner update
-        if (data.winner === '') this.showMessage(gameOver);
-        else this.showMessage(tie);
-        document.dispatchEvent(new Event('endGame'));
+        this.server.closeEventSource();
+
+        if (this.mancala.hasFinished()) {
+          if (data.winner === '') this.showMessage(tie);
+          else this.showMessage(gameOver);
+          document.dispatchEvent(new Event('endGame'));
+        } else {
+          this.showMessage(waiver(data.winner));
+          document.dispatchEvent(new Event('quitGame'));
+        }
       } else {
         // server sent a move update
         const status = this.mancala.performMove(data.pit);
         this.turn = data.board.turn;
         this.showMessage(status.message);
-        if (status.hasFinished) document.dispatchEvent(new Event('endGame'));
+        //if (status.hasFinished) document.dispatchEvent(new Event('endGame'));
       }
     }
   }

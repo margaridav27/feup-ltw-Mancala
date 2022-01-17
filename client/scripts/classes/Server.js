@@ -13,6 +13,11 @@ class Server {
     return this.user;
   }
 
+  closeEventSource() {
+    console.log('closing');
+    this.eventSource.close();
+  }
+
   async register(data) {
     this.user = data.nick;
     this.pass = data.pass;
