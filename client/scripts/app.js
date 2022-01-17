@@ -50,16 +50,23 @@ function loginClickHandler() {
   let loginArea = document.querySelectorAll('.auth div');
 
   if (!loggedIn) {
-    loginBtn.innerText = 'Logout';
-    loginArea.forEach((field) => disable(field));
-
     const nick = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
     const data = { nick, pass };
     server = new Server();
-    server.register(data);
+    server.register(data).then((response) => {
+      if (response.error !== undefined) {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
 
-    loggedIn = true;
+        alert('Wrong credentials. Please verify the username and password again.');
+      } else {
+        loginBtn.innerText = 'Logout';
+        loginArea.forEach((field) => disable(field));
+
+        loggedIn = true;
+      }
+    });
   } else {
     loginBtn.innerText = 'Login';
     loginArea.forEach((field) => enable(field));

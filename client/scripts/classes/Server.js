@@ -30,10 +30,13 @@ class Server {
       }),
     };
 
+    let response = '';
     await fetch(`${this.url}/register`, req)
       .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then((data) => (response = data))
+      .catch((err) => console.log('register', err));
+
+    return response;
   }
 
   async join(data) {
@@ -51,15 +54,9 @@ class Server {
     };
 
     await fetch(`${this.url}/join`, req)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        this.game = data.game;
-      })
-      .catch((err) => {
-        console.log('join', err);
-      });
+      .then((res) => res.json())
+      .then((data) => (this.game = data.game))
+      .catch((err) => console.log('join', err));
   }
 
   async notify(move) {
@@ -73,16 +70,13 @@ class Server {
       }),
     };
 
+    let response = '';
     await fetch(`${this.url}/notify`, req)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => {
-        console.log('notify', err);
-      });
+      .then((res) => res.json())
+      .then((data) => (response = data))
+      .catch((err) => console.log('notify', err));
+
+    return response;
   }
 
   async update(callback) {
@@ -123,15 +117,12 @@ class Server {
       }),
     };
 
+    let response = '';
     await fetch(`${this.url}/leave`, req)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => {
-        console.log('leave', err);
-      });
+      .then((res) => res.json())
+      .then((data) => (response = data))
+      .catch((err) => console.log('leave', err));
+
+    return response;
   }
 }
