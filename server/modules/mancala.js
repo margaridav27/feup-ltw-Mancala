@@ -103,10 +103,11 @@ module.exports.performMove = (move, player, game) => {
   let prev = move;
 
   // sow
+  console.log('******* SOW ******** ');
   for (let i = 0; i < seeds; i++) {
     wasEmpty = false;
     let next = nextPit(prev);
-    if (isWarehouse(next) && sideById(move) !== turn) {
+    if (isWarehouse(next) && sideById(next) !== turn) {
       console.log('opponent warehouse');
       const nextDup = nextPit(next);
       next = nextDup;
@@ -120,6 +121,7 @@ module.exports.performMove = (move, player, game) => {
 
   // capture
   if (wasEmpty && !isWarehouse(prev) && sideById(prev) === turn) {
+    console.log('******* CAPTURE ******** ');
     let capture = board[prev];
     board[prev] = 0;
     capture += board[oppositePit(prev)];
@@ -146,17 +148,22 @@ module.exports.performMove = (move, player, game) => {
   let winner;
   let match = false;
   if (totallyEmptySide(0) || totallyEmptySide(1)) {
-    for (const pit of board) {
-      if (isWarehouse(pit)) continue;
-      board[destinationWarehouse(pit)] += board[pit];
-      board[pit] = 0;
+    console.log('******* CLEANING ******** ');
+
+    console.log('board before cleaning', board);
+    for (let i = 0; i < board.length; i++) {
+      if (isWarehouse(i)) continue;
+      board[destinationWarehouse(i)] += board[i];
+      board[i] = 0;
+      console.log('seeds of pit', i, 'go to', destinationWarehouse(i));
     }
 
-    if (board[0] > board[boardSize * 2 + 1]) winner = players[0];
-    else if (board[0] < board[boardSize * 2 + 1]) winner = players[1];
+    if (board[boardSize] > board[boardSize * 2 + 1]) winner = players[0];
+    else if (board[boardSize] < board[boardSize * 2 + 1]) winner = players[1];
     else match = true;
   }
 
+  console.log('****** winner *******', winner);
   let response = {};
   if (winner) {
     response['winner'] = winner;
@@ -165,11 +172,12 @@ module.exports.performMove = (move, player, game) => {
     response['winner'] = '';
     response['board'] = { sides: {} };
   } else {
-    response['pit'] = move;
     response['board'] = { turn: players[turn], sides: {} };
   }
+  response['pit'] = move;
   response['board'].sides[`${players[0]}`] = { store: seedsInWarehouse(0), pits: side(0) };
   response['board'].sides[`${players[1]}`] = { store: seedsInWarehouse(1), pits: side(1) };
-
+  console.log('board after move', response.board.sides);
+  console.log('next turn', response.board.turn);
   return response;
 };

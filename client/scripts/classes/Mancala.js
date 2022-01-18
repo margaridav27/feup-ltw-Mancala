@@ -201,7 +201,7 @@ class Mancala {
       hasFinished
     );
 
-    let status = hasFinished ? { hasFinished, message: gameOver() } : { hasFinished, message };
+    let status = hasFinished ? { hasFinished, message: gameOver } : { hasFinished, message };
     if (hasFinished) this.setWinner();
     this.hasFinished = hasFinished;
     return status;

@@ -105,7 +105,7 @@ module.exports.leave = function (data) {
     answer.body = JSON.stringify({ error: 'Invalid request body.' });
   } else {
     const { nick, password, game } = data;
-
+    console.log("dataaaaaaaaaaaaaa", data);
     if (verifier.verifyCredentials(nick, password)) {
       answer.status = 200;
       answer.body = JSON.stringify({});
@@ -113,6 +113,7 @@ module.exports.leave = function (data) {
       const { activeGame, gameIndex } = findInGames(game);
       if (activeGame) {
         if (activeGame.p1.nick === nick || activeGame.p2.nick === nick) {
+          console.log(gameIndex);
           removeFromGames(gameIndex);
 
           answer.update = {
@@ -124,6 +125,7 @@ module.exports.leave = function (data) {
               winner: activeGame.p1.nick === nick ? activeGame.p2.nick : activeGame.p1.nick,
             }),
           };
+
         } else {
           answer.status = 400;
           answer.body = JSON.stringify({
@@ -187,13 +189,13 @@ module.exports.notify = function (data, callback) {
               activeGame.timeoutId = setTimeout(() => {
                 removeFromGames(gameIndex);
                 callback(undefined, activeGame);
-              }, 30000);
+              }, 90000);
             }
           }
 
           if (response.winner) {
             removeFromGames(activeGame);
-            ranking.addGame(activeGame);
+            //ranking.addGame(activeGame);
           }
         }
       } else {
@@ -241,7 +243,7 @@ module.exports.update = function (data, response, callback) {
         activeGame.timeoutId = setTimeout(() => {
           removeFromGames(gameIndex);
           callback(undefined, activeGame);
-        }, 30000);
+        }, 90000);
 
         answer.status = 200;
         answer.style = 'sse';
@@ -262,7 +264,7 @@ module.exports.update = function (data, response, callback) {
         playerInQueue.timeoutId = setTimeout(() => {
           removeFromQueue(playerIndex);
           callback(playerInQueue, undefined);
-        }, 30000);
+        }, 90000);
       } else {
         answer.status = 400;
         answer.body = JSON.stringify({ error: 'Invalid game reference.' });

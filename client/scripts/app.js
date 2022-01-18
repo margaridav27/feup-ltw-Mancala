@@ -59,7 +59,10 @@ function loginClickHandler() {
         document.getElementById('username').value = '';
         document.getElementById('password').value = '';
 
-        alert('Wrong credentials. Please verify the username and password again.');
+        if (response.error == 'User registered with a different password') alert('Wrong credentials. Please verify the username and password again.');
+
+        else alert('Server is down. Please verify if you are connected');
+
       } else {
         loginBtn.innerText = 'Logout';
         loginArea.forEach((field) => disable(field));
@@ -75,6 +78,12 @@ function loginClickHandler() {
     document.getElementById('password').value = '';
 
     loggedIn = false;
+
+    if (game) {
+      server.leave();
+      appState = DEFAULT.state;
+      resetGame();
+    }
   }
 }
 
@@ -111,14 +120,17 @@ function logoClickHandler() {
 }
 
 function gameClickHandler() {
+  console.log("app on play click", appState);
   let panels = [];
   const prevAppState = appState;
+
   let recordsButton = document.getElementById('records-btn');
 
   switch (appState) {
     case BOARD.state:
-      //quitGame();
-      game.quitHandler();
+      // quitGame();
+      if (game instanceof ServerGame) game.quitHandler();
+      quitGame();
       appState = DEFAULT.state;
       break;
     case DEFAULT.state:
@@ -147,25 +159,39 @@ function gameClickHandler() {
   if (prevAppState !== BOARD.state) {
     panels.push(INFO.panel);
     panels.push(BOARD.panel);
+
     changeVisibility(panels);
 
     toggleGameButton();
 
     let menuButtons = document.querySelectorAll('.menu-btn');
     menuButtons.forEach((button) => disable(button));
+    
+    let loginBtn = document.getElementById('login');
+    if(loginBtn.innerText === 'Login') {
+      disable(loginBtn);
+
+      let loginArea = document.querySelectorAll('.auth div');
+      loginArea.forEach((field) => disable(field));
+    }
+
     enable(menuButtons[0]); // now quit button
 
     appState = BOARD.state;
 
     if (loggedIn) game = new ServerGame(server);
+
     else {
       const botTurn = checkAgainstBot();
       if (botTurn === -1) game = new LocalGame();
+  
       else game = new BotGame(botTurn);
     }
 
     game.startGame();
   }
+
+  console.log('app on play click after', appState);
 }
 
 function instructionsClickHandler() {
@@ -218,7 +244,20 @@ function recordsClickHandler() {
       break;
     case BOARD.state:
       panels.push(INFO.panel);
-      panels.push(BOARD.panel);
+      panels.push(BOARD.panel);  
+      
+      let menuButtons = document.querySelectorAll('.menu-btn');
+      menuButtons.forEach((button) => {
+        enable(button);
+      });
+
+      let loginBtn = document.getElementById('login');
+      if (loginBtn.innerText === 'Login') {
+        enable(loginBtn);
+
+        let loginArea = document.querySelectorAll('.auth div');
+        loginArea.forEach((field) => enable(field));
+      }
       break;
     default:
       break;
@@ -296,20 +335,31 @@ function resetGame() {
   toggleGameButton();
 
   let panels = ['.info-panel', '.board-panel', '.default-panel'];
+  panels.forEach((pan) => console.log(document.querySelector(pan).classList.value));
   changeVisibility(panels);
+  panels.forEach((pan) => console.log(document.querySelector(pan).classList.value));
 
   let menuButtons = document.querySelectorAll('.menu-btn');
   menuButtons.forEach((button) => {
     enable(button);
   });
+
+  let loginBtn = document.getElementById('login');
+  if (loginBtn.innerText === 'Login') {
+    enable(loginBtn);
+
+    let loginArea = document.querySelectorAll('.auth div');
+    loginArea.forEach((field) => enable(field));
+  }
+
 }
 
-async function quitGame() {
-  await sleep(8000);
+function quitGame() {
   resetGame();
 }
 
 function endGame() {
+
   const mancala = game.getMancala();
   const players = mancala.getPlayers();
   const score = mancala.getScore();
@@ -321,6 +371,4 @@ function endGame() {
   });
 
   GameHistory.addGameToHistory({ players, score, winner });
-
-  resetGame();
 }

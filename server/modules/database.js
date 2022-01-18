@@ -15,6 +15,19 @@ module.exports.write = function (table, value) {
   });
 };
 
+module.exports.overWrite = function (table, value) {
+  fs.readFile(`database/${table}.json`, 'utf8', function readFileCallback(err, data) {
+    if (err) console.log('update database', err);
+    else {
+      json = JSON.stringify(value);
+
+      fs.writeFile(`database/${table}.json`, json, 'utf8', () => {
+        'Write successfully. ';
+      });
+    }
+  });
+};
+
 module.exports.read = function (table) {
   const data = fs.readFileSync(`database/${table}.json`);
   return JSON.parse(data);

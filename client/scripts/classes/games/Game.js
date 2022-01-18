@@ -1,4 +1,5 @@
-const waiting = (player) => `Welcome to Mancala, ${player}. Please just wait for someone to join.`;
+const waiting = (player) => `Welcome to Mancala, ${player}. Please wait for someone to join.`;
+const moveWhileWaiting = `Why such a rush ${String.fromCodePoint(128336)}? Just wait for someone to join.`;
 const joined = (player1, player2, first) => `We have a join! ${player1} and ${player2}, are you both ready? ${first}, you go first!`;
 
 //turn
@@ -51,5 +52,14 @@ class Game {
 
   showMessage(message) {
     document.getElementById('info').innerText = message;
+  }
+
+  finishedHandler() {
+    let winnerSection = document.querySelector('.winner-text');
+
+    if (this.mancala.getWinner()) winnerSection.innerText = winner(this.mancala.getWinner());
+    else winnerSection.innerText = tie; 
+
+    document.dispatchEvent(new Event('endGame'));
   }
 }

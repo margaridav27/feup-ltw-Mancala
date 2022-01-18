@@ -103,7 +103,7 @@ const server = http.createServer((request, response) => {
             answer = game.leave(data);
             break;
           case '/ranking':
-            answer = ranking.ranking();
+            answer = ranking.ranking(data);
             break;
           default:
             response.writeHead(404, { 'Content-Type': 'text/plain' });

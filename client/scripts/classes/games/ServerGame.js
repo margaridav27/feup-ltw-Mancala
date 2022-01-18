@@ -6,7 +6,7 @@ class ServerGame extends Game {
     this.players = [];
     this.turn = '';
 
-    document.addEventListener('quitGame', () => this.quitHandler.bind(this));
+    //document.addEventListener('quitGame', () => this.quitHandler.bind(this));
   }
 
   checkSide(move, side) {
@@ -22,14 +22,20 @@ class ServerGame extends Game {
   }
 
   async moveHandler(move) {
-    const nick = server.getUser();
-    if (this.turn === nick && this.checkSide(move, nick)) this.server.notify(move);
-    else if (this.turn !== nick) this.showMessage(notYourTurn(this.players[opponentSide]));
+    if (this.mancala) {
+      const nick = server.getUser();
+      if (this.turn === nick && this.checkSide(move, nick)) this.server.notify(move);
+      else if (this.turn !== nick) this.showMessage(notYourTurn(this.players[opponentSide]));
+    }
+    else {
+      this.showMessage(moveWhileWaiting);
+    }
   }
 
   quitHandler() {
     this.server.leave();
-    this.showMessage(waiver(this.server.getUser()));
+    console.log("quitig");
+    // dispatchEvent(new Event('quitGame'));
   }
 
   serverUpdateHandler(data) {
@@ -41,23 +47,29 @@ class ServerGame extends Game {
       this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
     } else {
       // the game was already occuring
-      if (data.winner) {
-        this.server.closeEventSource();
-
-        if (this.mancala.hasFinished()) {
-          if (data.winner === '') this.showMessage(tie);
-          else this.showMessage(gameOver);
-          document.dispatchEvent(new Event('endGame'));
-        } else {
-          this.showMessage(waiver(data.winner));
-          document.dispatchEvent(new Event('quitGame'));
-        }
-      } else {
-        // server sent a move update
+      if (data.pit !== undefined) {
         const status = this.mancala.performMove(data.pit);
         this.turn = data.board.turn;
-        this.showMessage(status.message);
-        //if (status.hasFinished) document.dispatchEvent(new Event('endGame'));
+        //this.showMessage(status.message);
+        document.querySelector('.winner-text').innerText = winner(data.winner);
+        // this.showMessage(winner(data.winner));
+        console.log('got in here before');
+        if (data.winner !== undefined) {
+          console.log('got in here');
+          //if (data.winner === '') this.showMessage(tie);
+          //else this.showMessage(gameOver);
+          this.server.closeEventSource();
+          this.server.ranking(data.winner);
+          document.dispatchEvent(new Event('endGame'));
+        }
+      } else {
+        let quiter = (this.players[0] == data.winner) ? this.players[1] : this.players[0];
+
+        document.querySelector('.winner').style.display = '';
+        dotAnimation();
+        document.querySelector('.winner-text').innerText = waiver(quiter) + '\n' + winner(data.winner);
+
+        // document.dispatchEvent(new Event('endGame'));
       }
     }
   }
