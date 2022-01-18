@@ -59,10 +59,9 @@ function loginClickHandler() {
         document.getElementById('username').value = '';
         document.getElementById('password').value = '';
 
-        if (response.error == 'User registered with a different password') alert('Wrong credentials. Please verify the username and password again.');
-
+        if (response.error == 'User registered with a different password')
+          alert('Wrong credentials. Please verify the username and password again.');
         else alert('Server is down. Please verify if you are connected');
-
       } else {
         loginBtn.innerText = 'Logout';
         loginArea.forEach((field) => disable(field));
@@ -114,13 +113,15 @@ function logoClickHandler() {
       break;
   }
 
-  panels.push(DEFAULT.panel);
-  changeVisibility(panels);
-  appState = DEFAULT.state;
+  if (appState !== DEFAULT.state) {
+    panels.push(DEFAULT.panel);
+    changeVisibility(panels);
+    appState = DEFAULT.state;
+  }
 }
 
 function gameClickHandler() {
-  console.log("app on play click", appState);
+  console.log('app on play click', appState);
   let panels = [];
   const prevAppState = appState;
 
@@ -166,9 +167,9 @@ function gameClickHandler() {
 
     let menuButtons = document.querySelectorAll('.menu-btn');
     menuButtons.forEach((button) => disable(button));
-    
+
     let loginBtn = document.getElementById('login');
-    if(loginBtn.innerText === 'Login') {
+    if (loginBtn.innerText === 'Login') {
       disable(loginBtn);
 
       let loginArea = document.querySelectorAll('.auth div');
@@ -180,11 +181,9 @@ function gameClickHandler() {
     appState = BOARD.state;
 
     if (loggedIn) game = new ServerGame(server);
-
     else {
       const botTurn = checkAgainstBot();
       if (botTurn === -1) game = new LocalGame();
-  
       else game = new BotGame(botTurn);
     }
 
@@ -244,8 +243,8 @@ function recordsClickHandler() {
       break;
     case BOARD.state:
       panels.push(INFO.panel);
-      panels.push(BOARD.panel);  
-      
+      panels.push(BOARD.panel);
+
       let menuButtons = document.querySelectorAll('.menu-btn');
       menuButtons.forEach((button) => {
         enable(button);
@@ -263,31 +262,46 @@ function recordsClickHandler() {
       break;
   }
 
-  let recordsButton = document.getElementById('records-btn');
-  if (appState === GAMES.state || appState === SCORES.state) {
-    GameHistory.cleanHistory();
+  if (loggedIn) {
+    server.ranking().then((response) => {
+      GameHistory.cleanHistory();
 
-    if (appState === GAMES.state) {
-      recordsButton.innerText = 'SCORE RECORDS';
+      const rankingObj = response;
+      GameHistory.renderServerGames(rankingObj);
+
+      if (appState !== SCORES.state) panels.push(SCORES.panel);
+      changeVisibility(panels);
+
       appState = SCORES.state;
-      GameHistory.renderLocalScores();
+    });
+  } else {
+    let recordsButton = document.getElementById('records-btn');
+
+    if (appState === GAMES.state || appState === SCORES.state) {
+      GameHistory.cleanHistory();
+
+      if (appState === GAMES.state) {
+        recordsButton.innerText = 'SCORE RECORDS';
+        appState = SCORES.state;
+        GameHistory.renderLocalScores();
+      } else {
+        recordsButton.innerText = 'GAME RECORDS';
+        appState = GAMES.state;
+        GameHistory.renderLocalGames();
+      }
+
+      panels.push(GAMES.panel);
+      panels.push(SCORES.panel);
     } else {
+      panels.push(GAMES.panel);
       recordsButton.innerText = 'GAME RECORDS';
       appState = GAMES.state;
+
       GameHistory.renderLocalGames();
+
+      changeVisibility(panels);
     }
-
-    panels.push(GAMES.panel);
-    panels.push(SCORES.panel);
-  } else {
-    panels.push(GAMES.panel);
-    recordsButton.innerText = 'GAME RECORDS';
-    appState = GAMES.state;
-
-    GameHistory.renderLocalGames();
   }
-
-  changeVisibility(panels);
 }
 
 function settingsClickHandler() {
@@ -351,7 +365,6 @@ function resetGame() {
     let loginArea = document.querySelectorAll('.auth div');
     loginArea.forEach((field) => enable(field));
   }
-
 }
 
 function quitGame() {
@@ -359,7 +372,6 @@ function quitGame() {
 }
 
 function endGame() {
-
   const mancala = game.getMancala();
   const players = mancala.getPlayers();
   const score = mancala.getScore();
@@ -370,5 +382,5 @@ function endGame() {
     enable(button);
   });
 
-  GameHistory.addGameToHistory({ players, score, winner });
+  if (!loggedIn) GameHistory.addGameToHistory({ players, score, winner });
 }

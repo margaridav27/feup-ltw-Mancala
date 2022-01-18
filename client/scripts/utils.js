@@ -67,12 +67,12 @@ function createWinnerPopUp() {
   });
 
   let close = document.createElement('img');
-  close.setAttribute('src', 'assets/close.png');
+  close.setAttribute('src', 'client/assets/close.png');
   close.setAttribute('width', '20px');
   closeAnchor.appendChild(close);
 
   let trophy = document.createElement('img');
-  trophy.setAttribute('src', 'assets/winning.png');
+  trophy.setAttribute('src', 'client/assets/winning.png');
   trophy.className = 'rotate';
   trophy.setAttribute('width', '100px');
 
@@ -138,13 +138,12 @@ function timeBar(seconds) {
   var c = document.querySelector('#progressBar');
   var cx = c.getContext('2d');
   var counter = 0;
-  var add = c.width/(seconds*(2**4));
+  var add = c.width / (seconds * 2 ** 4);
   timer(seconds - 1, document.querySelector('#download-text'));
   incrementTimeBar(add, counter, c, cx);
 }
 
 function incrementTimeBar(add, counter, c, cx) {
-
   var interval = setInterval(function () {
     counter += add;
 
@@ -152,37 +151,35 @@ function incrementTimeBar(add, counter, c, cx) {
     cx.fillRect(0, 0, counter, c.height);
 
     if (counter == c.width) clearInterval(interval);
-  }, 1000/(2**4));
+  }, 1000 / 2 ** 4);
 }
 
-
 function timer(duration, display) {
-  var timer = duration, minutes, seconds;
+  var timer = duration,
+    minutes,
+    seconds;
 
   minutes = parseInt(timer / 60, 10);
   seconds = parseInt(timer % 60, 10);
 
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  seconds = seconds < 10 ? '0' + seconds : seconds;
 
-  display.innerText = minutes + ":" + seconds;
+  display.innerText = minutes + ':' + seconds;
 
   timer = duration - 1;
   var interval = setInterval(function () {
-      minutes = parseInt(timer / 60, 10);
-      seconds = parseInt(timer % 60, 10);
+    minutes = parseInt(timer / 60, 10);
+    seconds = parseInt(timer % 60, 10);
 
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
 
-      display.innerText = minutes + ":" + seconds;
+    display.innerText = minutes + ':' + seconds;
 
-      if (--timer < 0) clearInterval(interval);
+    if (--timer < 0) clearInterval(interval);
   }, 1000);
 }
-
-
-
 
 //deixar estar aqui para uns testes
 
@@ -192,20 +189,19 @@ function timer(duration, display) {
 //   r=(r*Math.PI/180)||0;
 //   var cr = Math.cos(r);
 //   var sr = Math.sin(r);
-//   cx.setTransform(cr,sr,-sr,cr,x-(cr*sx-sr*sy),y-(sr*sx+cr*sy)); 
+//   cx.setTransform(cr,sr,-sr,cr,x-(cr*sx-sr*sy),y-(sr*sx+cr*sy));
 //   cx.drawImage(img,0,0);
 // }
-
 
 // function render(cx, r, img){
 //   window.requestAnimationFrame(function() {
 //     render(cx, r, img);
 //   });
 //   // requestAnimationFrame(render);
-  
-//   cx.setTransform(1, 0, 0, 1, 0, 0); 
+
+//   cx.setTransform(1, 0, 0, 1, 0, 0);
 //   cx.clearRect(0,0,400,400);
-  
+
 //   drawImage(img,100,100,r++,img.width/2,img.height/2,cx);
 // }
 
@@ -218,7 +214,7 @@ function timer(duration, display) {
 //   img.onload = function(){
 //     render(cx, r, img);
 //   }
-//   img.src = "assets/mancala.png";
+//   img.src = "client/assets/mancala.png";
 //   console.log(img.style.width)
 //   img.style.width = "1px";
 //   i.disable;

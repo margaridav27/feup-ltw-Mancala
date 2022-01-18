@@ -1,6 +1,7 @@
 const mancala = require('./mancala.js');
-const ranking = require('./ranking.js');
 const verifier = require('./verifier.js');
+const timer = require('./timer.js');
+const ranking = require('./ranking.js');
 
 const crypto = require('crypto');
 
@@ -61,8 +62,7 @@ module.exports.join = function (data) {
     if (verifier.verifyCredentials(nick, password)) {
       const { match, matchIndex } = findMatch(group, size, initial);
       if (match) {
-        console.log('clear waiting timeout');
-        if (match.timeoutId !== undefined) clearTimeout(match.timeoutId);
+        timer.clearTimeout(match.timeoutId);
 
         removeFromQueue(matchIndex);
         addToGames({
@@ -105,7 +105,7 @@ module.exports.leave = function (data) {
     answer.body = JSON.stringify({ error: 'Invalid request body.' });
   } else {
     const { nick, password, game } = data;
-    console.log("dataaaaaaaaaaaaaa", data);
+
     if (verifier.verifyCredentials(nick, password)) {
       answer.status = 200;
       answer.body = JSON.stringify({});
@@ -113,7 +113,6 @@ module.exports.leave = function (data) {
       const { activeGame, gameIndex } = findInGames(game);
       if (activeGame) {
         if (activeGame.p1.nick === nick || activeGame.p2.nick === nick) {
-          console.log(gameIndex);
           removeFromGames(gameIndex);
 
           answer.update = {
@@ -125,7 +124,6 @@ module.exports.leave = function (data) {
               winner: activeGame.p1.nick === nick ? activeGame.p2.nick : activeGame.p1.nick,
             }),
           };
-
         } else {
           answer.status = 400;
           answer.body = JSON.stringify({
@@ -183,19 +181,16 @@ module.exports.notify = function (data, callback) {
                 body: JSON.stringify(activeGame.gameObj),
               };
 
-              // reset timeout
-              console.log('set timeout to next move');
-              if (activeGame.timeoutId !== undefined) clearTimeout(activeGame.timeoutId);
-              activeGame.timeoutId = setTimeout(() => {
+              activeGame.timeoutId = timer.resetTimeout(activeGame.timeoutId, () => {
                 removeFromGames(gameIndex);
                 callback(undefined, activeGame);
-              }, 90000);
+              });
             }
           }
 
           if (response.winner) {
             removeFromGames(activeGame);
-            //ranking.addGame(activeGame);
+            ranking.addGame(activeGame);
           }
         }
       } else {
@@ -239,11 +234,10 @@ module.exports.update = function (data, response, callback) {
           activeGame.p2.nick
         );
 
-        console.log('set initial timeout');
-        activeGame.timeoutId = setTimeout(() => {
+        activeGame.timeoutId = timer.setTimeout(() => {
           removeFromGames(gameIndex);
           callback(undefined, activeGame);
-        }, 90000);
+        });
 
         answer.status = 200;
         answer.style = 'sse';
@@ -260,11 +254,10 @@ module.exports.update = function (data, response, callback) {
         answer.status = 200;
         answer.style = 'sse';
 
-        console.log('set queue timeout');
-        playerInQueue.timeoutId = setTimeout(() => {
+        playerInQueue.timeoutId = timer.setTimeout(() => {
           removeFromQueue(playerIndex);
           callback(playerInQueue, undefined);
-        }, 90000);
+        });
       } else {
         answer.status = 400;
         answer.body = JSON.stringify({ error: 'Invalid game reference.' });

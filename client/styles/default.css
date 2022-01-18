@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  background-image: url("../assets/default-panel-background.png");
+  background-image: url('../assets/default-panel-background.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
@@ -16,12 +16,11 @@
   height: inherit;
 }
 
-.deafult-panel-logo .rotate{
+.deafult-panel-logo .rotate {
   width: 17vh;
   height: inherit;
   position: unset;
 }
-
 
 .deafult-panel-logo {
   display: flex;

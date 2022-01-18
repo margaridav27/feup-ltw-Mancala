@@ -5,9 +5,9 @@ const PORT = 9080;
 const http = require('http');
 const url = require('url');
 
-const register = require('./modules/register.js');
-const ranking = require('./modules/ranking.js');
-const game = require('./modules/game.js');
+const register = require('./server/modules/register.js');
+const ranking = require('./server/modules/ranking.js');
+const game = require('./server/modules/game.js');
 
 const headers = {
   plain: {

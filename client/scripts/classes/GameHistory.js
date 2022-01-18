@@ -1,15 +1,6 @@
 class GameHistory {
-  static localGames = (localStorage.games) ? JSON.parse(localStorage.games) : [];
-  static localScores = (localStorage.scores) ? JSON.parse(localStorage.scores) : [];
-
-  // static localGames = [
-  //     { players: ["Bibs","Maggy"], score: [7,25] },
-  //     { players: ["Mati","Maggy"], score: [15,17] },
-  //     { players: ["Bia","Didi"], score: [10,22] },
-  //     { players: ["Falcamir","Joni"], score: [7,27] },
-  //     { players: ["Mike","Edgar"], score: [3,29] },
-  //     { players: ["Guida","Didi"], score: [15,17] },
-  // ]
+  static localGames = localStorage.games ? JSON.parse(localStorage.games) : [];
+  static localScores = localStorage.scores ? JSON.parse(localStorage.scores) : [];
 
   static renderGameCell(cell) {
     let tr = document.createElement('tr');
@@ -38,10 +29,11 @@ class GameHistory {
   }
 
   static renderScoreCell(cell) {
+    console.log(cell);
     let tr = document.createElement('tr');
 
     let p = document.createElement('td');
-    p.innerText = cell.player;
+    p.innerText = cell.nick;
     tr.appendChild(p);
 
     let l = document.createElement('td');
@@ -49,7 +41,7 @@ class GameHistory {
     tr.appendChild(l);
 
     let t = document.createElement('td');
-    t.innerText = cell.totalGames;
+    t.innerText = cell.games;
     tr.appendChild(t);
 
     return tr;
@@ -62,29 +54,31 @@ class GameHistory {
 
   static updateLocalGames(game) {
     this.localGames.push({ players: game.players, score: game.score });
-    localStorage.setItem("games", JSON.stringify(this.localGames));
+    localStorage.setItem('games', JSON.stringify(this.localGames));
   }
 
   static updateLocalScores(game) {
-
     for (let i = 0; i < 2; i++) {
-      let scoreHistoryCell = this.localScores.find((info) => info.player == game.players[i]);
+      let scoreHistoryCell = this.localScores.find((info) => info.nick == game.players[i]);
 
       if (scoreHistoryCell) {
-        scoreHistoryCell.victories = (game.winner == game.players[i]) ? scoreHistoryCell.victories + 1 : scoreHistoryCell.victories;
-        scoreHistoryCell.totalScore++;
+        scoreHistoryCell.victories =
+          game.winner == game.players[i]
+            ? scoreHistoryCell.victories + 1
+            : scoreHistoryCell.victories;
+        scoreHistoryCell.games++;
       } else {
         scoreHistoryCell = {
-          player: game.players[i],
-          victories: (game.winner == game.players[i]) ? 1 : 0,
-          totalGames: 1,
+          nick: game.players[i],
+          victories: game.winner == game.players[i] ? 1 : 0,
+          games: 1,
         };
         this.localScores.push(scoreHistoryCell);
       }
     }
 
     this.localScores.sort((p1, p2) => (p1.victories < p2.victories ? 1 : -1));
-    localStorage.setItem("scores", JSON.stringify(this.localScores));
+    localStorage.setItem('scores', JSON.stringify(this.localScores));
   }
 
   static renderLocalGames() {
@@ -97,6 +91,14 @@ class GameHistory {
   static renderLocalScores() {
     let table = document.getElementById('scores');
     this.localScores.forEach((score) => {
+      table.appendChild(this.renderScoreCell(score));
+    });
+  }
+
+  static renderServerGames(object) {
+    let table = document.getElementById('scores');
+    console.log(table);
+    object.ranking.forEach((score) => {
       table.appendChild(this.renderScoreCell(score));
     });
   }

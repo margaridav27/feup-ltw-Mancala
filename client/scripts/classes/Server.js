@@ -15,7 +15,6 @@ class Server {
 
   closeEventSource() {
     this.eventSource.close();
-
   }
 
   async register(data) {
@@ -34,7 +33,7 @@ class Server {
     await fetch(`${this.url}/register`, req)
       .then((res) => res.json())
       .then((data) => (response = data))
-      .catch((err) => response.error = err)
+      .catch((err) => (response.error = err));
 
     return response;
   }
@@ -70,7 +69,7 @@ class Server {
       }),
     };
 
-    let response = '';
+    let response = {};
     await fetch(`${this.url}/notify`, req)
       .then((res) => res.json())
       .then((data) => (response = data))
@@ -96,18 +95,19 @@ class Server {
     }
   }
 
-  async ranking(winner) {
+  async ranking() {
     const req = {
       method: 'POST',
-      body: JSON.stringify({
-        nick: this.user,
-        winner: winner,
-      }),
+      body: JSON.stringify({}),
     };
-    console.log(req);
+
+    let response = {};
     await fetch(`${this.url}/ranking`, req)
-      .then((res) => console.log(res.json()))
+      .then((res) => res.json())
+      .then((data) => (response = data))
       .catch((err) => console.log(err));
+
+    return response;
   }
 
   async leave() {
@@ -120,7 +120,7 @@ class Server {
       }),
     };
 
-    let response = '';
+    let response = {};
     await fetch(`${this.url}/leave`, req)
       .then((res) => res.json())
       .then((data) => (response = data))
