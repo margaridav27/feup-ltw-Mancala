@@ -40,6 +40,9 @@ function setupEventHandlers() {
   let botCheckbox2 = document.getElementById('bot-2');
   botCheckbox2.addEventListener('click', () => botCheckHandler('2'));
 
+  let close = document.getElementById('error-popup');
+  close.addEventListener('click', () => loginPopUpHandler());
+
   document.addEventListener('endGame', () => endGame());
 
   document.addEventListener('quitGame', () => quitGame());

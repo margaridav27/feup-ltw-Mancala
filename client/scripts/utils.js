@@ -181,6 +181,24 @@ function timer(duration, display) {
   }, 1000);
 }
 
+function loginErrorPopUp(message) {
+
+  document.querySelector('.error-message').style.display = "";
+  // let board = document.querySelector('.board-panel');
+
+  // let winner = document.createElement('div');
+  // winner.className = 'winner';
+  // winner.style.display = 'none';
+
+  // //dots
+  // let loader = document.createElement('div');
+  // loader.className = 'load-container';
+}
+
+function loginPopUpHandler() {
+  document.querySelector('.error-message').style.display = "none";
+}
+
 //deixar estar aqui para uns testes
 
 // function drawImage(img,x,y,r,sx,sy, cx){

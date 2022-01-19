@@ -1,5 +1,5 @@
 html body {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   padding: 0;
   margin: 0;
   height: 100vh;
@@ -29,26 +29,26 @@ button:hover {
   background: rgba(255, 255, 255, 0.8);
 }
 
-input[type="text"],
-input[type="password"] {
+input[type='text'],
+input[type='password'] {
   width: 150px;
   border-radius: 20px;
 }
 
-input[type="number"] {
+input[type='number'] {
   width: 45px;
 }
 
-input[type="checkbox"],
-input[type="radio"] {
+input[type='checkbox'],
+input[type='radio'] {
   width: 30px;
   height: 30px;
   appearance: none;
   border-radius: 50%;
 }
 
-input[type="checkbox"]:checked,
-input[type="radio"]:checked {
+input[type='checkbox']:checked,
+input[type='radio']:checked {
   background: rgba(102, 187, 106, 1);
 }
 
@@ -57,3 +57,16 @@ label {
   vertical-align: middle;
   margin-left: 5px;
 }
+
+/* .error-message {
+  display: none;
+} */
+
+.error-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100000;
+}
+
