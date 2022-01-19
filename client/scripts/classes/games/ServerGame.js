@@ -23,11 +23,20 @@ class ServerGame extends Game {
 
   async moveHandler(move) {
     if (this.mancala) {
+      console.log(this.board.cavities[move]);
       const nick = server.getUser();
-      if (this.turn === nick && this.checkSide(move, nick)) this.server.notify(move);
-      else if (this.turn !== nick) this.showMessage(notYourTurn(this.players[opponentSide]));
-    } else {
-      this.showMessage(moveWhileWaiting);
+      if (this.turn === nick && this.checkSide(move, nick)) {
+        this.server.notify(move);
+      }
+      if (this.turn === nick && !this.checkSide(move, nick)) {
+        console.log("ahhhhhhhhhhhhhhhh");
+        if (this.board.cavities[move].seeds.length > 0) this.showMessage(invalidSide(nick));
+        else this.showMessage(invalidSideZeroSeeds(nick));
+      }
+      else if (this.turn !== nick) {
+        console.log(this.board.cavities[move]);
+        this.showMessage(notYourTurn(nick));
+      }
     }
   }
 
@@ -50,7 +59,7 @@ class ServerGame extends Game {
       if (data.pit !== undefined) {
         const status = this.mancala.performMove(data.pit);
         this.turn = data.board.turn;
-        //this.showMessage(status.message);
+        this.showMessage(status.message);
         document.querySelector('.winner-text').innerText = winner(data.winner);
         // this.showMessage(winner(data.winner));
         console.log('got in here before');
@@ -85,7 +94,7 @@ class ServerGame extends Game {
       console.log('UPDATING');
       server.update(this.serverUpdateHandler.bind(this));
     });
-    this.showMessage(waiting(nick));
+    // this.showMessage(waiting(nick));
     showWaitingPopUp();
   }
 }
