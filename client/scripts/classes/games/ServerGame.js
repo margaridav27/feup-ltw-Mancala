@@ -44,6 +44,7 @@ class ServerGame extends Game {
       this.turn = data.board.turn;
       this.mancala = new Mancala(this.board, this.players);
       this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
+      hideWaitingPopUp();
     } else {
       // the game was already occuring
       if (data.pit !== undefined) {
@@ -85,5 +86,6 @@ class ServerGame extends Game {
       server.update(this.serverUpdateHandler.bind(this));
     });
     this.showMessage(waiting(nick));
+    showWaitingPopUp();
   }
 }

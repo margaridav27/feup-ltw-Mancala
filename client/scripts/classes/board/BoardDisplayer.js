@@ -8,9 +8,8 @@ class BoardDisplayer {
     this.constructWarehouseAndRows();
     this.constructHoles(data.holes);
     this.constructSeeds(data.seeds);
+
     createWinnerPopUp();
-    createWaitingPopUp();
-    //showWaitingPopUp();
   }
 
   getBoardDimensions() {
@@ -34,7 +33,7 @@ class BoardDisplayer {
   }
 
   positionSeedRandomlyInHole(seed) {
-    const marginOfError = 30;
+    const marginOfError = parseInt(this.holeDimensions.w * 0.2);
     const seedRadius = this.holeDimensions.w / 14;
     const holeCentered = {
       l: Math.floor(this.holeDimensions.w / 2 - seedRadius),
@@ -53,7 +52,7 @@ class BoardDisplayer {
   }
 
   positionSeedRandomlyInWarehouse(seed) {
-    const marginOfError = 30;
+    const marginOfError = parseInt(this.holeDimensions.w * 0.2);
     const seedRadius = this.holeDimensions.w / 14;
     const warehouseCentered = {
       l: Math.floor(this.warehouseDimensions.w / 2 - seedRadius),
@@ -160,6 +159,8 @@ class BoardDisplayer {
       // seed dimensions
       seedElement.style.width = `${this.holeDimensions.w / 7}px`;
       seedElement.style.height = seedElement.style.width;
+      // seedElement.style.width = '2vw';
+      // seedElement.style.height = seedElement.style.width;
       seedElement.style.background = `radial-gradient(circle at 60% 20%, ${seedColor}, rgb(36 36 36) 100%, #000000 100%)`;
 
       // position relatively to the hole

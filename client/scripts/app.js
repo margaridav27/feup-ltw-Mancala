@@ -16,6 +16,8 @@ window.onload = () => {
 };
 
 function setupEventHandlers() {
+  createWaitingPopUp();
+
   let logo = document.getElementById('logo');
   logo.addEventListener('click', () => logoClickHandler());
 
