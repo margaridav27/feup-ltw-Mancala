@@ -1,5 +1,3 @@
-const waiting = (player) => `Welcome to Mancala, ${player}. Please wait for someone to join.`;
-const moveWhileWaiting = `Why such a rush ${String.fromCodePoint(128336)}? Just wait for someone to join.`;
 const joined = (player1, player2, first) => `We have a join! ${player1} and ${player2}, are you both ready? ${first}, you go first!`;
 
 //turn
