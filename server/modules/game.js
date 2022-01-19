@@ -56,15 +56,19 @@ module.exports.join = function (data) {
   if (!verifier.verifyProps(data, props)) {
     answer.status = 400;
     answer.body = JSON.stringify({ error: 'Invalid request body.' });
+    console.log('erroooooooor111111111111 400');
   } else {
     const { group, nick, password, size, initial } = data;
 
     if (verifier.verifyCredentials(nick, password)) {
+      console.log('inside if after verify');
       const { match, matchIndex } = findMatch(group, size, initial);
       if (match) {
         timer.clearTimeout(match.timeoutId);
 
         removeFromQueue(matchIndex);
+        console.log('removed the player from the queue', match.nick);
+
         addToGames({
           p1: { nick: match.nick, response: match.response },
           p2: { nick, response: undefined },
@@ -72,6 +76,7 @@ module.exports.join = function (data) {
           size,
           initial,
         });
+        console.log('new game added between', match.nick, 'and', nick);
 
         answer.status = 200;
         answer.body = JSON.stringify({ game: match.hash });
@@ -82,6 +87,7 @@ module.exports.join = function (data) {
           .digest('hex');
 
         addToQueue({ group, nick, size, initial, hash, response: undefined });
+        console.log('added a player to the queue', nick);
 
         answer.status = 200;
         answer.body = JSON.stringify({ game: hash });
@@ -89,8 +95,11 @@ module.exports.join = function (data) {
     } else {
       answer.status = 400;
       answer.body = JSON.stringify({ error: 'Invalid credentials.' });
+      console.log('erroooooooor 400');
     }
   }
+  
+  console.log('returning');
 
   return answer;
 };
@@ -112,23 +121,28 @@ module.exports.leave = function (data) {
 
       const { activeGame, gameIndex } = findInGames(game);
       if (activeGame) {
-        if (activeGame.p1.nick === nick || activeGame.p2.nick === nick) {
-          removeFromGames(gameIndex);
+        if (activeGame.p1 !== undefined && activeGame.p2 !== undefined) {
+          // none of the players left the game yet
+          if (activeGame.p1.nick === nick || activeGame.p2.nick === nick) {
+            answer.update = {
+              status: 200,
+              style: 'sse',
+              es1: activeGame.p1.response,
+              es2: activeGame.p2.response,
+              end: true,
+              body: JSON.stringify({
+                winner: activeGame.p1.nick === nick ? activeGame.p2.nick : activeGame.p1.nick,
+              }),
+            };
+          }
 
-          answer.update = {
-            status: 200,
-            style: 'sse',
-            es1: activeGame.p1.response,
-            es2: activeGame.p2.response,
-            body: JSON.stringify({
-              winner: activeGame.p1.nick === nick ? activeGame.p2.nick : activeGame.p1.nick,
-            }),
-          };
+          // at least one of the players left the game
+          if (activeGame.p1.nick === nick) activeGame.p1 = undefined;
+          else if (activeGame.p2.nick === nick) activeGame.p2 = undefined;
         } else {
-          answer.status = 400;
-          answer.body = JSON.stringify({
-            error: 'Player not associated with given game reference.',
-          });
+          // both players left the game => remove it from active games
+          if (activeGame.p1 === undefined && activeGame.p2 === undefined)
+            removeFromGames(gameIndex);
         }
       } else {
         const { playerInQueue, playerIndex } = findInQueue(game);

@@ -33,6 +33,10 @@ function update(update, first) {
       update.es1.write('data:' + update.body + '\n\n');
       update.es2.write('data:' + update.body + '\n\n');
     }
+    if (update.end !== undefined) {
+      update.es1.end();
+      update.es2.end();
+    }
   }
 }
 

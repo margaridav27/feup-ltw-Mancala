@@ -84,9 +84,6 @@ module.exports.isPlayerTurn = (playerName) => {
 
 module.exports.performMove = (move, player, game) => {
   parseGameObject(game);
-  console.log('-------- AFTER PARSE --------');
-  console.log('TURN', game.board.turn);
-  console.log('BOARD', game.board.sides);
 
   move = parseInt(move);
 
@@ -96,32 +93,24 @@ module.exports.performMove = (move, player, game) => {
   const seeds = board[move];
   board[move] = 0;
 
-  console.log('played on', move);
-  console.log('nr seeds on played pit', seeds);
-
   let wasEmpty = false;
   let prev = move;
 
   // sow
-  console.log('******* SOW ******** ');
   for (let i = 0; i < seeds; i++) {
     wasEmpty = false;
     let next = nextPit(prev);
     if (isWarehouse(next) && sideById(next) !== turn) {
-      console.log('opponent warehouse');
       const nextDup = nextPit(next);
       next = nextDup;
     }
     if (!isWarehouse(next)) wasEmpty = board[next] === 0;
-    console.log('sow on pit', next, 'which had', board[next], 'seeds');
     board[next] += 1;
-    console.log('sowed on pit', next, 'which now has', board[next], 'seeds');
     prev = next;
   }
 
   // capture
   if (wasEmpty && !isWarehouse(prev) && sideById(prev) === turn) {
-    console.log('******* CAPTURE ******** ');
     let capture = board[prev];
     board[prev] = 0;
     capture += board[oppositePit(prev)];
@@ -129,33 +118,20 @@ module.exports.performMove = (move, player, game) => {
     board[destinationWarehouse(prev)] += capture;
   }
 
-  console.log(
-    'played last on pit',
-    prev,
-    'is it a warehouse?',
-    isWarehouse(prev),
-    'from side',
-    sideById(prev)
-  );
   // if did not play last on his own warehouse
   if (!(isWarehouse(prev) && sideById(prev) === turn)) {
     const turnDup = turn === 0 ? 1 : 0;
     turn = turnDup;
-    console.log('changed turn to', turn);
   }
 
   // cleaning
   let winner;
   let match = false;
   if (totallyEmptySide(0) || totallyEmptySide(1)) {
-    console.log('******* CLEANING ******** ');
-
-    console.log('board before cleaning', board);
     for (let i = 0; i < board.length; i++) {
       if (isWarehouse(i)) continue;
       board[destinationWarehouse(i)] += board[i];
       board[i] = 0;
-      console.log('seeds of pit', i, 'go to', destinationWarehouse(i));
     }
 
     if (board[boardSize] > board[boardSize * 2 + 1]) winner = players[0];
@@ -163,7 +139,6 @@ module.exports.performMove = (move, player, game) => {
     else match = true;
   }
 
-  console.log('****** winner *******', winner);
   let response = {};
   if (winner) {
     response['winner'] = winner;
@@ -177,7 +152,6 @@ module.exports.performMove = (move, player, game) => {
   response['pit'] = move;
   response['board'].sides[`${players[0]}`] = { store: seedsInWarehouse(0), pits: side(0) };
   response['board'].sides[`${players[1]}`] = { store: seedsInWarehouse(1), pits: side(1) };
-  console.log('board after move', response.board.sides);
-  console.log('next turn', response.board.turn);
+
   return response;
 };

@@ -14,7 +14,12 @@ class Server {
   }
 
   closeEventSource() {
+    console.log(this.eventSource);
+
     this.eventSource.close();
+    this.eventSource = undefined;
+
+    console.log(this.eventSource);
   }
 
   async register(data) {
@@ -79,7 +84,10 @@ class Server {
   }
 
   async update(callback) {
-    if (!this.eventSource) {
+    console.log('entered update');
+    console.log(this.eventSource);
+    if (this.eventSource === undefined) {
+      console.log('event source was undefined');
       this.eventSource = new EventSource(
         `${this.url}/update?` +
           new URLSearchParams({
@@ -87,6 +95,10 @@ class Server {
             game: this.game,
           })
       );
+
+      this.eventSource.onopen = (event) => {
+        console.log('opened event source');
+      };
 
       this.eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);

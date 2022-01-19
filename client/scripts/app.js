@@ -129,9 +129,10 @@ function gameClickHandler() {
 
   switch (appState) {
     case BOARD.state:
-      // quitGame();
       if (game instanceof ServerGame) game.quitHandler();
       quitGame();
+
+      //server = undefined;
       appState = DEFAULT.state;
       break;
     case DEFAULT.state:

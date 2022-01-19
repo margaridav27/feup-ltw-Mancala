@@ -26,15 +26,14 @@ class ServerGame extends Game {
       const nick = server.getUser();
       if (this.turn === nick && this.checkSide(move, nick)) this.server.notify(move);
       else if (this.turn !== nick) this.showMessage(notYourTurn(this.players[opponentSide]));
-    }
-    else {
+    } else {
       this.showMessage(moveWhileWaiting);
     }
   }
 
   quitHandler() {
     this.server.leave();
-    console.log("quitig");
+    //console.log("quitig");
     // dispatchEvent(new Event('quitGame'));
   }
 
@@ -58,17 +57,21 @@ class ServerGame extends Game {
           console.log('got in here');
           //if (data.winner === '') this.showMessage(tie);
           //else this.showMessage(gameOver);
+          this.server.leave();
           this.server.closeEventSource();
-          this.server.ranking(data.winner);
           document.dispatchEvent(new Event('endGame'));
         }
       } else {
-        let quiter = (this.players[0] == data.winner) ? this.players[1] : this.players[0];
+        if (data.winner === this.server.getUser()) this.server.leave();
+        //this.server.leave();
+        this.server.closeEventSource();
+
+        let quiter = this.players[0] == data.winner ? this.players[1] : this.players[0];
 
         document.querySelector('.winner').style.display = '';
         dotAnimation();
-        document.querySelector('.winner-text').innerText = waiver(quiter) + '\n' + winner(data.winner);
-
+        document.querySelector('.winner-text').innerText =
+          waiver(quiter) + '\n' + winner(data.winner);
         // document.dispatchEvent(new Event('endGame'));
       }
     }
@@ -77,7 +80,10 @@ class ServerGame extends Game {
   startGame() {
     const data = { size: this.size, seeds: this.seeds };
     const nick = this.server.getUser();
-    this.server.join(data).then(() => this.server.update(this.serverUpdateHandler.bind(this)));
+    this.server.join(data).then(() => {
+      console.log('UPDATING');
+      server.update(this.serverUpdateHandler.bind(this));
+    });
     this.showMessage(waiting(nick));
   }
 }
