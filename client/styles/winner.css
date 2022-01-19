@@ -3,18 +3,39 @@
   --size: 5px;
 }
 
-.load-container {
-  width: 550px;
-  height: 300px;
-  top: 33%;
-  left: 25%;
-  display: flex;
+.load-container,
+.load-container-waiting {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* display: flex; */
   align-items: center;
   align-content: center;
   justify-content: center;
   border-radius: 30px;
   background-color: #dbc6b6;
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+}
+
+.load-container-waiting {
+  width: 80vh;
+  height: 30vh;
+}
+
+.load-container {
+  width: 80vh;
+  height: 50vh;
   padding: 10px 30px;
+}
+
+.load-container-waiting span {
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  margin-bottom: 3%;
 }
 
 .dot-element1,
@@ -66,10 +87,12 @@
 .winner,
 .waiting {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 100000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(2px);
 }
 
 .winner-info {
@@ -99,11 +122,11 @@
 }
 
 .loader {
-  border: 16px solid #f3f3f3;
+  border: 10px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 16px solid rgba(252, 112, 0, 0.4);
-  width: 120px;
-  height: 120px;
+  border-top: 10px solid rgba(252, 112, 0, 0.4);
+  width: 50px;
+  height: 50px;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }

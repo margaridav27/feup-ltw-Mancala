@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const documentRoot = '/net/areas/homes/up201907907/public_html';
+const documentRoot = '/net/areas/homes/up201907907/public_html/feup-ltw-mancala';
 const defaultIndex = 'index.html';
 const mediaTypes = {
   txt: 'text/plain',
@@ -17,9 +17,7 @@ const mediaTypes = {
 function getMediaType(pathname) {
   const lastDot = pathname.lastIndexOf('.');
   let mediaType;
-
   if (lastDot !== -1) mediaType = mediaTypes[pathname.substring(lastDot + 1)];
-
   if (mediaType === undefined) mediaType = 'text/plain';
   return mediaType;
 }
@@ -28,48 +26,47 @@ function isText(mediaType) {
   return !mediaType.startsWith('image');
 }
 
-function getPathname(req) {
-  let pathname = path.normalize(documentRoot + req.url);
-
+function getPathname(request) {
+  let pathname = path.normalize(documentRoot + request.url);
   if (!pathname.startsWith(documentRoot)) pathname = null;
   return pathname;
 }
 
-function doGetPathname(pathname, res) {
+function doGetPathname(pathname, response) {
   const mediaType = getMediaType(pathname);
   const encoding = isText(mediaType) ? 'utf-8' : null;
 
   fs.readFile(pathname, encoding, (err, data) => {
     if (err) {
-      res.writeHead(404);
-      res.end();
+      response.writeHead(404);
+      response.end();
     } else {
-      res.writeHead(200, { 'Content-Type': mediaType });
-      res.end(data);
+      response.writeHead(200, { 'Content-Type': mediaType });
+      response.end(data);
     }
   });
 }
 
-module.exports.processRequest = function (req, res) {
-  const pathname = getPathname(req);
+module.exports.processRequest = function (request, response) {
+  const pathname = getPathname(request);
 
   if (pathname === null) {
-    res.writeHead(403);
-    res.end();
+    response.writeHead(403);
+    response.end();
   } else {
     fs.stat(pathname, (err, stats) => {
       if (err) {
-        res.writeHead(500);
-        res.end();
+        response.writeHead(500);
+        response.end();
       } else if (stats.isDirectory()) {
         if (pathname.endsWith('/')) {
-          doGetPathname(pathname + defaultIndex, res);
+          doGetPathname(pathname + defaultIndex, response);
         } else {
-          res.writeHead(301, { Location: pathname + '/' });
-          res.end();
+          response.writeHead(301, { Location: pathname + '/' });
+          response.end();
         }
       } else {
-        doGetPathname(pathname, res);
+        doGetPathname(pathname, response);
       }
     });
   }

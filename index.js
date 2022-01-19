@@ -5,7 +5,7 @@ const PORT = 9078;
 const http = require('http');
 const url = require('url');
 
-const static = require('./server/modules/static.js');
+const ss = require('./server/modules/static.js');
 const register = require('./server/modules/register.js');
 const ranking = require('./server/modules/ranking.js');
 const game = require('./server/modules/game.js');
@@ -123,11 +123,7 @@ const server = http.createServer((request, response) => {
       if (pathname === '/update') {
         answer = game.update(preq.query, response, timeoutCallback);
         respond(answer);
-      } else {
-        static.processRequest(request, response);
-        // response.writeHead(404, { 'Content-Type': 'text/plain' });
-        // response.end({});
-      }
+      } else ss.processRequest(request, response);
       break;
     default:
       response.writeHead(500, { 'Content-Type': 'text/plain' });

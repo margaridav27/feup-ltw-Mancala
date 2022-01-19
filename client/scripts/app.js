@@ -63,8 +63,8 @@ function loginClickHandler() {
         document.getElementById('password').value = '';
 
         if (response.error == 'User registered with a different password')
-          alert('Wrong credentials. Please verify the username and password again.');
-        else alert('Server is down. Please verify if you are connected');
+          loginErrorPopUp('Wrong credentials. Please verify the username and password again.');
+        else loginErrorPopUp('Server is down. Please verify if you are connected.');
       } else {
         loginBtn.innerText = 'Logout';
         loginArea.forEach((field) => disable(field));

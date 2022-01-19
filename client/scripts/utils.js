@@ -34,7 +34,7 @@ function sleep(ms) {
 }
 
 function createWinnerPopUp() {
-  let board = document.querySelector('.board-panel');
+  let board = document.querySelector('body');
 
   let winner = document.createElement('div');
   winner.className = 'winner';
@@ -109,18 +109,22 @@ async function dotAnimation() {
 }
 
 function createWaitingPopUp() {
-  let board = document.querySelector('.board-panel');
+  let board = document.querySelector('body');
 
   let waiting = document.createElement('div');
   waiting.className = 'waiting';
   waiting.style.display = 'none';
 
   let container = document.createElement('div');
-  container.className = 'load-container';
+  container.className = 'load-container-waiting';
+
+  let waitingText = document.createElement('span');
+  waitingText.innerHTML = 'Waiting for another player to join...';
 
   let loader = document.createElement('div');
   loader.className = 'loader';
 
+  container.appendChild(waitingText);
   container.appendChild(loader);
   waiting.appendChild(container);
   board.appendChild(waiting);
@@ -183,16 +187,9 @@ function timer(duration, display) {
 
 function loginErrorPopUp(message) {
 
-  document.querySelector('.error-message').style.display = "";
-  // let board = document.querySelector('.board-panel');
+  document.querySelector('.error-message').style.display = 'flex';
 
-  // let winner = document.createElement('div');
-  // winner.className = 'winner';
-  // winner.style.display = 'none';
-
-  // //dots
-  // let loader = document.createElement('div');
-  // loader.className = 'load-container';
+  document.querySelector('.error-message span').innerText = message;
 }
 
 function loginPopUpHandler() {
