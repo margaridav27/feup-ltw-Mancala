@@ -154,20 +154,14 @@ class BoardDisplayer {
       seedElement.id = `seed-${seed.sid}`;
       seedElement.className = 'seed';
 
+      // seed dimensions & color
       const seedColor = seedsColorPalette[random(0, seedsColorPalette.length - 1)];
-
-      // seed dimensions
       seedElement.style.width = `${this.holeDimensions.w / 7}px`;
       seedElement.style.height = seedElement.style.width;
-      // seedElement.style.width = '2vw';
-      // seedElement.style.height = seedElement.style.width;
       seedElement.style.background = `radial-gradient(circle at 60% 20%, ${seedColor}, rgb(36 36 36) 100%, #000000 100%)`;
 
       // position relatively to the hole
       this.positionSeedRandomlyInHole(seedElement);
-
-      // color
-      //seedElement.style.backgroundColor = seedColor;
 
       holeElement.appendChild(seedElement);
     });
