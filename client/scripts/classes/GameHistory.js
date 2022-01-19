@@ -1,4 +1,5 @@
 class GameHistory {
+
   static localGames = localStorage.games ? JSON.parse(localStorage.games) : [];
   static localScores = localStorage.scores ? JSON.parse(localStorage.scores) : [];
 
@@ -44,6 +45,7 @@ class GameHistory {
     t.innerText = cell.games;
     tr.appendChild(t);
 
+    console.log(tr);
     return tr;
   }
 
@@ -91,7 +93,9 @@ class GameHistory {
   static renderLocalScores() {
     let table = document.getElementById('scores');
     this.localScores.forEach((score) => {
+      console.log(score);
       table.appendChild(this.renderScoreCell(score));
+      console.log(table);
     });
   }
 

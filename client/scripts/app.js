@@ -298,6 +298,7 @@ function recordsClickHandler() {
 
       panels.push(GAMES.panel);
       panels.push(SCORES.panel);
+      changeVisibility(panels);
     } else {
       panels.push(GAMES.panel);
       recordsButton.innerText = 'GAME RECORDS';
