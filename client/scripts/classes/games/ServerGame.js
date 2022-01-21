@@ -6,7 +6,21 @@ class ServerGame extends Game {
     this.players = [];
     this.turn = '';
 
-    //document.addEventListener('quitGame', () => this.quitHandler.bind(this));
+    this.timeout = 60000;
+    this.timeoutId = undefined;
+  }
+
+  setTimeout(callback) {
+    this.timeoutId = setTimeout(callback, this.timeout);
+  }
+
+  clearTimeout() {
+    if (this.timeoutId !== undefined) clearTimeout(this.timeoutId);
+  }
+
+  resetTimeout(callback) {
+    this.clearTimeout(timeoutId);
+    this.setTimeout(callback);
   }
 
   checkSide(move, side) {
@@ -23,67 +37,61 @@ class ServerGame extends Game {
 
   async moveHandler(move) {
     if (this.mancala) {
-      console.log(this.board.cavities[move]);
       const nick = server.getUser();
-      if (this.turn === nick && this.checkSide(move, nick)) {
-        this.server.notify(move);
-      }
-      if (this.turn === nick && !this.checkSide(move, nick)) {
-        console.log("ahhhhhhhhhhhhhhhh");
-        if (this.board.cavities[move].seeds.length > 0) this.showMessage(invalidSide(nick));
-        else this.showMessage(invalidSideZeroSeeds(nick));
-      }
-      else if (this.turn !== nick) {
-        console.log(this.board.cavities[move]);
-        this.showMessage(notYourTurn(nick));
-      }
+      if (this.turn === nick) {
+        if (this.checkSide(move, nick)) this.server.notify(move);
+        else {
+          if (this.board.cavities[move].seeds.length > 0) this.showMessage(invalidSide(nick));
+          else this.showMessage(invalidSideZeroSeeds(nick));
+        }
+      } else this.showMessage(notYourTurn(nick));
     }
   }
 
   quitHandler() {
     this.server.leave();
-    //console.log("quitig");
-    // dispatchEvent(new Event('quitGame'));
+  }
+
+  gameStartHandler(data) {
+    this.players = Object.keys(data.board.sides);
+    this.turn = data.board.turn;
+    this.mancala = new Mancala(this.board, this.players);
+    this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
+    hideWaitingPopUp();
+  }
+
+  gameOverHandler(data) {
+    this.server.leave();
+    this.server.closeEventSource();
+    document.dispatchEvent(new Event('endGame'));
+  }
+
+  giveUpHandler(data) {
+    if (data.winner === this.server.getUser()) this.server.leave();
+    this.server.closeEventSource();
+
+    let quiter = this.players[0] === data.winner ? this.players[1] : this.players[0];
+    document.querySelector('.winner').style.display = '';
+    dotAnimation();
+    document.querySelector('.winner-text').innerText = waiver(quiter) + '\n' + winner(data.winner);
+  }
+
+  movePerformanceHandler(data) {
+    const status = this.mancala.performMove(data.pit);
+    this.turn = data.board.turn;
+    this.showMessage(status.message);
+    document.querySelector('.winner-text').innerText = winner(data.winner);
   }
 
   serverUpdateHandler(data) {
-    if (!this.mancala) {
-      // was waiting to be joined
-      this.players = Object.keys(data.board.sides);
-      this.turn = data.board.turn;
-      this.mancala = new Mancala(this.board, this.players);
-      this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
-      hideWaitingPopUp();
+    if (this.mancala !== undefined) {
+      if (data.winner !== undefined) ; // reached timeout in queue
+      else this.gameStartHandler(data);
     } else {
-      // the game was already occuring
       if (data.pit !== undefined) {
-        const status = this.mancala.performMove(data.pit);
-        this.turn = data.board.turn;
-        this.showMessage(status.message);
-        document.querySelector('.winner-text').innerText = winner(data.winner);
-        // this.showMessage(winner(data.winner));
-        console.log('got in here before');
-        if (data.winner !== undefined) {
-          console.log('got in here');
-          //if (data.winner === '') this.showMessage(tie);
-          //else this.showMessage(gameOver);
-          this.server.leave();
-          this.server.closeEventSource();
-          document.dispatchEvent(new Event('endGame'));
-        }
-      } else {
-        if (data.winner === this.server.getUser()) this.server.leave();
-        //this.server.leave();
-        this.server.closeEventSource();
-
-        let quiter = this.players[0] == data.winner ? this.players[1] : this.players[0];
-
-        document.querySelector('.winner').style.display = '';
-        dotAnimation();
-        document.querySelector('.winner-text').innerText =
-          waiver(quiter) + '\n' + winner(data.winner);
-        // document.dispatchEvent(new Event('endGame'));
-      }
+        this.movePerformanceHandler(data);
+        if (data.winner !== undefined) this.gameOverHandler(data);
+      } else this.giveUpHandler(data);
     }
   }
 
