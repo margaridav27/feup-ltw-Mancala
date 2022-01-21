@@ -24,12 +24,12 @@
     <div class="error-message">
       <div class="load-container">
         <a class="close-btn" id="error-popup">
-          <img src="client/assets/close.png" width="20px"/>
+          <img src="client/assets/close.png" width="20px" />
         </a>
         <span>Wrong credentials. Please verify the username and password again.</span>
       </div>
     </div>
-    
+
     <header>
       <div class="logo">
         <img id="logo" alt="Mancala Logo" src="client/assets/mancala-logo.png" />
@@ -47,8 +47,6 @@
       </form>
     </header>
 
-
-
     <div class="menu">
       <button class="menu-btn" id="game-btn">PLAY</button>
       <button class="menu-btn" id="instructions-btn">INSTRUCTIONS</button>
@@ -64,7 +62,7 @@
       </div>
     </div>
 
-    <div class="settings-panel hide-panel" id="settings-panel">
+    <div class="settings-panel hidden" id="settings-panel">
       <form class="card player-card levels-hide" id="player-card-1">
         <img src="client/assets/player-1-icon.png" alt="Player 1 Icon" />
         <div class="name">
@@ -116,24 +114,26 @@
       </form>
     </div>
 
-    <div class="info-panel hide-panel">
+    <div class="info-panel hidden">
       <div class="score">
         <img src="client/assets/player-1-icon.png" alt="Default Panel Background" width="40px" />
         <section id="score-1">0</section>
       </div>
-      <div class="info" id="info">
-        <div id="download-text hide-panel"></div>
-        <canvas id="progressBar hide-panel"></canvas>
-      </div>
+
       <div class="score">
         <section id="score-2">0</section>
         <img src="client/assets/player-2-icon.png" alt="Default Panel Background" width="40px" />
       </div>
     </div>
 
-    <div class="board-panel hide-panel" id="board-panel"></div>
+    <div class="info" id="info">
+      <div id="download-text"></div>
+      <canvas id="progress-bar"></canvas>
+    </div>
 
-    <div class="instructions-panel hide-panel">
+    <div class="board-panel hidden" id="board-panel"></div>
+
+    <div class="instructions-panel hidden">
       <div class="instructions">
         Each player has a certain number of holes, by deafult 4, which can be defined at the
         beginning of the game, and a warehouse, the big hole on the side.
@@ -175,14 +175,14 @@
       <img src="client/assets/assistent.png" />
     </div>
 
-    <div class="records-panel game-records hide-panel">
+    <div class="records-panel game-records hidden">
       <table>
         <tbody id="games"></tbody>
       </table>
       <img src="client/assets/coach.png" />
     </div>
 
-    <div class="records-panel score-records hide-panel">
+    <div class="records-panel score-records hidden">
       <table>
         <thead>
           <tr>

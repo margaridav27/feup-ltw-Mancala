@@ -35,7 +35,7 @@ class BotGame extends Game {
     this.showMessage(status.message);
 
     if (status.hasFinished) {
-      this.finishedHandler();
+      this.endGameHandler();
     }
 
     if (this.mancala.isBotCurrentPlayer()) {
@@ -44,7 +44,7 @@ class BotGame extends Game {
     }
 
     if (status.hasFinished) {
-      this.finishedHandler();
+      this.endGameHandler();
     }
   }
 

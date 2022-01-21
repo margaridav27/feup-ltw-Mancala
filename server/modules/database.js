@@ -1,30 +1,18 @@
 const fs = require('fs');
 
 module.exports.write = function (table, value) {
-  fs.readFile(`./server/database/${table}.json`, 'utf8', function readFileCallback(err, data) {
-    if (err) console.log('update database', err);
-    else {
-      let updatable = JSON.parse(data);
-      updatable.push(value);
-      json = JSON.stringify(updatable);
-
-      fs.writeFile(`./server/database/${table}.json`, json, 'utf8', () => {
-        'Write successfully. ';
-      });
-    }
+  fs.readFile(`./server/database/${table}.json`, 'utf8', () => {
+    let updatable = JSON.parse(data);
+    updatable.push(value);
+    json = JSON.stringify(updatable);
+    fs.writeFile(`./server/database/${table}.json`, json, 'utf8');
   });
 };
 
 module.exports.overWrite = function (table, value) {
-  fs.readFile(`./server/database/${table}.json`, 'utf8', function readFileCallback(err, data) {
-    if (err) console.log('update database', err);
-    else {
-      json = JSON.stringify(value);
-
-      fs.writeFile(`./server/database/${table}.json`, json, 'utf8', () => {
-        'Write successfully. ';
-      });
-    }
+  fs.readFile(`./server/database/${table}.json`, 'utf8', () => {
+    json = JSON.stringify(value);
+    fs.writeFile(`./server/database/${table}.json`, json, 'utf8');
   });
 };
 

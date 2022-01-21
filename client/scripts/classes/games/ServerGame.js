@@ -92,6 +92,7 @@ class ServerGame extends Game {
     this.server.leave();
     this.server.closeEventSource();
     this.clearTimeout();
+
     hideWaitingPopUp();
     document.dispatchEvent(new Event('quitGame'));
   }
@@ -110,7 +111,6 @@ class ServerGame extends Game {
 
   serverUpdateHandler(data) {
     if (this.mancala === undefined) {
-      console.log(data);
       if (data.winner !== undefined) this.notJoinedHandler();
       else this.gameStartHandler(data);
     } else {

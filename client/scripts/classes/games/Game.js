@@ -1,16 +1,34 @@
-const joined = (player1, player2, first) => `We have a join! ${player1} and ${player2}, are you both ready? ${first}, you go first!`;
+const joined = (player1, player2, first) =>
+  `We have a join! ${player1} and ${player2}, are you both ready? ${first}, you go first!`;
 
 //turn
-const justStarted = (player) => `Welcome to Mancala!\n ${player}, you go first, show us what you got! ${String.fromCodePoint(128526)}`;
-const yourTurn = (player) => `It's your turn to play, ${player}. Go ahead, make your move! ${String.fromCodePoint(128518)}`;
-const playAgain = (player) => `It's your turn to play again, ${player}. Go ahead, make your move! ${String.fromCodePoint(128516)}`;
-const switchTurn = (player) => `It's ${player}'s turn. Show us what you got! ${String.fromCodePoint(128518)}`;
+const justStarted = (player) =>
+  `Welcome to Mancala!\n ${player}, you go first, show us what you got! ${String.fromCodePoint(
+    128526
+  )}`;
+const yourTurn = (player) =>
+  `It's your turn to play, ${player}. Go ahead, make your move! ${String.fromCodePoint(128518)}`;
+const playAgain = (player) =>
+  `It's your turn to play again, ${player}. Go ahead, make your move! ${String.fromCodePoint(
+    128516
+  )}`;
+const switchTurn = (player) =>
+  `It's ${player}'s turn. Show us what you got! ${String.fromCodePoint(128518)}`;
 const notYourTurn = (player) => `${player}, you must wait for your turn to play!`;
 
 // wrong move
-const invalidSide = (player) => `${player}, that's not your side, don't be a cheater! ${String.fromCodePoint(129324)}`;
-const invalidSideZeroSeeds = (player) => `${player}, that's not your side, don't be a cheater ${String.fromCodePoint(128545)}!\nBut, if you are, be a smart one and don't play on an empty hole... ${String.fromCodePoint(128521)}`;
-const zeroSeeds = (player) => `Ooops ${String.fromCodePoint(128557)}, it looks like that hole is empty...\n Please choose another one, ${player}.`;
+const invalidSide = (player) =>
+  `${player}, that's not your side, don't be a cheater! ${String.fromCodePoint(129324)}`;
+const invalidSideZeroSeeds = (player) =>
+  `${player}, that's not your side, don't be a cheater ${String.fromCodePoint(
+    128545
+  )}!\nBut, if you are, be a smart one and don't play on an empty hole... ${String.fromCodePoint(
+    128521
+  )}`;
+const zeroSeeds = (player) =>
+  `Ooops ${String.fromCodePoint(
+    128557
+  )}, it looks like that hole is empty...\n Please choose another one, ${player}.`;
 
 //end game
 const gameOver = `Game over!\n And the winner is ${String.fromCodePoint(129345)}`;
@@ -52,11 +70,11 @@ class Game {
     document.getElementById('info').innerText = message;
   }
 
-  finishedHandler() {
+  endGameHandler() {
     let winnerSection = document.querySelector('.winner-text');
 
     if (this.mancala.getWinner()) winnerSection.innerText = winner(this.mancala.getWinner());
-    else winnerSection.innerText = tie; 
+    else winnerSection.innerText = tie;
 
     document.dispatchEvent(new Event('endGame'));
   }

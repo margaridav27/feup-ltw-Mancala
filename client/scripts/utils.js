@@ -1,6 +1,6 @@
 function changeVisibility(panels) {
   panels.forEach((panel) => {
-    document.querySelector(panel).classList.toggle('hide-panel');
+    document.querySelector(panel).classList.toggle('hidden');
   });
 }
 
@@ -138,17 +138,17 @@ function showWaitingPopUp() {
   document.querySelector('.waiting').style.display = '';
 }
 
-function timeBar(seconds) {
-  var c = document.querySelector('#progressBar');
-  var cx = c.getContext('2d');
-  var counter = 0;
-  var add = c.width / (seconds * 2 ** 4);
+function progressBar(seconds) {
+  let c = document.querySelector('#progress-bar');
+  let cx = c.getContext('2d');
+  let counter = 0;
+  let add = c.width / (seconds * 2 ** 4);
   timer(seconds - 1, document.querySelector('#download-text'));
-  incrementTimeBar(add, counter, c, cx);
+  incrementProgressBar(add, counter, c, cx);
 }
 
-function incrementTimeBar(add, counter, c, cx) {
-  var interval = setInterval(function () {
+function incrementProgressBar(add, counter, c, cx) {
+  let interval = setInterval(function () {
     counter += add;
 
     cx.fillStyle = '#9B7957';
@@ -159,7 +159,7 @@ function incrementTimeBar(add, counter, c, cx) {
 }
 
 function timer(duration, display) {
-  var timer = duration,
+  let timer = duration,
     minutes,
     seconds;
 
@@ -172,7 +172,7 @@ function timer(duration, display) {
   display.innerText = minutes + ':' + seconds;
 
   timer = duration - 1;
-  var interval = setInterval(function () {
+  let interval = setInterval(function () {
     minutes = parseInt(timer / 60, 10);
     seconds = parseInt(timer % 60, 10);
 
@@ -186,53 +186,10 @@ function timer(duration, display) {
 }
 
 function loginErrorPopUp(message) {
-
   document.querySelector('.error-message').style.display = 'flex';
-
   document.querySelector('.error-message span').innerText = message;
 }
 
 function loginPopUpHandler() {
-  document.querySelector('.error-message').style.display = "none";
+  document.querySelector('.error-message').style.display = 'none';
 }
-
-//deixar estar aqui para uns testes
-
-// function drawImage(img,x,y,r,sx,sy, cx){
-//   sx=sx||0;
-//   sy=sy||0;
-//   r=(r*Math.PI/180)||0;
-//   var cr = Math.cos(r);
-//   var sr = Math.sin(r);
-//   cx.setTransform(cr,sr,-sr,cr,x-(cr*sx-sr*sy),y-(sr*sx+cr*sy));
-//   cx.drawImage(img,0,0);
-// }
-
-// function render(cx, r, img){
-//   window.requestAnimationFrame(function() {
-//     render(cx, r, img);
-//   });
-//   // requestAnimationFrame(render);
-
-//   cx.setTransform(1, 0, 0, 1, 0, 0);
-//   cx.clearRect(0,0,400,400);
-
-//   drawImage(img,100,100,r++,img.width/2,img.height/2,cx);
-// }
-
-// function canvasSpin() {
-//   var r = 1;
-//   var c = document.getElementById('logoCanvas');
-//   var cx = c.getContext('2d');
-
-//   var img = document.createElement('img');
-//   img.onload = function(){
-//     render(cx, r, img);
-//   }
-//   img.src = "client/assets/mancala.png";
-//   console.log(img.style.width)
-//   img.style.width = "1px";
-//   i.disable;
-// }
-
-// canvasSpin();

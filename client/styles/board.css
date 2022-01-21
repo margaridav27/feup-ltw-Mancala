@@ -117,7 +117,7 @@
 
 /* -------------------- timer -------------------- */
 
-#progressBar {
+#progress-bar {
   z-index: -10;
   color: white;
   width: 100%;

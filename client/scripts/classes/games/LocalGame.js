@@ -16,14 +16,13 @@ class LocalGame extends Game {
   moveHandler(move) {
     const status = this.mancala.performMove(move);
     this.showMessage(status.message);
-    
-    if (status.hasFinished) {
-      this.finishedHandler();
-    }
+
+    if (status.hasFinished) this.endGameHandler();
   }
 
   startGame() {
     this.mancala = new Mancala(this.board, this.players);
+
     this.showMessage(justStarted(this.players[0]));
   }
 }

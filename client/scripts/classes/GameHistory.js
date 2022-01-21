@@ -1,5 +1,4 @@
 class GameHistory {
-
   static localGames = localStorage.games ? JSON.parse(localStorage.games) : [];
   static localScores = localStorage.scores ? JSON.parse(localStorage.scores) : [];
 
@@ -30,7 +29,6 @@ class GameHistory {
   }
 
   static renderScoreCell(cell) {
-    console.log(cell);
     let tr = document.createElement('tr');
 
     let p = document.createElement('td');
@@ -45,7 +43,6 @@ class GameHistory {
     t.innerText = cell.games;
     tr.appendChild(t);
 
-    console.log(tr);
     return tr;
   }
 
@@ -85,26 +82,17 @@ class GameHistory {
 
   static renderLocalGames() {
     let table = document.getElementById('games');
-    this.localGames.forEach((game) => {
-      table.appendChild(this.renderGameCell(game));
-    });
+    this.localGames.forEach((game) => table.appendChild(this.renderGameCell(game)));
   }
 
   static renderLocalScores() {
     let table = document.getElementById('scores');
-    this.localScores.forEach((score) => {
-      console.log(score);
-      table.appendChild(this.renderScoreCell(score));
-      console.log(table);
-    });
+    this.localScores.forEach((score) => table.appendChild(this.renderScoreCell(score)));
   }
 
   static renderServerGames(object) {
     let table = document.getElementById('scores');
-    console.log(table);
-    object.ranking.forEach((score) => {
-      table.appendChild(this.renderScoreCell(score));
-    });
+    object.ranking.forEach((score) => table.appendChild(this.renderScoreCell(score)));
   }
 
   static addGameToHistory(game) {

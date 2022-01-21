@@ -16,6 +16,7 @@ window.onload = () => {
 };
 
 function setupEventHandlers() {
+  //progressBar(30);
   createWaitingPopUp();
 
   let logo = document.getElementById('logo');
@@ -126,7 +127,6 @@ function logoClickHandler() {
 }
 
 function gameClickHandler() {
-  console.log('ENTERED HERE WITH STATE', appState);
   let panels = [];
   const prevAppState = appState;
 
