@@ -6,20 +6,23 @@ class ServerGame extends Game {
     this.players = [];
     this.turn = '';
 
-    this.timeout = 60000;
+    this.timeout = 20000;
     this.timeoutId = undefined;
   }
 
   setTimeout(callback) {
+    console.log('set timeout');
     this.timeoutId = setTimeout(callback, this.timeout);
   }
 
   clearTimeout() {
+    console.log('clear timeout');
     if (this.timeoutId !== undefined) clearTimeout(this.timeoutId);
   }
 
   resetTimeout(callback) {
-    this.clearTimeout(timeoutId);
+    console.log('reset clear');
+    this.clearTimeout(this.timeoutId);
     this.setTimeout(callback);
   }
 
@@ -56,19 +59,26 @@ class ServerGame extends Game {
     this.players = Object.keys(data.board.sides);
     this.turn = data.board.turn;
     this.mancala = new Mancala(this.board, this.players);
+
     this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
     hideWaitingPopUp();
+
+    this.resetTimeout(() => {
+      console.log('reached timeout while waiting for first move');
+    });
   }
 
-  gameOverHandler(data) {
+  gameOverHandler() {
     this.server.leave();
     this.server.closeEventSource();
+    this.clearTimeout();
     document.dispatchEvent(new Event('endGame'));
   }
 
   giveUpHandler(data) {
-    if (data.winner === this.server.getUser()) this.server.leave();
+    this.server.leave();
     this.server.closeEventSource();
+    this.clearTimeout();
 
     let quiter = this.players[0] === data.winner ? this.players[1] : this.players[0];
     document.querySelector('.winner').style.display = '';
@@ -76,16 +86,32 @@ class ServerGame extends Game {
     document.querySelector('.winner-text').innerText = waiver(quiter) + '\n' + winner(data.winner);
   }
 
+  notJoinedHandler() {
+    console.log('not joined handler => sending leave');
+
+    this.server.leave();
+    this.server.closeEventSource();
+    this.clearTimeout();
+    hideWaitingPopUp();
+    document.dispatchEvent(new Event('quitGame'));
+  }
+
   movePerformanceHandler(data) {
     const status = this.mancala.performMove(data.pit);
     this.turn = data.board.turn;
+
     this.showMessage(status.message);
     document.querySelector('.winner-text').innerText = winner(data.winner);
+
+    this.resetTimeout(() => {
+      console.log('reached timeout while waiting for', data.board.turn, 'to make a move');
+    });
   }
 
   serverUpdateHandler(data) {
-    if (this.mancala !== undefined) {
-      if (data.winner !== undefined) ; // reached timeout in queue
+    if (this.mancala === undefined) {
+      console.log(data);
+      if (data.winner !== undefined) this.notJoinedHandler();
       else this.gameStartHandler(data);
     } else {
       if (data.pit !== undefined) {
@@ -97,12 +123,15 @@ class ServerGame extends Game {
 
   startGame() {
     const data = { size: this.size, seeds: this.seeds };
-    const nick = this.server.getUser();
+
     this.server.join(data).then(() => {
-      console.log('UPDATING');
       server.update(this.serverUpdateHandler.bind(this));
+
+      this.setTimeout(() => {
+        console.log('reached timeout on queue');
+      });
     });
-    // this.showMessage(waiting(nick));
+
     showWaitingPopUp();
   }
 }

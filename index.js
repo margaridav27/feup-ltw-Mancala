@@ -63,10 +63,10 @@ function timeoutCallback(player, game) {
   // timeout was reached and the player was still in queue
   if (player !== undefined) {
     const message = JSON.stringify({ winner: player.nick });
+    player.response.writeHead(200, headers['sse']);
     player.response.write('data:' + message + '\n\n');
 
-    console.log(player);
-    console.log('timeout reached');
+    console.log('timeout was reached and the player was still in queue ==>', player.nick);
   }
 
   // timeout was reached and the game was already occuring
@@ -76,8 +76,10 @@ function timeoutCallback(player, game) {
     game.p1.response.write('data:' + message + '\n\n');
     game.p2.response.write('data:' + message + '\n\n');
 
-    console.log(game);
-    console.log('timeout reached');
+    console.log(
+      'timeout was reached and the game was already occuring ==>',
+      game.gameObj.board.turn
+    );
   }
 }
 

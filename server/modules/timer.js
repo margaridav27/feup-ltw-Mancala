@@ -1,12 +1,17 @@
+const timeout = 20000
+
 module.exports.clearTimeout = function (id) {
+  console.log('clear timeout');
   if (id !== undefined) clearTimeout(id);
 };
 
 module.exports.setTimeout = function (callback) {
-  return setTimeout(callback, 60000);
+  console.log('set timeout');
+  return setTimeout(callback, timeout);
 };
 
 module.exports.resetTimeout = function (id, callback) {
-  if (id !== undefined) this.clearTimeout(id);
-  return setTimeout(callback, 60000);
+  console.log('reset clear');
+  if (id !== undefined) clearTimeout(id);
+  return setTimeout(callback, timeout);
 };

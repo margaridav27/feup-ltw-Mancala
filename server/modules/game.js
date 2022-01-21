@@ -56,18 +56,15 @@ module.exports.join = function (data) {
   if (!verifier.verifyProps(data, props)) {
     answer.status = 400;
     answer.body = JSON.stringify({ error: 'Invalid request body.' });
-    console.log('erroooooooor111111111111 400');
   } else {
     const { group, nick, password, size, initial } = data;
 
     if (verifier.verifyCredentials(nick, password)) {
-      console.log('inside if after verify');
       const { match, matchIndex } = findMatch(group, size, initial);
       if (match) {
         timer.clearTimeout(match.timeoutId);
 
         removeFromQueue(matchIndex);
-        console.log('removed the player from the queue', match.nick);
 
         addToGames({
           p1: { nick: match.nick, response: match.response },
@@ -76,7 +73,6 @@ module.exports.join = function (data) {
           size,
           initial,
         });
-        console.log('new game added between', match.nick, 'and', nick);
 
         answer.status = 200;
         answer.body = JSON.stringify({ game: match.hash });
@@ -87,7 +83,6 @@ module.exports.join = function (data) {
           .digest('hex');
 
         addToQueue({ group, nick, size, initial, hash, response: undefined });
-        console.log('added a player to the queue', nick);
 
         answer.status = 200;
         answer.body = JSON.stringify({ game: hash });
@@ -95,11 +90,8 @@ module.exports.join = function (data) {
     } else {
       answer.status = 400;
       answer.body = JSON.stringify({ error: 'Invalid credentials.' });
-      console.log('erroooooooor 400');
     }
   }
-  
-  console.log('returning');
 
   return answer;
 };
@@ -196,14 +188,14 @@ module.exports.notify = function (data, callback) {
               };
 
               activeGame.timeoutId = timer.resetTimeout(activeGame.timeoutId, () => {
-                removeFromGames(gameIndex);
+                //removeFromGames(gameIndex);
                 callback(undefined, activeGame);
               });
             }
           }
 
           if (response.winner) {
-            removeFromGames(activeGame);
+            //removeFromGames(activeGame);
             ranking.addGame(activeGame);
           }
         }
@@ -233,7 +225,7 @@ module.exports.update = function (data, response, callback) {
   } else {
     const { nick, game } = data;
 
-    let { activeGame, gameIndex } = findInGames(game);
+    let { activeGame, _ } = findInGames(game);
     if (activeGame) {
       if (nick === activeGame.p1.nick && activeGame.p1.response === undefined)
         activeGame.p1.response = response;
@@ -248,10 +240,7 @@ module.exports.update = function (data, response, callback) {
           activeGame.p2.nick
         );
 
-        activeGame.timeoutId = timer.setTimeout(() => {
-          removeFromGames(gameIndex);
-          callback(undefined, activeGame);
-        });
+        activeGame.timeoutId = timer.setTimeout(() => callback(undefined, activeGame));
 
         answer.status = 200;
         answer.style = 'sse';
@@ -260,7 +249,7 @@ module.exports.update = function (data, response, callback) {
         answer.body = JSON.stringify(activeGame.gameObj);
       }
     } else {
-      let { playerInQueue, playerIndex } = findInQueue(game);
+      let { playerInQueue, _ } = findInQueue(game);
 
       if (playerInQueue) {
         playerInQueue.response = response;
@@ -268,10 +257,7 @@ module.exports.update = function (data, response, callback) {
         answer.status = 200;
         answer.style = 'sse';
 
-        playerInQueue.timeoutId = timer.setTimeout(() => {
-          removeFromQueue(playerIndex);
-          callback(playerInQueue, undefined);
-        });
+        playerInQueue.timeoutId = timer.setTimeout(() => callback(playerInQueue, undefined));
       } else {
         answer.status = 400;
         answer.body = JSON.stringify({ error: 'Invalid game reference.' });

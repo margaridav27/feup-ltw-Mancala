@@ -126,7 +126,7 @@ function logoClickHandler() {
 }
 
 function gameClickHandler() {
-  console.log('app on play click', appState);
+  console.log('ENTERED HERE WITH STATE', appState);
   let panels = [];
   const prevAppState = appState;
 
@@ -137,7 +137,6 @@ function gameClickHandler() {
       if (game instanceof ServerGame) game.quitHandler();
       quitGame();
 
-      //server = undefined;
       appState = DEFAULT.state;
       break;
     case DEFAULT.state:
@@ -182,7 +181,7 @@ function gameClickHandler() {
       loginArea.forEach((field) => disable(field));
     }
 
-    enable(menuButtons[0]); // now quit button
+    enable(menuButtons[0]);
 
     appState = BOARD.state;
 
@@ -195,8 +194,6 @@ function gameClickHandler() {
 
     game.startGame();
   }
-
-  console.log('app on play click after', appState);
 }
 
 function instructionsClickHandler() {
@@ -356,9 +353,7 @@ function resetGame() {
   toggleGameButton();
 
   let panels = ['.info-panel', '.board-panel', '.default-panel'];
-  panels.forEach((pan) => console.log(document.querySelector(pan).classList.value));
   changeVisibility(panels);
-  panels.forEach((pan) => console.log(document.querySelector(pan).classList.value));
 
   let menuButtons = document.querySelectorAll('.menu-btn');
   menuButtons.forEach((button) => {
@@ -372,6 +367,8 @@ function resetGame() {
     let loginArea = document.querySelectorAll('.auth div');
     loginArea.forEach((field) => enable(field));
   }
+
+  appState = DEFAULT.state;
 }
 
 function quitGame() {
