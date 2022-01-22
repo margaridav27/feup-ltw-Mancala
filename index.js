@@ -1,6 +1,6 @@
 'use strict';
 
-const PORT = 9078;
+const PORT = 8978;
 
 const http = require('http');
 const url = require('url');
@@ -25,20 +25,40 @@ const headers = {
 };
 
 function update(update, first) {
-  if (update.es1 !== undefined && update.es2 !== undefined) {
-    if (first) {
-      update.es1.writeHead(update.status, headers[update.style]);
-      update.es2.writeHead(update.status, headers[update.style]);
-    }
-    if (update.body !== undefined) {
+  if (update.es1 !== undefined) {
+    if (first) update.es1.writeHead(200, headers['sse']);
+
+    if (update.body !== undefined) 
       update.es1.write('data:' + update.body + '\n\n');
-      update.es2.write('data:' + update.body + '\n\n');
-    }
-    if (update.end !== undefined) {
+
+    if (update.end !== undefined)
       update.es1.end();
-      update.es2.end();
-    }
   }
+
+  if (update.es2 !== undefined) {
+    if (first) update.es2.writeHead(200, headers['sse']);
+
+    if (update.body !== undefined) 
+      update.es2.write('data:' + update.body + '\n\n');
+
+    if (update.end !== undefined)
+      update.es2.end();
+  }
+
+  // if (update.es1 !== undefined && update.es2 !== undefined) {
+  //   if (first) {
+  //     update.es1.writeHead(update.status, headers[update.style]);
+  //     update.es2.writeHead(update.status, headers[update.style]);
+  //   }
+  //   if (update.body !== undefined) {
+  //     update.es1.write('data:' + update.body + '\n\n');
+  //     update.es2.write('data:' + update.body + '\n\n');
+  //   }
+  //   if (update.end !== undefined) {
+  //     update.es1.end();
+  //     update.es2.end();
+  //   }
+  // }
 }
 
 function respond(answer, response) {
@@ -65,21 +85,13 @@ function timeoutCallback(player, game) {
     const message = JSON.stringify({ winner: player.nick });
     player.response.writeHead(200, headers['sse']);
     player.response.write('data:' + message + '\n\n');
-
-    console.log('timeout was reached and the player was still in queue ==>', player.nick);
   }
 
   // timeout was reached and the game was already occuring
   if (game !== undefined) {
-    const winner = game.gameObj.board.turn === game.p1.nick ? game.p2.nick : game.p1.nick;
-    const message = JSON.stringify({ winner });
+    const message = JSON.stringify({ winner: game.winner });
     game.p1.response.write('data:' + message + '\n\n');
     game.p2.response.write('data:' + message + '\n\n');
-
-    console.log(
-      'timeout was reached and the game was already occuring ==>',
-      game.gameObj.board.turn
-    );
   }
 }
 

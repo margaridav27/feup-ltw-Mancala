@@ -5,14 +5,14 @@ module.exports.write = function (table, value) {
     let updatable = JSON.parse(data);
     updatable.push(value);
     json = JSON.stringify(updatable);
-    fs.writeFile(`./server/database/${table}.json`, json, 'utf8');
+    fs.writeFile(`./server/database/${table}.json`, json, 'utf8', () => {});
   });
 };
 
 module.exports.overWrite = function (table, value) {
   fs.readFile(`./server/database/${table}.json`, 'utf8', () => {
     json = JSON.stringify(value);
-    fs.writeFile(`./server/database/${table}.json`, json, 'utf8');
+    fs.writeFile(`./server/database/${table}.json`, json, 'utf8', () => {});
   });
 };
 

@@ -45,11 +45,16 @@ function createWinnerPopUp() {
   loader.className = 'load-container';
 
   let dot1 = document.createElement('span');
-  dot1.className = 'dot-element1';
+  dot1.className = 'dot-element';
+  dot1.id = 'dot-1';
+
   let dot2 = document.createElement('span');
-  dot2.className = 'dot-element2';
+  dot2.className = 'dot-element';
+  dot2.id = 'dot-2';
+  
   let dot3 = document.createElement('span');
-  dot3.className = 'dot-element3';
+  dot3.className = 'dot-element';
+  dot3.id = 'dot-3';
 
   loader.appendChild(dot1);
   loader.appendChild(dot2);
@@ -76,8 +81,10 @@ function createWinnerPopUp() {
   trophy.className = 'rotate';
   trophy.setAttribute('width', '100px');
 
+  let textContainer = document.createElement('div');
   let text = document.createElement('span');
   text.className = 'winner-text';
+  textContainer.appendChild(text);
 
   let recordsBtn = document.createElement('button');
   recordsBtn.id = 'winner-records';
@@ -90,7 +97,7 @@ function createWinnerPopUp() {
 
   winnerInfo.appendChild(closeAnchor);
   winnerInfo.appendChild(trophy);
-  winnerInfo.appendChild(text);
+  winnerInfo.appendChild(textContainer);
   winnerInfo.appendChild(recordsBtn);
 
   loader.appendChild(winnerInfo);
@@ -102,9 +109,9 @@ function createWinnerPopUp() {
 
 async function dotAnimation() {
   await sleep(3000);
-  document.querySelector('.dot-element1').style.display = 'none';
-  document.querySelector('.dot-element2').style.display = 'none';
-  document.querySelector('.dot-element3').style.display = 'none';
+  document.getElementById('dot-1').style.display = 'none';
+  document.getElementById('dot-2').style.display = 'none';
+  document.getElementById('dot-3').style.display = 'none';
   document.querySelector('.winner-info').style.display = 'flex';
 }
 

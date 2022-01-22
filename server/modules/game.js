@@ -113,30 +113,48 @@ module.exports.leave = function (data) {
 
       const { activeGame, gameIndex } = findInGames(game);
       if (activeGame) {
-        if (activeGame.p1 !== undefined && activeGame.p2 !== undefined) {
-          // none of the players left the game yet
-          if (activeGame.p1.nick === nick || activeGame.p2.nick === nick) {
+        timer.clearTimeout(activeGame.timeoutId);
+
+        // none of the players left the game yet
+        if (activeGame.p1 !== undefined || activeGame.p2 !== undefined) {
+
+          // the player who does not send first the leave request will be the winner
+          if (activeGame.winner === undefined) 
+            activeGame.winner = activeGame.p1.nick === nick ? 
+              activeGame.p2.nick : 
+              activeGame.p1.nick;
+
+          // player 1 sent leave request
+          if (activeGame.p1 !== undefined && activeGame.p1.nick === nick) {
             answer.update = {
-              status: 200,
-              style: 'sse',
               es1: activeGame.p1.response,
+              es2: undefined,
+              end: true,
+              body: JSON.stringify({
+                winner: activeGame.winner,
+              }),
+            };
+
+            activeGame.p1 = undefined;
+          } 
+          
+          // player 2 sent leave request
+          if (activeGame.p2 !== undefined && activeGame.p2.nick === nick) {
+            answer.update = {
+              es1: undefined,
               es2: activeGame.p2.response,
               end: true,
               body: JSON.stringify({
-                winner: activeGame.p1.nick === nick ? activeGame.p2.nick : activeGame.p1.nick,
+                winner: activeGame.winner,
               }),
             };
-          }
 
-          // at least one of the players left the game
-          if (activeGame.p1.nick === nick) activeGame.p1 = undefined;
-          else if (activeGame.p2.nick === nick) activeGame.p2 = undefined;
-        } else {
-          // both players left the game => remove it from active games
-          if (activeGame.p1 === undefined && activeGame.p2 === undefined)
-            removeFromGames(gameIndex);
-        }
+            activeGame.p2 = undefined;
+          }
+        } else removeFromGames(gameIndex); // both players already left the game => remove it from active games
       } else {
+        timer.clearTimeout(playerInQueue.timeoutId);
+
         const { playerInQueue, playerIndex } = findInQueue(game);
         if (playerInQueue) removeFromQueue(playerIndex);
         else {
@@ -165,7 +183,7 @@ module.exports.notify = function (data, callback) {
     const { nick, password, game, move } = data;
 
     if (verifier.verifyCredentials(nick, password)) {
-      const { activeGame, gameIndex } = findInGames(game);
+      const { activeGame, _ } = findInGames(game);
       if (activeGame) {
         if (nick === activeGame.p1.nick || nick === activeGame.p2.nick) {
           const response = mancala.performMove(move, nick, activeGame.gameObj);
@@ -180,22 +198,20 @@ module.exports.notify = function (data, callback) {
               answer.status = 200;
               answer.body = JSON.stringify({});
               answer.update = {
-                status: 200,
-                style: 'sse',
                 es1: activeGame.p1.response,
                 es2: activeGame.p2.response,
                 body: JSON.stringify(activeGame.gameObj),
               };
 
-              activeGame.timeoutId = timer.resetTimeout(activeGame.timeoutId, () => {
-                //removeFromGames(gameIndex);
-                callback(undefined, activeGame);
-              });
+              activeGame.timeoutId = timer.resetTimeout(activeGame.timeoutId, () => callback(undefined, activeGame));
             }
           }
 
           if (response.winner) {
-            //removeFromGames(activeGame);
+            timer.clearTimeout(activeGame.timeoutId);
+
+            activeGame.winner = response.winner;
+            
             ranking.addGame(activeGame);
           }
         }

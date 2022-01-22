@@ -51,10 +51,6 @@ class ServerGame extends Game {
     }
   }
 
-  quitHandler() {
-    this.server.leave();
-  }
-
   gameStartHandler(data) {
     this.players = Object.keys(data.board.sides);
     this.turn = data.board.turn;
@@ -69,29 +65,40 @@ class ServerGame extends Game {
   }
 
   gameOverHandler() {
+    this.clearTimeout();
+
     this.server.leave();
     this.server.closeEventSource();
-    this.clearTimeout();
+
     document.dispatchEvent(new Event('endGame'));
   }
 
   giveUpHandler(data) {
-    this.server.leave();
-    this.server.closeEventSource();
     this.clearTimeout();
 
-    let quiter = this.players[0] === data.winner ? this.players[1] : this.players[0];
+    this.server.leave();
+    this.server.closeEventSource();
+
+    let winner;
+    let quiter;
+    if (data !== undefined) {
+      winner = data.winner;
+      quiter = this.players[0] === winner ? this.players[1] : this.players[0];
+    } else {
+      quiter = this.server.getUser();
+      winner = this.players[0] === quiter ? this.players[1] : this.players[0];
+    }
+
     document.querySelector('.winner').style.display = '';
     dotAnimation();
-    document.querySelector('.winner-text').innerText = waiver(quiter) + '\n' + winner(data.winner);
+    document.querySelector('.winner-text').innerText = waiver(quiter) + '\n' + winner(winner);
   }
 
   notJoinedHandler() {
-    console.log('not joined handler => sending leave');
+    this.clearTimeout();
 
     this.server.leave();
     this.server.closeEventSource();
-    this.clearTimeout();
 
     hideWaitingPopUp();
     document.dispatchEvent(new Event('quitGame'));

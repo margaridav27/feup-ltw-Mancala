@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const documentRoot = '/net/areas/homes/up201907907/public_html/feup-ltw-mancala';
+const documentRoot = '/net/areas/homes/up201907907/public_html';
 const defaultIndex = 'index.html';
 const mediaTypes = {
   txt: 'text/plain',

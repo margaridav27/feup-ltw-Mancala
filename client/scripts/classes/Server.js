@@ -1,7 +1,6 @@
 class Server {
   constructor() {
-    //this.url = 'http://twserver.alunos.dcc.fc.up.pt:9078';
-    this.url = 'http://localhost:9078';
+    this.url = 'http://twserver.alunos.dcc.fc.up.pt:8978';
     this.game = undefined;
     this.group = '78';
     this.user = undefined;
