@@ -105,7 +105,7 @@ class Server {
     await fetch(`${this.url}/ranking`, req)
       .then((res) => res.json())
       .then((data) => (response = data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log('ranking', err));
 
     return response;
   }

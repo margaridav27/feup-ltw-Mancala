@@ -37,6 +37,18 @@
   margin-bottom: 3%;
 }
 
+.loader-time-container {
+  position: relative;
+}
+
+.waiting .time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: small;
+}
+
 .dot-element {
   border-radius: 100%;
   border: var(--size) solid var(--point-color);

@@ -24,41 +24,27 @@ const headers = {
   },
 };
 
-function update(update, first) {
+function update(update, first, last) {
+  if (update.es !== undefined) {
+    console.log('player on queue left the game?',last);
+    if (first) update.es.writeHead(200, headers['sse']);
+    if (update.body !== undefined) update.es.write('data:' + update.body + '\n\n');
+    if (last) update.es.end();
+  }
+
   if (update.es1 !== undefined) {
+    console.log('player 1 left the game?', last);
     if (first) update.es1.writeHead(200, headers['sse']);
-
-    if (update.body !== undefined) 
-      update.es1.write('data:' + update.body + '\n\n');
-
-    if (update.end !== undefined)
-      update.es1.end();
+    if (update.body !== undefined) update.es1.write('data:' + update.body + '\n\n');
+    if (last) update.es1.end();
   }
 
   if (update.es2 !== undefined) {
+    console.log('player 2 left the game?', last);
     if (first) update.es2.writeHead(200, headers['sse']);
-
-    if (update.body !== undefined) 
-      update.es2.write('data:' + update.body + '\n\n');
-
-    if (update.end !== undefined)
-      update.es2.end();
+    if (update.body !== undefined) update.es2.write('data:' + update.body + '\n\n');
+    if (last) update.es2.end();
   }
-
-  // if (update.es1 !== undefined && update.es2 !== undefined) {
-  //   if (first) {
-  //     update.es1.writeHead(update.status, headers[update.style]);
-  //     update.es2.writeHead(update.status, headers[update.style]);
-  //   }
-  //   if (update.body !== undefined) {
-  //     update.es1.write('data:' + update.body + '\n\n');
-  //     update.es2.write('data:' + update.body + '\n\n');
-  //   }
-  //   if (update.end !== undefined) {
-  //     update.es1.end();
-  //     update.es2.end();
-  //   }
-  // }
 }
 
 function respond(answer, response) {
@@ -72,11 +58,14 @@ function respond(answer, response) {
       response.end();
       break;
     case 'sse':
-      update(answer, true);
+      update(answer, true, false);
       break;
   }
 
-  if (answer.update !== undefined) update(answer.update, false);
+  if (answer.update !== undefined) console.log('UPDATE', answer.update.body, answer.update.last);
+  if (answer.update !== undefined) update(answer.update, 
+                                          answer.update.first,
+                                          answer.update.last);
 }
 
 function timeoutCallback(player, game) {

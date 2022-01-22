@@ -107,6 +107,7 @@ module.exports.leave = function (data) {
   } else {
     const { nick, password, game } = data;
 
+    console.log('\n\nLEAVE RECEIVED FROM',nick,'\n\n');
     if (verifier.verifyCredentials(nick, password)) {
       answer.status = 200;
       answer.body = JSON.stringify({});
@@ -118,46 +119,43 @@ module.exports.leave = function (data) {
         // none of the players left the game yet
         if (activeGame.p1 !== undefined || activeGame.p2 !== undefined) {
 
-          // the player who does not send first the leave request will be the winner
+          console.log('winner was not yet defined', activeGame.winner === undefined);
+          // the player who did not send first the leave request will be the winner
           if (activeGame.winner === undefined) 
             activeGame.winner = activeGame.p1.nick === nick ? 
               activeGame.p2.nick : 
               activeGame.p1.nick;
 
-          // player 1 sent leave request
-          if (activeGame.p1 !== undefined && activeGame.p1.nick === nick) {
-            answer.update = {
-              es1: activeGame.p1.response,
-              es2: undefined,
-              end: true,
-              body: JSON.stringify({
-                winner: activeGame.winner,
-              }),
-            };
+          console.log('winner is', activeGame.winner);
 
-            activeGame.p1 = undefined;
-          } 
+          answer.update = {
+            es1: activeGame.p1 !== undefined && activeGame.p1.response,
+            es2: activeGame.p2 !== undefined && activeGame.p2.response,
+            first: false,
+            last: true,
+            body: JSON.stringify({
+              winner: activeGame.winner,
+            }),
+          };
+
+          if (activeGame.p1 !== undefined) activeGame.p1 = undefined;
+          if (activeGame.p2 !== undefined) activeGame.p2 = undefined;
           
-          // player 2 sent leave request
-          if (activeGame.p2 !== undefined && activeGame.p2.nick === nick) {
-            answer.update = {
-              es1: undefined,
-              es2: activeGame.p2.response,
-              end: true,
-              body: JSON.stringify({
-                winner: activeGame.winner,
-              }),
-            };
-
-            activeGame.p2 = undefined;
-          }
-        } else removeFromGames(gameIndex); // both players already left the game => remove it from active games
+        } else { console.log('removing game from list'); removeFromGames(gameIndex); }// both players already left the game => remove it from active games
       } else {
-        timer.clearTimeout(playerInQueue.timeoutId);
-
         const { playerInQueue, playerIndex } = findInQueue(game);
-        if (playerInQueue) removeFromQueue(playerIndex);
-        else {
+        if (playerInQueue) {
+          timer.clearTimeout(playerInQueue.timeoutId);
+
+          answer.update = {
+            es: playerInQueue.response,
+            first: false,
+            last: true,
+            body: JSON.stringify({ winner: playerInQueue.nick }),
+          }
+
+          removeFromQueue(playerIndex);
+        } else {
           answer.status = 400;
           answer.body = JSON.stringify({ error: 'Invalid game reference.' });
         }
@@ -168,6 +166,7 @@ module.exports.leave = function (data) {
     }
   }
 
+  if (answer.update !== undefined) console.log('answer right before returning', answer.update);
   return answer;
 };
 
@@ -200,6 +199,8 @@ module.exports.notify = function (data, callback) {
               answer.update = {
                 es1: activeGame.p1.response,
                 es2: activeGame.p2.response,
+                first: false,
+                last: false,
                 body: JSON.stringify(activeGame.gameObj),
               };
 

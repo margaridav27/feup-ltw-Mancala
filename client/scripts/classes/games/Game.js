@@ -67,7 +67,7 @@ class Game {
   }
 
   showMessage(message) {
-    document.getElementById('info').innerText = message;
+    document.querySelector('#info span').innerText = message;
   }
 
   endGameHandler() {

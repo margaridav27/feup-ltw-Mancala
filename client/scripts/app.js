@@ -16,7 +16,6 @@ window.onload = () => {
 };
 
 function setupEventHandlers() {
-  //progressBar(30);
   createWaitingPopUp();
 
   let logo = document.getElementById('logo');
@@ -135,7 +134,7 @@ function gameClickHandler() {
   switch (appState) {
     case BOARD.state:
       if (game instanceof ServerGame) game.giveUpHandler();
-      quitGame();
+      else quitGame();
 
       appState = DEFAULT.state;
       break;
@@ -372,7 +371,9 @@ function resetGame() {
 }
 
 function quitGame() {
+  console.log('in quit game');
   resetGame();
+  // showCanvas();
 }
 
 function endGame() {

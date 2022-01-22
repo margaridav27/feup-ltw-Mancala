@@ -122,17 +122,41 @@ function createWaitingPopUp() {
   waiting.className = 'waiting';
   waiting.style.display = 'none';
 
+  let closeAnchor = document.createElement('a');
+  closeAnchor.className = 'close-btn';
+  closeAnchor.addEventListener('click', () => {
+    game.notJoinedHandler();
+    document.querySelector('.waiting').style.display = 'none';
+    appState = DEFAULT.state;
+  });
+
+  let close = document.createElement('img');
+  close.setAttribute('src', 'client/assets/close.png');
+  close.setAttribute('width', '20px');
+  closeAnchor.appendChild(close);
+
+
   let container = document.createElement('div');
   container.className = 'load-container-waiting';
 
   let waitingText = document.createElement('span');
-  waitingText.innerHTML = 'Waiting for another player to join...';
+  waitingText.innerText = 'Waiting for another player to join...';
+
+  let loaderTime = document.createElement('div');
+  loaderTime.className = 'loader-time-container';
 
   let loader = document.createElement('div');
   loader.className = 'loader';
 
+  let time = document.createElement('span');
+  time.className = 'time';
+
+  loaderTime.append(loader);
+  loaderTime.appendChild(time);
+
+  container.appendChild(closeAnchor);
   container.appendChild(waitingText);
-  container.appendChild(loader);
+  container.appendChild(loaderTime);
   waiting.appendChild(container);
   board.appendChild(waiting);
 }
@@ -145,23 +169,33 @@ function showWaitingPopUp() {
   document.querySelector('.waiting').style.display = '';
 }
 
-function progressBar(seconds) {
-  let c = document.querySelector('#progress-bar');
+function showCanvas() {
+  changeVisibility([".time-text", ".progress-bar"]);
+}
+
+function progressBar(seconds, interval) {
+  if (interval) clearInterval(interval);
+
+  let c = document.querySelector('.progress-bar');
   let cx = c.getContext('2d');
   let counter = 0;
   let add = c.width / (seconds * 2 ** 4);
-  timer(seconds - 1, document.querySelector('#download-text'));
-  incrementProgressBar(add, counter, c, cx);
+
+  let timerId = timer(seconds - 1, document.querySelector('.time-text'));
+
+  cx.fillStyle = '#E6CCB2';
+  cx.fillRect(0, 0, c.width, c.height);
+
+  let barId = incrementProgressBar(add, counter, c, cx);
+  return {timerId, barId};
 }
 
 function incrementProgressBar(add, counter, c, cx) {
-  let interval = setInterval(function () {
+  return setInterval(function () {
     counter += add;
 
     cx.fillStyle = '#9B7957';
     cx.fillRect(0, 0, counter, c.height);
-
-    if (counter == c.width) clearInterval(interval);
   }, 1000 / 2 ** 4);
 }
 
@@ -179,7 +213,8 @@ function timer(duration, display) {
   display.innerText = minutes + ':' + seconds;
 
   timer = duration - 1;
-  let interval = setInterval(function () {
+
+  return setInterval(function () {
     minutes = parseInt(timer / 60, 10);
     seconds = parseInt(timer % 60, 10);
 
@@ -187,8 +222,7 @@ function timer(duration, display) {
     seconds = seconds < 10 ? '0' + seconds : seconds;
 
     display.innerText = minutes + ':' + seconds;
-
-    if (--timer < 0) clearInterval(interval);
+    timer--;
   }, 1000);
 }
 
