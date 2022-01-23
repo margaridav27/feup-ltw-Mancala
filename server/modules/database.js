@@ -1,11 +1,16 @@
 const fs = require('fs');
 
 module.exports.write = function (table, value) {
-  fs.readFile(`./server/database/${table}.json`, 'utf8', () => {
-    let updatable = JSON.parse(data);
-    updatable.push(value);
-    json = JSON.stringify(updatable);
-    fs.writeFile(`./server/database/${table}.json`, json, 'utf8', () => {});
+  fs.readFile(`./server/database/${table}.json`, 'utf8', (err, data) => {
+    if (err) console.log('Error while updating database.', err);
+    else {
+      let updatable = JSON.parse(data);
+      updatable.push(value);
+      json = JSON.stringify(updatable);
+      fs.writeFile(`./server/database/${table}.json`, json, 'utf8', () => {
+        'Database updated successfully. ';
+      });
+    }
   });
 };
 

@@ -13,40 +13,20 @@ var server = undefined;
 
 window.onload = () => {
   setupEventHandlers();
+  createWaitingPopUp();
 };
 
 function setupEventHandlers() {
-  createWaitingPopUp();
-
-  let logo = document.getElementById('logo');
-  logo.addEventListener('click', () => logoClickHandler());
-
-  let loginBtn = document.getElementById('login');
-  loginBtn.addEventListener('click', () => loginClickHandler());
-
-  let gameBtn = document.getElementById('game-btn');
-  gameBtn.addEventListener('click', () => gameClickHandler());
-
-  let instructionsBtn = document.getElementById('instructions-btn');
-  instructionsBtn.addEventListener('click', () => instructionsClickHandler());
-
-  let recordsBtn = document.getElementById('records-btn');
-  recordsBtn.addEventListener('click', () => recordsClickHandler());
-
-  let settingsBtn = document.getElementById('settings-btn');
-  settingsBtn.addEventListener('click', () => settingsClickHandler());
-
-  let botCheckbox1 = document.getElementById('bot-1');
-  botCheckbox1.addEventListener('click', () => botCheckHandler('1'));
-
-  let botCheckbox2 = document.getElementById('bot-2');
-  botCheckbox2.addEventListener('click', () => botCheckHandler('2'));
-
-  let close = document.getElementById('error-popup');
-  close.addEventListener('click', () => loginPopUpHandler());
-
+  document.getElementById('logo').addEventListener('click', () => logoClickHandler());
+  document.getElementById('login').addEventListener('click', () => loginClickHandler());
+  document.getElementById('game-btn').addEventListener('click', () => gameClickHandler());
+  document.getElementById('instructions-btn').addEventListener('click', () => instructionsClickHandler());
+  document.getElementById('records-btn').addEventListener('click', () => recordsClickHandler());
+  document.getElementById('settings-btn').addEventListener('click', () => settingsClickHandler());
+  document.getElementById('bot-1').addEventListener('click', () => botCheckHandler('1'));
+  document.getElementById('bot-2').addEventListener('click', () => botCheckHandler('2'));
+  document.getElementById('error-popup').addEventListener('click', () => loginPopUpHandler());
   document.addEventListener('endGame', () => endGame());
-
   document.addEventListener('quitGame', () => quitGame());
 }
 
@@ -58,18 +38,26 @@ function loginClickHandler() {
     const nick = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
     const data = { nick, pass };
+
     server = new Server();
+
     server.register(data).then((response) => {
       if (response.error !== undefined) {
         document.getElementById('username').value = '';
         document.getElementById('password').value = '';
 
-        if (response.error == 'User registered with a different password')
+        if (response.error === 'User registered with a different password')
           loginErrorPopUp('Wrong credentials. Please verify the username and password again.');
-        else loginErrorPopUp('Server is down. Please verify if you are connected.');
+        else 
+          loginErrorPopUp('Server is down. Please verify if you are connected.');
+
       } else {
         loginBtn.innerText = 'Logout';
+
         loginArea.forEach((field) => disable(field));
+        let playerCards = document.getElementsByClassName('player-card');
+        [].forEach.call(playerCards, (card) => disable(card));
+        document.getElementById('name-1').value = server.getUser();
 
         loggedIn = true;
       }
@@ -83,7 +71,7 @@ function loginClickHandler() {
 
     loggedIn = false;
 
-    if (game) {
+    if (game !== undefined) {
       server.leave();
       appState = DEFAULT.state;
       resetGame();
@@ -371,9 +359,7 @@ function resetGame() {
 }
 
 function quitGame() {
-  console.log('in quit game');
   resetGame();
-  // showCanvas();
 }
 
 function endGame() {

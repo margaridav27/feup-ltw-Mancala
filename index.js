@@ -26,21 +26,18 @@ const headers = {
 
 function update(update, first, last) {
   if (update.es !== undefined) {
-    console.log('player on queue left the game?',last);
     if (first) update.es.writeHead(200, headers['sse']);
     if (update.body !== undefined) update.es.write('data:' + update.body + '\n\n');
     if (last) update.es.end();
   }
 
   if (update.es1 !== undefined) {
-    console.log('player 1 left the game?', last);
     if (first) update.es1.writeHead(200, headers['sse']);
     if (update.body !== undefined) update.es1.write('data:' + update.body + '\n\n');
     if (last) update.es1.end();
   }
 
   if (update.es2 !== undefined) {
-    console.log('player 2 left the game?', last);
     if (first) update.es2.writeHead(200, headers['sse']);
     if (update.body !== undefined) update.es2.write('data:' + update.body + '\n\n');
     if (last) update.es2.end();
@@ -62,7 +59,6 @@ function respond(answer, response) {
       break;
   }
 
-  if (answer.update !== undefined) console.log('UPDATE', answer.update.body, answer.update.last);
   if (answer.update !== undefined) update(answer.update, 
                                           answer.update.first,
                                           answer.update.last);
@@ -71,7 +67,7 @@ function respond(answer, response) {
 function timeoutCallback(player, game) {
   // timeout was reached and the player was still in queue
   if (player !== undefined) {
-    const message = JSON.stringify({ winner: player.nick });
+    const message = JSON.stringify({ winner: null });
     player.response.writeHead(200, headers['sse']);
     player.response.write('data:' + message + '\n\n');
   }

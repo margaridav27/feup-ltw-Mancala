@@ -12,8 +12,8 @@ class ServerGame extends Game {
     this.timerId = undefined;
   }
 
-  setTimeout() {
-    this.timeoutId = setTimeout(() => {}, this.timeout);
+  setTimeout(callback) {
+    this.timeoutId = setTimeout(callback, this.timeout);
   }
 
   clearTimeout() {
@@ -23,9 +23,9 @@ class ServerGame extends Game {
     if (this.intervalId !== undefined) clearInterval(this.intervalId);
   }
 
-  resetTimeout() {
+  resetTimeout(callback) {
     this.clearTimeout(this.timeoutId);
-    this.setTimeout();
+    this.setTimeout(callback);
 
     let ids = progressBar(this.timeout / 1000, this.intervalId);
     this.intervalId = ids.barId;
@@ -62,43 +62,40 @@ class ServerGame extends Game {
     this.turn = data.board.turn;
     this.mancala = new Mancala(this.board, this.players);
 
-    this.showMessage(joined(this.players[0], this.players[1], this.players[0]));
     hideWaitingPopUp();
-
+    this.showMessage(joined(this.players[0], 
+                            this.players[1], 
+                            this.players[0]));
     this.resetTimeout();
   }
 
   gameOverHandler() {
-    showCanvas();
+    toggleCanvas();
 
     this.clearTimeout();
-
-    this.server.leave();
     this.server.closeEventSource();
-
     document.dispatchEvent(new Event('endGame'));
   }
 
   giveUpHandler(data) {
-    showCanvas();
+    toggleCanvas();
 
     this.clearTimeout();
-
-    this.server.leave();
     this.server.closeEventSource();
     
-    let w; // winner
-    let q; // quiter
-    if (data !== undefined) {
-      w = data.winner;
-      q = this.players[0] === w ? this.players[1] : this.players[0];
+    if (q === this.server.getUser()) {
+      document.dispatchEvent(new Event('quitGame'));
     } else {
-      q = this.server.getUser();
-      w = this.players[0] === q ? this.players[1] : this.players[0];
-    }
+      let w; // winner
+      let q; // quiter
+      if (data !== undefined) {
+        w = data.winner;
+        q = this.players[0] === w ? this.players[1] : this.players[0];
+      } else {
+        q = this.server.getUser();
+        w = this.players[0] === q ? this.players[1] : this.players[0];
+      }
 
-    if (q === this.server.getUser()) document.dispatchEvent(new Event('quitGame'));
-    else {
       document.querySelector('.winner').style.display = '';
       document.querySelector('.winner-text').innerText = waiver(q) + '\n' + winner(w);
       dotAnimation();
@@ -106,15 +103,11 @@ class ServerGame extends Game {
   }
 
   notJoinedHandler() {
-    showCanvas();
-
-    this.clearTimeout();
-
-    this.server.leave();
-    this.server.closeEventSource();
-
+    toggleCanvas();
     hideWaitingPopUp();
 
+    this.clearTimeout();
+    this.server.closeEventSource();
     document.dispatchEvent(new Event('quitGame'));
   }
 
@@ -125,21 +118,26 @@ class ServerGame extends Game {
     this.showMessage(status.message);
     document.querySelector('.winner-text').innerText = winner(data.winner);
 
-    this.resetTimeout();
+    this.resetTimeout(() => this.server.leave());
   }
 
   serverUpdateHandler(data) {
     if (this.mancala === undefined) {
-      if (data.winner !== undefined) this.notJoinedHandler();
-      else {
+      if (data.winner !== undefined) {
+        this.notJoinedHandler();
+      } else {
         this.gameStartHandler(data);
-        showCanvas();
+        toggleCanvas();
       }
     } else {
       if (data.pit !== undefined) {
         this.movePerformanceHandler(data);
-        if (data.winner !== undefined) this.gameOverHandler(data);
-      } else this.giveUpHandler(data);
+        if (data.winner !== undefined) {
+          this.gameOverHandler(data);
+        }
+      } else {
+        this.giveUpHandler(data);
+      }
     }
   }
 
@@ -147,10 +145,11 @@ class ServerGame extends Game {
     const data = { size: this.size, seeds: this.seeds };
     this.server.join(data).then(() => {
       server.update(this.serverUpdateHandler.bind(this));
-      this.setTimeout(() => {});
+      this.setTimeout(() => this.server.leave());
     });
 
-    this.timerId = timer(this.timeout/1000 -1, document.querySelector('.waiting .time'));
+    this.timerId = timer(this.timeout/1000 -1, 
+                         document.querySelector('.waiting .time'));
     showWaitingPopUp();
   }
 }

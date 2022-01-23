@@ -98,7 +98,7 @@ class Bot {
         { holes, warehouses: [0, 0] },
         data.turn,
         data.nrHoles,
-        4
+        2
       );
       return botPlay;
     } else if (data.level == 3) {
@@ -106,7 +106,7 @@ class Bot {
         { holes, warehouses: [0, 0] },
         data.turn,
         data.nrHoles,
-        7
+        4
       );
       return botPlay;
     }

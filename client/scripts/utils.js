@@ -40,25 +40,19 @@ function createWinnerPopUp() {
   winner.className = 'winner';
   winner.style.display = 'none';
 
+  let container = document.createElement('div');
+  container.className = 'container';
+
   //dots
   let loader = document.createElement('div');
   loader.className = 'load-container';
 
-  let dot1 = document.createElement('span');
-  dot1.className = 'dot-element';
-  dot1.id = 'dot-1';
-
-  let dot2 = document.createElement('span');
-  dot2.className = 'dot-element';
-  dot2.id = 'dot-2';
-  
-  let dot3 = document.createElement('span');
-  dot3.className = 'dot-element';
-  dot3.id = 'dot-3';
-
-  loader.appendChild(dot1);
-  loader.appendChild(dot2);
-  loader.appendChild(dot3);
+  loader.innerHTML = `
+    <div class="loader-dot">
+      <span class="dot dot-1"></span>
+      <span class="dot dot-2"></span>
+      <span class="dot dot-3"></span>
+    </div> `
 
   let winnerInfo = document.createElement('div');
   winnerInfo.className = 'winner-info';
@@ -100,18 +94,19 @@ function createWinnerPopUp() {
   winnerInfo.appendChild(textContainer);
   winnerInfo.appendChild(recordsBtn);
 
-  loader.appendChild(winnerInfo);
+  container.appendChild(loader);
+  container.appendChild(winnerInfo);
 
-  winner.appendChild(loader);
+  winner.appendChild(container);
 
   board.appendChild(winner);
 }
 
 async function dotAnimation() {
   await sleep(3000);
-  document.getElementById('dot-1').style.display = 'none';
-  document.getElementById('dot-2').style.display = 'none';
-  document.getElementById('dot-3').style.display = 'none';
+  document.querySelector('.dot.dot-1').style.display = 'none';
+  document.querySelector('.dot.dot-2').style.display = 'none';
+  document.querySelector('.dot.dot-3').style.display = 'none';
   document.querySelector('.winner-info').style.display = 'flex';
 }
 
@@ -125,7 +120,8 @@ function createWaitingPopUp() {
   let closeAnchor = document.createElement('a');
   closeAnchor.className = 'close-btn';
   closeAnchor.addEventListener('click', () => {
-    game.notJoinedHandler();
+    //game.notJoinedHandler();
+    this.server.leave();
     document.querySelector('.waiting').style.display = 'none';
     appState = DEFAULT.state;
   });
@@ -169,7 +165,7 @@ function showWaitingPopUp() {
   document.querySelector('.waiting').style.display = '';
 }
 
-function showCanvas() {
+function toggleCanvas() {
   changeVisibility([".time-text", ".progress-bar"]);
 }
 
