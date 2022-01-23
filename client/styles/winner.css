@@ -4,7 +4,8 @@
 }
 
 .container,
-.load-container-waiting {
+.load-container-waiting,
+.load-container {
   position: relative;
   top: 50%;
   left: 50%;
@@ -48,13 +49,6 @@
   transform: translate(-50%, -50%);
   font-size: small;
 }
-
-
-/* @keyframes preloader {
-  100% {
-    transform: scale(2);
-  }
-} */
 
 .rotate {
   animation: rotation 3s infinite linear;

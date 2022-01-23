@@ -105,11 +105,11 @@
         <img src="client/assets/mancala.png" alt="Player 1 Icon" />
         <div class="holes">
           <label for="holes">Holes</label>
-          <input type="number" id="holes" name="holes" min="3" max="6" value="4" />
+          <input type="number" id="holes" name="holes" min="1" max="6" value="4" />
         </div>
         <div class="seeds">
           <label for="seeds">Seeds (each hole)</label>
-          <input type="number" id="seeds" name="seeds" min="3" max="8" value="4" />
+          <input type="number" id="seeds" name="seeds" min="1" max="8" value="4" />
         </div>
       </form>
     </div>
@@ -136,13 +136,13 @@
       <div class="instructions">
         Each player has a certain number of holes and a warehouse, the big hole on the side.
         <p>If you are the first to play, your warehouse will be on the right side, if you're the second, you can see it on the left side.</p>
-        <p>The number of holes and seeds that each hole has can be defined at the section settings before starting a game.</p>
+        <p>The number of holes and seeds of each hole can be defined at the section settings before starting a game.</p>
         <p>You can only control the holes on your side.</p>
-        <p>In your turn, you take all of the seeds from a small hole of your side and plant them in the following holes, counterclockwise. You only need to click on the hole you wish to choose.</p>
-        <p>If the hole your planting is your warehouse, the seed will be dropped and you will win a point. If it is the opponent's warehouse, it will be skipped.</p>
-        <p>You will <strong>play again</strong> if the last seed is planted in your warehouse.</li>
+        <p>In your turn, you take all of the seeds from a small hole of your side and sow them in the following holes, counterclockwise. You only need to click on the hole you wish to sow from.</p>
+        <p>If you sow the last seed on your warehouse, the seed will be dropped and you will win a point. When sowing, if you pass through an opponent's warehouse, it will be skipped.</p>
+        <p>You will <strong>play again</strong> if the last seed is sowed in your own warehouse.</li>
         <p>You will <strong>capture</strong> more seeds if the last seed is dropped into an empty hole on your side. If so, you store the last seed in the warehouse, as well as the seeds from the opposite hole, the opponent's one.
-        <p>The game ends when one of the side has no more seeds. The player that still has seeds stores them in the warehouse.</p>
+        <p>The game ends when one of the side has no more seeds, i.e. is totally empty. The player that still has seeds stores them in the warehouse.</p>
         <p><strong>Wins</strong> whoever has more seeds.</p>
         <p>If you wish to play against another server user, you need to be logged in.</p>
         <p>To play local games, that includes playing against the computer, you need to be logged out.</p>

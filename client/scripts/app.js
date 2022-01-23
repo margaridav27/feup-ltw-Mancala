@@ -66,16 +66,20 @@ function loginClickHandler() {
     loginBtn.innerText = 'Login';
     loginArea.forEach((field) => enable(field));
 
+    let playerCards = document.getElementsByClassName('player-card');
+    [].forEach.call(playerCards, (card) => enable(card));
+    document.getElementById('name-1').value = '';
+
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
-
+   
     loggedIn = false;
 
-    if (game !== undefined) {
+    if (appState === BOARD.state) {
       server.leave();
       appState = DEFAULT.state;
       resetGame();
-    }
+    } 
   }
 }
 
@@ -121,7 +125,7 @@ function gameClickHandler() {
 
   switch (appState) {
     case BOARD.state:
-      if (game instanceof ServerGame) game.giveUpHandler();
+      if (game instanceof ServerGame) server.leave();
       else quitGame();
 
       appState = DEFAULT.state;
@@ -366,7 +370,7 @@ function endGame() {
   const mancala = game.getMancala();
   const players = mancala.getPlayers();
   const score = mancala.getScore();
-  const winner = score[0] > score[1] ? players[0] : players[1];
+  const winner = mancala.getWinner();
 
   let menuButtons = document.querySelectorAll('.menu-btn');
   menuButtons.forEach((button) => {

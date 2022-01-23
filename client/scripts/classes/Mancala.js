@@ -31,6 +31,7 @@ class Mancala {
   setWinner() {
     if (this.score[0] > this.score[1]) this.result = this.players[0];
     else if (this.score[0] < this.score[1]) this.result = this.players[1];
+    else this.result = null;
   }
 
   hasFinished() {

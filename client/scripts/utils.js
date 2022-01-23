@@ -45,7 +45,7 @@ function createWinnerPopUp() {
 
   //dots
   let loader = document.createElement('div');
-  loader.className = 'load-container';
+  loader.className = 'dot-container';
 
   loader.innerHTML = `
     <div class="loader-dot">
@@ -120,7 +120,6 @@ function createWaitingPopUp() {
   let closeAnchor = document.createElement('a');
   closeAnchor.className = 'close-btn';
   closeAnchor.addEventListener('click', () => {
-    //game.notJoinedHandler();
     this.server.leave();
     document.querySelector('.waiting').style.display = 'none';
     appState = DEFAULT.state;
@@ -130,7 +129,6 @@ function createWaitingPopUp() {
   close.setAttribute('src', 'client/assets/close.png');
   close.setAttribute('width', '20px');
   closeAnchor.appendChild(close);
-
 
   let container = document.createElement('div');
   container.className = 'load-container-waiting';

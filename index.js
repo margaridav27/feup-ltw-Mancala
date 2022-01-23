@@ -74,7 +74,10 @@ function timeoutCallback(player, game) {
 
   // timeout was reached and the game was already occuring
   if (game !== undefined) {
-    const message = JSON.stringify({ winner: game.winner });
+    const winner = game.gameObj.turn === game.p1.nick ?
+                   game.p2.nick :
+                   game.p1.nick;
+    const message = JSON.stringify({ winner });
     game.p1.response.write('data:' + message + '\n\n');
     game.p2.response.write('data:' + message + '\n\n');
   }

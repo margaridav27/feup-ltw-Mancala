@@ -144,7 +144,7 @@ module.exports.performMove = (move, player, game) => {
     response['winner'] = winner;
     response['board'] = { sides: {} };
   } else if (match) {
-    response['winner'] = '';
+    response['winner'] = null;
     response['board'] = { sides: {} };
   } else {
     response['board'] = { turn: players[turn], sides: {} };

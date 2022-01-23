@@ -74,7 +74,7 @@ class ServerGame extends Game {
 
     this.clearTimeout();
     this.server.closeEventSource();
-    document.dispatchEvent(new Event('endGame'));
+    this.endGameHandler();
   }
 
   giveUpHandler(data) {
@@ -83,21 +83,26 @@ class ServerGame extends Game {
     this.clearTimeout();
     this.server.closeEventSource();
     
+    let w; // winner
+    let q; // quiter
+    if (data !== undefined) {
+      w = data.winner;
+      q = this.players[0] === w ? this.players[1] : this.players[0];
+    } else {
+      q = this.server.getUser();
+      w = this.players[0] === q ? this.players[1] : this.players[0];
+    }
+
     if (q === this.server.getUser()) {
       document.dispatchEvent(new Event('quitGame'));
     } else {
-      let w; // winner
-      let q; // quiter
-      if (data !== undefined) {
-        w = data.winner;
-        q = this.players[0] === w ? this.players[1] : this.players[0];
-      } else {
-        q = this.server.getUser();
-        w = this.players[0] === q ? this.players[1] : this.players[0];
-      }
-
       document.querySelector('.winner').style.display = '';
-      document.querySelector('.winner-text').innerText = waiver(q) + '\n' + winner(w);
+
+      if (w === null) 
+        document.querySelector('.winner-text').innerText = tie;
+      else 
+        document.querySelector('.winner-text').innerText = waiver(q) + '\n' + winner(w);
+      
       dotAnimation();
     }
   }
